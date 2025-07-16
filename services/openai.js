@@ -4,13 +4,19 @@ const { getBusinessInfo } = require('./business');
 const { normalize } = require('./normalize');
 const { matchModelResponse, matchFAQSmart} = require('./modelMatcher');
 const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
-const { updateSession} = require('./session');
 const { logToJson} = require('./jsonLog');
 const sessionHistory = new Map();
 const replyTimeouts = new Map();
 const pendingMessages = new Map();
 const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
 const generalModel = loadJsonArrayFile(generalModelPath);
+
+function updateSession(senderId, role, content) {
+  if (!sessionHistory.has(senderId)) sessionHistory.set(senderId, []);
+  const history = sessionHistory.get(senderId);
+  history.push({ role, content });
+  if (history.length > 10) history.shift();
+}
 
 const generateReply = async (senderId, userMessage, metadata = {}) => {
   const start = Date.now();
