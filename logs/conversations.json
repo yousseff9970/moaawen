@@ -1,0 +1,2059 @@
+[
+  {
+    "timestamp": "2025-06-27T10:23:08.700Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "message": "كم يوم بدو الأردر ليوصل؟",
+    "ai_reply": "مرحبا! الطلب عادة بين 1 و2 يوم عمل ليصل، والتوصيل بيفوت على بعد 5$. إذا حابة أساعدك أكثر أو تريدي طلب، خبريني! 😊",
+    "source": "voice"
+  },
+  {
+    "timestamp": "2025-06-27T13:49:23.377Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم في لونا وير؟",
+      "source": "ai"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:01:36.435Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 4
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:01:51.386Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Bade 3 hoodies large",
+    "ai_reply": {
+      "reply": "شكراً لطلبك! رح أرسل لك هوديز كلاود بالمقاس الكبير على طول. فيك تواصل معنا على الواتساب لنرتب الطلب ونعطيك التفاصيل، أو إذا حابب تتأكد من التوافر، خبرني.",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2496
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:02:05.837Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "W zed 3layhon 2 small",
+    "ai_reply": {
+      "reply": "تمام، رح أجهز لك 3 هوديز، منهم اثنين بمقاس صغير.  \nهل حابب تضيف شي تاني أو تتأكد من التوافر؟ تواصل معنا على الواتساب لنرتب الطلب بسرعة!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2032
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:02:26.685Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Azde 3 large w 2 small",
+    "ai_reply": {
+      "reply": "تمام، رح أضيف 3 هوديز بمقاس كبير و2 بمقاس صغير.  \nهل حابب تشتريهم الآن أو في شي تاني؟ تواصل معنا على الواتساب لنؤكد الطلب ونرسل لك التفاصيل.",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1623
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:02:43.811Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Ade total ma3 delivery",
+    "ai_reply": {
+      "reply": "تمام، لنحسب المجموع مع تكلفة التوصيل:\n\n- 3 هوديز كبيرة: 3 × 40$ = 120$\n- 2 هوديز صغيرة: 2 × 30$ = 60$\n- التوصيل: 5$\n\nالمجموع الكلي: 120$ + 60$ + 5$ = **185$**\n\nهل حابب أرسلك رابط الدفع أو تواصل معنا على الواتساب لنرتب الطلب؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1939
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:03:10.419Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Metzelekr sho talabet awal shi?",
+    "ai_reply": {
+      "reply": "أول شي طلبت 3 هوديز كبيرة و2 صغيرة، والمجموع مع التوصيل صار 185$.  \nهل حابب تكمل الطلب أو في شي تاني حابب تضيفه؟ إذا بدك، تواصل معنا على الواتساب لنرتب لك الطلب بسرعة!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1981
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:06:20.743Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "سلام",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 7
+    },
+    "source": "voice"
+  },
+  {
+    "timestamp": "2025-06-29T10:06:32.027Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "سلام",
+    "source": "voice"
+  },
+  {
+    "timestamp": "2025-06-29T10:23:02.874Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 27
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:34:45.944Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Image]",
+    "source": "image"
+  },
+  {
+    "timestamp": "2025-06-29T10:41:14.759Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Ho",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم مع لونا وير؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2563
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T10:48:40.713Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T11:33:57.366Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Kef bestafed menak",
+    "ai_reply": {
+      "reply": "فيك تتواصل معنا على الواتساب أو إنستغرام لنقدم لك كل المعلومات عن منتجاتنا وعروضنا. إذا حابب، فيني أساعدك حالياً برابط مباشر أو أرسل لك التفاصيل!  \nمستعد لأي استفسار. 😊",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1961
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T11:34:14.884Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Sho id l instagram",
+    "ai_reply": {
+      "reply": "إيموجين لونا وير على إنستغرام هو: @lunawear.lb  \nفيك تتابعنا وتشوف آخر التصاميم والعروض هناك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2071
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T11:34:32.120Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Sho l domain lwebsite",
+    "ai_reply": {
+      "reply": "لحتى تتابع منتجاتنا وتشتري أونلاين، فيك تزور موقعنا الإلكتروني على العنوان التالي: www.lunawearlb.com  \nإذا بدك أي مساعدة أو تفاصيل إضافية، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1646
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T12:58:30.290Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Meztkr sho sa2ltak abel",
+    "ai_reply": {
+      "reply": "أكيد، سألتي عن إنستغرام واسم الدومين للموقع الإلكتروني. إذا في شي تاني حابة تعرفيه أو استفسار، أنا هون لمساعدتك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 3041
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T12:58:56.898Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Ente kter zake",
+    "ai_reply": {
+      "reply": "شكراً كتير على كلامك الحلو! إذا بحاجة لأي مساعدة أو حابة تعرفي عن منتجاتنا أكتر، أنا جاهز دومًا. 😊",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2123
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T13:58:18.389Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T13:58:36.052Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Bade hoodies",
+    "ai_reply": {
+      "reply": "عندك خيارين للهودي:  \n- **Cloud Hoodie الصغيرة** بسعر 30$  \n- **Cloud Hoodie الكبيرة** بسعر 40$  \n\nهل حابة أبعثلك روابط أو تفاصيل أكثر عنهم؟  \nوفيك كمان تختاري اللون أو المقاس اللي بدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1968
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T14:02:40.576Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Fe discount",
+    "ai_reply": {
+      "reply": "لحتى نعملك خصم، ممكن تستفيدي من عرض خاص أو تتابعينا على إنستغرام @lunawear.lb لحتى تعرفي عن العروض الحصرية والخصومات.  \nهل حابة أساعدك برابط للمنتجات أو تفاصيل تانية؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1967
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T15:34:33.281Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hello",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 2
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T15:34:53.435Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Metzkr sho sa2ltak",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم؟  \nهل حابة تعرفي عن منتجاتنا أو طلبية معينة؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1074
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T15:35:23.617Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Bade hoodies",
+    "ai_reply": {
+      "reply": "أكيد! عنا هوديز كتيرة، وعندنا هوديز فروي كتير حلوة.  \nحابة تعرفي على الموديلات أو الأسعار؟  \nعنا هوديز صغيرة بسعر 30$ وكبيرة بسعر 40$.  \nشو بتحبي تختاري؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1511
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T15:35:36.150Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "4 large w 2 small ma3 delivery ade total",
+    "ai_reply": {
+      "reply": "تمام، رح نعمل حسابك:\n\n4 هوديز كبيرة بسعر 40$ each = 4 × 40$ = 160$  \n2 هوديز صغيرة بسعر 30$ each = 2 × 30$ = 60$  \n\nالمجموع قبل التوصيل: 160$ + 60$ = 220$\n\nالتوصيل ثابت 5$،  \nإذن المجموع الكلي: 220$ + 5$ = 225$  \n\nهل حابة أطلبلك هالكمية؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1173
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T18:52:52.470Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 2
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T18:52:53.820Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Kifak",
+    "ai_reply": {
+      "reply": "أنا بخير، شكراً لسؤالك! كيف فيني ساعدك أكتر اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1577
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T18:52:55.638Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Bade hoodie",
+    "ai_reply": {
+      "reply": "تمام، بتحبي هوديز صغيرة أو كبيرة؟  \nعنا هوديز صغيرة بسعر 30$ وكبيرة بسعر 40$.  \nحابة تختاري أي لون أو موديل معين؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1437
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-29T19:28:51.629Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi kifak bade hoodie",
+    "ai_reply": {
+      "reply": "مرحباً! أنا بخير، شكراً لسؤالك.  \nهل حابة هوديز صغيرة أو كبيرة؟  \nعنا هوديز صغيرة بسعر 30$ وكبيرة بسعر 40$.  \nشو اللون أو الموديل اللي بتحبي إياه؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2041
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T10:23:29.011Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 16
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T17:30:34.637Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "Hi",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 5
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T18:33:53.510Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 27
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T18:34:33.080Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيفك؟ كيف فيني ساعدك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2356
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:29:32.086Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحبا! أنا كويس، شكراً لسؤالك. كيف فيني ساعدك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1935
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:29:42.437Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:30:14.031Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا منيح، شكراً لسؤالك. كيف فيني ساعدك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2606
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:30:50.746Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيفك؟ عندي منتجات لابأس فيها. إذا بدك هوديز، عندي هودي Cloud، فيه منها حجم صغير بـ 30$ وحجم كبير بـ 40$. وإذا حابب تشوف باقي المنتجات أو حابب شي تاني، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2234
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:31:15.733Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Marhaba! Kifak?  \nHawwil akhbirak 3an list el-montajat:\n\n1. **Luna Linen Set** - 120$\n   - Description: Set min linen n3em wa yefra7, mnih lil saif.\n\n2. **Cloud Hoodie** - 30$ small / 40$ large\n   - Description: Hoodie mashi fluffy wa dafi, shakel jameel.\n\nBaddi akhbirak iza baddak shay m3ayin, aw iza baddak tishteri.  \nTsharrafna b WhatsApp: +961 71 987 654  \nAw 3ala Instagram: @lunawear.lb",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2917
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:31:22.800Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، حابب هودي بحجم كبير؟ إذا فيك توضحلي أكتر شو بدك، أنا جاهز أساعدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1050
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:31:58.997Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Shukran 3ala talabak!  \nTotal el-montagat:\n\n- 2 hoodie large = 2 × 40$ = 80$\n- 2 hoodie small = 2 × 30$ = 60$\n\nMajmou3 el-montajat = 80$ + 60$ = 140$\n\nEl-delivery flat rate = 5$\n\nEl total m3 el-delivery = 140$ + 5$ = 145$\n\nTsharrafna b WhatsApp: +961 71 987 654 aw 3ala Instagram: @lunawear.lb  \nWla tensa, el-shi bti3mil 3al wa7d!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 4201
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:32:12.751Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، رح أعدلك الطلب:\n\n- 2 هوديز حجم كبير = 80$\n- 2 هوديز حجم صغير = 60$\n\nالمجموع قبل التوصيل: **140$**\n\nالتوصيل ثمنه 5$.  \nالمجموع الكلي مع التوصيل: **145$**\n\nهل حابب أرسللك إياها عالواتساب أو إن شاء الله أبعثلك إياها بسرعة؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1614
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:32:45.977Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "هل تقصد 3 هوديز حجم كبير من نوع معين، أو في نوع تاني؟ إذا قصدت 3 هوديز حجم كبير، السعر لكل واحد 40$, يعني المجموع:\n\n3 × 40$ = 120$\n\nهل في شي تاني حابب تضيفه أو ترد لي أكيد؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2257
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:32:54.149Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Shukran 3ala talabak!  \nLazem netkallem shway, la2an ma andna m3loumat 3an \"mesh tben\" 3and Luna Wear.  \nMomkin t9olli shi akthar 3an el-montaj aw teshir 3aleh?  \nAw iza baddak shay tani, ana hon l musaa3dek!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1232
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:33:32.550Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Yay!  \nBashirak, ma andna \"mesh tnen\" 3and Luna Wear.  \nMomkin t2ol li shou akthar 3an el-montaj aw teshir 3aleh?  \nAw iza baddak shay tani, ana hon l musaa3dek!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 3507
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:34:12.558Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Tasharrafna!  \nTotal el-4 hoodies large:\n\n4 × 40$ = 160$\n\nEl-delivery flat rate = 5$\n\nEl total m3 el-delivery = 165$\n\nTsharrafna b WhatsApp: +961 71 987 654 aw 3ala Instagram: @lunawear.lb  \nLazem t3alemna iza biddak shi tani aw iza baddak t7جز!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2091
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:40:05.536Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 28
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:40:32.751Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Kifak! إليك قائمة المنتجات عندنا:\n\n1. **Luna Linen Set**  \nالسعر: 120$  \nالوصف: مجموعة من الكتان الناعم والمريح، مثالية للصيف.\n\n2. **Cloud Hoodie**  \nالسعر: 30$ للصغير / 40$ للكبير  \nالوصف: هودي ثقيل وناعم، دافي وشيك للشتوية.\n\nإذا حابب تعرف أكتر أو تشتري شي، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2521
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:40:41.948Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Marhaba! Kifak? Tasharrafna.  \nHalla2 b3tik list bel products:\n\n1. **Luna Linen Set**  \n   - السعر: 120$  \n   - الوصف: مجموعة من الكتان الناعم والمريح، مثالية للصيف.\n\n2. **Cloud Hoodie**  \n   - السعر: 30$ الحجم الصغير / 40$ الحجم الكبير  \n   - الوصف: هودي فلابي للشتوية، دافئ وأنيق.\n\nإذا حابب أي مساعدة تانية أو عندك سؤال، خبرني!  \nممكن تتواصل معي على الواتساب: +961 71 987 654 أو على إنستغرام: @lunawear.lb",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2639
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:41:21.005Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، حبيبي!  \nثلاثة هوديز كلوود بحجم كبير سعر كل واحد 40$.  \n\nمجموع الطلب: 120$.  \n\nهل حابب أرسلها عالبيت أو بدك تفاصيل تانية؟  \nفيك تتواصل معي على الواتساب: +961 71 987 654 أو على إنستغرام: @lunawear.lb",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1397
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:41:27.147Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، حابب تشتري هوديي كلاود حجم صغير.  \nالمجموع: 30$.  \n\nهل بدك أطلبهم مباشرة أو بدك شي تاني؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1279
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:42:13.150Z",
+    "platform": "instagram",
+    "user_id": "1425546801700785",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، السعر للهوديي هو 30$.  \nرسوم التوصيل 5$.  \n\nالمجموع الكلي: 30$ + 5$ = 35$.  \n\nهل حابب أبعثلك رابط الطلب أو تفضّل أرتبلك الطلب مباشرة؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1880
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-06-30T19:42:19.985Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام،  \nالمجموع قبل التوصيل: 120$  \nورسوم التوصيل: 5$  \n\nالمجموع الكلي: **125$**  \n\nهل حابب أرسلها عالبيت؟  \nممكن تتواصل معي على الواتساب: +961 71 987 654 أو على إنستغرام: @lunawear.lb",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2650
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T17:25:20.501Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 66
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T17:26:02.412Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 35
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T17:31:01.671Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "شكراً إلك! إذا في شي تاني أنا جاهز 🙌",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T18:40:41.820Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 30
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T18:40:51.826Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "المتجر اسمه هو Moaawen. إذا بدك أي مساعدة تانية أو تفاصيل عن المنتجات، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1378
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T18:41:05.604Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "عندك مجموعة من المنتجات، وهيدي بعض الأمثلة:\n\n1. بطاقة هدية بسعر 10$\n2. خطة بيع شمع التزلج بسعر 24.95$\n3. لوح التزلج \"The 3p Fulfilled Snowboard\" بسعر 2629.95$\n4. لوح التزلج \"The Archived Snowboard\" بسعر 629.95$\n5. مجموعة ألواح التزلج \"The Collection Snowboard\" بأنواع مختلفة:\n   - Hydrogen: 600.00$\n   - Liquid: 749.95$\n   - Oxygen: 1025.00$\n6. لوح التزلج \"The Complete Snowboard\" بسعر 699.95$، وهو منتج مميز جدًا.\n7. لوح التزلج \"The Draft Snowboard\" بسعر 2629.95$\n8. لوح التزلج \"The Hidden Snowboard\" بسعر 749.95$\n9. لوح التزلج \"The Inventory Not Tracked Snowboard\" بسعر 949.95$\n10. لوح التزلج \"The Minimal Snowboard\" بسعر 885.95$\n11. لوح التزلج \"The Multi-location Snowboard\" بسعر 729.95$\n12. لوح التزلج \"The Multi-managed Snowboard\" بسعر 629.95$\n13. لوح التزلج \"The Out of Stock Snowboard\" بسعر 885.95$\n14. لوح التزلج \"The Videographer Snowboard\" بسعر 885.95$\n\nوغيرها من المنتجات. إذا حابب تعرف أكثر عن شي معين أو تشتري، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 4188
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T18:56:44.925Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 7
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T18:56:55.515Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "عندك منتجات متوفرة، بس للأسف معظمها مو مكتوب عليها تفاصيل أو أسعار. في عندك بطاقة هدية للمتجر، وواحد من المنتجات عبارة عن لوح تزلج (snowboard) بريميوم كتير حلو. إذا بدك تفاصيل أكتر أو تريد طلب شي، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1353
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T18:57:59.854Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "للأسف، المنتج \"Minimal snowboard\" مش متوفر عندي أو مو مذكور بالتفاصيل. إذا بدك شي تاني أو تود تعرف عن منتجات تانية، أنا هون للمساعدة!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2160
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:08:49.715Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! سعر الـ The Minimal Snowboard هو 885.95 دولار وهو متوفر حالياً بالمخزون. هل تود معرفة المزيد أو طلبه؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1140
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:41:54.149Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 55
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:42:03.973Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Hello and welcome! How can I help you?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 73
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:47:03.073Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:47:12.654Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:47:24.719Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:47:34.399Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.",
+      "source": "error",
+      "layer_used": "order_failed"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:50:15.796Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 71
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:50:25.577Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! إليك قائمة المنتجات المتوفرة:\n\n1. **بطاقة هدية** - 10 دولار (غير متوفر حالياً)\n2. **Selling Plans Ski Wax** - 24.95 دولار\n3. **The 3p Fulfilled Snowboard** - 2629.95 دولار\n4. **The Archived Snowboard** - 629.95 دولار\n5. **The Collection Snowboard: Hydrogen** - 600.00 دولار\n6. **The Collection Snowboard: Liquid** - 749.95 دولار\n7. **The Collection Snowboard: Oxygen** - 1025.00 دولار\n8. **The Compare at Price Snowboard** - 785.95 دولار\n9. **The Complete Snowboard** - 699.95 دولار\n10. **The Draft Snowboard** - 2629.95 دولار\n11. **The Hidden Snowboard** - 749.95 دولار\n12. **The Inventory Not Tracked Snowboard** - 949.95 دولار (غير متوفر حالياً)\n13. **The Minimal Snowboard** - 885.95 دولار\n14. **The Multi-location Snowboard** - 729.95 دولار\n15. **The Multi-managed Snowboard** - 629.95 دولار\n16. **The Out of Stock Snowboard** - 885.95 دولار (غير متوفر حالياً)\n17. **The Videographer Snowboard** - 885.95 دولار\n\nهل تود معرفة تفاصيل أكثر عن أي منتج معين أو طلبية؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 4897
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:50:52.857Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "منتج \"The Minimal Snowboard\" سعره 885.95 دولار وهو متوفر حالياً. إذا حابب تشتريه أو تعرف أكثر عن المواصفات، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2440
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:51:01.303Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:51:09.864Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:51:19.024Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:51:48.227Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.",
+      "source": "error",
+      "layer_used": "order_failed"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T19:56:45.531Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، إذا حابب تشتري أو عندك أي استفسار تاني، أنا هون لمساعدتك.",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2639
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:02:47.478Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 41
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:02:56.428Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "هيدا الـ\"**The Minimal Snowboard**\" سعره 885.95 دولار وهو متوفر حالياً. هل حابب أطلبه أو في شي تاني بتحب تعرفه؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1718
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:03:09.681Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "أكيد، إذا حابب تطلب شي، فيني أساعدك في اختيار المنتج أو أرتب لك الطلب. شو حابب تطلب؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1634
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:03:19.595Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:04:05.643Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:04:46.181Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:04:51.467Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.",
+      "source": "error",
+      "layer_used": "order_failed"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:12:50.621Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:12:58.126Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:13:03.395Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:13:09.347Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.",
+      "source": "error",
+      "layer_used": "order_failed"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:18:54.245Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:19:04.740Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:19:12.662Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:19:22.836Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.",
+      "source": "error",
+      "layer_used": "order_failed"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:22:07.328Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:22:16.463Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:22:24.978Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:22:31.401Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.",
+      "source": "error",
+      "layer_used": "order_failed"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:25:33.972Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:25:44.730Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:25:49.207Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:28:59.127Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:29:25.557Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:29:40.479Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:32:38.770Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:32:47.353Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:32:56.230Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:33:29.512Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، شو اسمك الكامل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:33:33.619Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "👍 عطيني رقم تليفونك لو سمحت.",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:33:38.055Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "تمام، وعنوان التوصيل بالتفصيل؟",
+      "source": "order_wizard",
+      "layer_used": "order_flow"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-13T20:33:43.315Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "✅ تم إنشاء طلبك لمنتج **Selling Plans Ski Wax** بنجاح! رقم الطلب: #6061817299133. سيتم التواصل معك قريبًا.",
+      "source": "shopify",
+      "layer_used": "order_created"
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-14T11:33:49.367Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 39
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-14T11:40:07.879Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:46:25.941Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 33
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:46:30.108Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحبًا! كيف فيني ساعدك اليوم؟ عندك شي معين حابب تعرف عنه أو تطلبه؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2452
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:46:43.959Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "عنا مجموعة منتجات متنوعة، مثل:\n\n- أكسسوارات\n- هدايا مميزة\n- منتجات تزيين وديكور\n- أدوات وأشياء خاصة بالمناسبات\n\nإذا حابب تعرف أكثر عن شي معين أو طلب شي، خبرني وأنا جاهز أساعدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2344
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:49:51.443Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 29
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:49:57.659Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعاون، موجود لمساعدتك. فيك تسألني عن خدماتنا أو أي شيء تاني بتحب تعرفه. كيف فيني أساعدك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1639
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:50:13.612Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "عنا خدمات متنوعة لمساعدتك، مثل إنشاء محتوى، ترجمة، تحسين النصوص، والرد على استفساراتك بسرعة ودقة. إذا حابب تعرف أكثر عن خدماتنا أو عندك طلب معين، خبرني وأنا جاهز أساعدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2296
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:50:38.962Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "عنا خدمات كتيرة، ومنها:\n\n1. كتابة وتحرير المحتوى\n2. ترجمة النصوص بين اللغات\n3. المساعدة في البحث وجمع المعلومات\n4. إنشاء محتوى تسويقي وإعلاني\n5. تقديم نصائح واستشارات في مجالات مختلفة\n\nإذا عندك طلب معين أو حابب تعرف أكثر عن خدمة محددة، خبرني وأنا جاهز أساعدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2172
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:54:39.479Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 28
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:54:47.739Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحبًا! نحن موعان، نوفر لك خدمة دردشة للموقع الإلكتروني، مع تكامل مع Shopify و WooCommerce، ودعم متعدد اللغات، وأدوات لتحويل المحادثات إلى مبيعات. عندك فرصة تجربة مجانية لمدة شهر كامل مع جميع المميزات والقنوات مفعلة. كيف فيني أساعدك أكثر؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2389
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:55:18.279Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "عنا خدمات كتيرة بتساعدك تتواصل مع زباينك بشكل أسهل وأسرع، ومنها:\n\n- إضافة دردشة مباشرة للموقع الإلكتروني\n- تكامل مع متاجر Shopify و WooCommerce لمزامنة المنتجات والمخزون\n- تطبيق موعان على Shopify و WooCommerce\n- تحويل المحادثات يدويًا إلى دعم حي\n- دعم متعدد اللغات (لبناني، عربي فصحى، إنجليزي)\n\nوالأفضل إنك تستفيد من العرض المجاني لمدة شهر كامل، وبتقدر تراقب أداء خدمة العملاء، وتوفر حتى 80% من تكاليف الدعم، وتحول المحادثات لمبيعات بشكل أسهل.  \n\nهل حابب تعرف أكثر عن كيف تستفيد من الخدمة بشكل خاص؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2951
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:55:41.999Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "نعم، فينا نضيف واتساب كجزء من خدماتنا، وبيساعدك ترد على العملاء بسرعة من خلال واتساب مباشرة، بالإضافة لميزات الدردشة على الموقع والتكامل مع متجرك. هالشي بيزيد من سرعة التفاعل ورضا الزباين، وبيخلي التواصل أسهل وأسرع. حابب تعرف كيف ممكن نضيف واتساب لموقعك أو متجرك؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2428
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:56:02.155Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "نعم، فينا نستخدم واتساب كجزء من خدماتنا، وبيكون متصل مع الدردشة على الموقع الإلكتروني، بحيث تقدر ترد على زباينك بسرعة وسهولة من خلال واتساب. هالشي بيزيد من فعالية التواصل وبيساعدك ترد على استفسارات الزباين بشكل مباشر وفعال. إذا حابب نوضح أكثر أو نساعدك في إضافة واتساب لموقعك، خبرني!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2614
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T08:56:59.191Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "إي، رقم هاتفنا هو 81778494. إذا حابب تتواصل معنا مباشرة أو تستفسر عن خدماتنا، فيك تتصل أو تراسل عبر الواتساب من خلال wa.me/96181778494. كيف فيني أساعدك أكثر؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2617
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T09:18:51.389Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 30
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T11:52:16.544Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 27
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T11:58:10.965Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 29
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T12:10:26.147Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 46
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T12:15:07.176Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 27
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T13:31:49.416Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 7
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:03:51.426Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 29
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:09:55.364Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Tamam elhamdellah, shukran 3al So2al! kif fini se3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:14:37.127Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 29
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:17:17.570Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 27
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:18:15.701Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعاون، كيف فيني ساعدك اليوم؟ إذا حابب تعرف عن خدماتنا أو المنتجات، أنا جاهز للمساعدة. تواصل معنا على 81778494 أو عبر واتساب wa.me/96181778494، أو زور موقعنا www.moaawen.ai للمزيد من المعلومات.",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 3576
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:45:41.160Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 28
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:46:16.865Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 27
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T18:46:23.678Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعاون، جاهز للمساعدة بأي استفسار عن خدماتنا أو منتجاتنا. هل تود معرفة المزيد عن خدماتنا مثل دمج دردشة الموقع أو تزامن المنتجات مع Shopify و WooCommerce، أو كيف يمكننا أن نساعدك في تحسين خدمة العملاء وزيادة المبيعات؟ تواصل معي بأي وقت!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2307
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T19:09:41.827Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 3
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T19:59:50.830Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Hello and welcome! How can I help you?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 2
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:00:18.546Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم؟ إذا بدك معلومات عن خدماتنا، منتجاتنا، أو أي شيء تاني، خبرني وأنا جاهز للمساعدة.  \nممكن تزور موقعنا www.moaawen.ai لمزيد من التفاصيل.  \nسؤال؟ استفسار؟ أنا هون لأساعدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1728
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:00:24.064Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعوَن، مساعدك في موعوَن بلبنان. كيف فيني ساعدك اليوم؟ إذا حابب تعرف عن خدماتنا أو كيف فينا نساعدك، أنا هون لنساعدك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1573
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:01:54.887Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم بخصوص خدمات موعاون أو أي استفسار عن منتجاتنا أو ميزاتنا؟ تواصل معنا على الرقم 81778494 أو عبر واتساب wa.me/96181778494، أو زور موقعنا www.moaawen.ai لمزيد من المعلومات. نحن هنا لمساعدتك!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1527
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:03:25.289Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم بخصوص خدمات موعان أو أي استفسار عن منصتنا؟ إذا حابب تعرف أكثر عن خدماتنا أو كيف فينا نساعدك، أنا جاهز!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1386
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:05:26.882Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم بخصوص خدمات Moaawen أو أي استفسار عن منتجاتنا أو ميزاتنا؟  \nتذكر أننا نوفر تجربة مجانية لمدة شهر كامل مع جميع الميزات والقنوات مفعلة، ونسهل عليك دمج الويدجت على موقعك أو متجرك الإلكتروني.  \nممكن أساعدك بتفاصيل أكثر عن خدماتنا أو كيف فيك تستفيد منها؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 2643
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:07:35.739Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "Ahla w sahla! Kif fini sa3dak?",
+      "source": "model",
+      "layer_used": "model_general",
+      "duration": 2
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:08:02.003Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! كيف فيني ساعدك اليوم بخصوص خدمات مواأن أو أي استفسار عن موقعنا أو منتجاتنا؟ تواصل معنا على رقم 81778494 أو عبر الواتساب wa.me/96181778494.  \nموقعنا الإلكتروني: www.moaawen.ai  \nنقدم تجربة مجانية لمدة شهر كامل مع جميع الميزات، وبدون الحاجة لأي مهارات برمجية، لنساعدك على تحسين خدمة العملاء وزيادة المبيعات.  \nشو حابب تعرف أكثر؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 7205
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:08:03.253Z",
+    "platform": "whatsapp",
+    "user_id": "96171587848",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعاون، جاهز لمساعدتك في كل ما يتعلق بموقع موعاون وخدماتنا. إذا كنت بحاجة لمعلومات عن خدماتنا، فوائدها، أو كيف يمكن أن تساعدك في تحسين تواصلك مع عملائك، لا تتردد في السؤال. تفضل، كيف يمكنني مساعدتك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 3892
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:11:58.651Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعاون، جاهز لمساعدتك في كل ما يتعلق بموقع موعاون وخدماته. إذا كنت بحاجة لأي معلومات عن خدماتنا، المزايا، أو كيف نستطيع ندعم عملك، لا تتردد تسألني. كيف فيني أساعدك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1723
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:12:13.631Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موعان، جاهز لمساعدتك في كل ما يخص خدمات موعان. إذا بدك تعرف أكثر عن خدماتنا، المميزات، أو كيف فينا نساعدك بتحسين تواصلك مع عملائك، لا تتردد تسألني. فيك كمان تستفيد من فترة تجربة مجانية لمدة شهر كامل مع كل الميزات والقنوات مفعلة. كيف فيني أساعدك اليوم؟",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1536
+    },
+    "source": "text"
+  },
+  {
+    "timestamp": "2025-07-15T20:12:59.943Z",
+    "platform": "whatsapp",
+    "user_id": "96176962469",
+    "user_name": "Unknown",
+    "message": "[Batched]",
+    "ai_reply": {
+      "reply": "مرحباً! أنا موآون، مساعدكم في موآون. كيف فيني ساعدك اليوم؟ إذا حابب تعرف عن خدماتنا أو منتجاتنا، أنا جاهز لأي سؤال. تفضل!",
+      "source": "ai",
+      "layer_used": "ai",
+      "duration": 1087
+    },
+    "source": "text"
+  }
+]

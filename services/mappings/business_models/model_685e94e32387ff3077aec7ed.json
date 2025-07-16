@@ -1,0 +1,23 @@
+[
+  {
+    "intent": "product_info",
+    "lebenglish": ["sho fe products", "fe shay", "products list", "3endkon shay"],
+    "arabic": ["ما هي المنتجات", "شو عِندكن"],
+    "english": ["what products", "do you have items"],
+    "response": "عِندنا مجموعة واسعة من المنتجات! خبرني شو حابب تعرف أكتر؟"
+  },
+  {
+    "intent": "delivery_info",
+    "lebenglish": ["kam yom", "btwsl", "delivery", "adeh l delivery"],
+    "arabic": ["كم يوم", "توصيل", "بتوصل"],
+    "english": ["delivery time", "when do you deliver"],
+    "response": "التوصيل خلال 1-2 أيام عمل، بسعر ثابت ٥$."
+  },
+  {
+    "intent": "pricing",
+    "lebenglish": ["kam se3r", "adeh l se3r", "price"],
+    "arabic": ["سعر", "كم الثمن"],
+    "english": ["how much", "cost"],
+    "response": "كل منتج إله سعره، فيك تشوف الأسعار بالتفاصيل أو تسأل عن منتج معيّن!"
+  }
+]

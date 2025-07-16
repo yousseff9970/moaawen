@@ -1,0 +1,32 @@
+{
+  "name": "new",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "form-data": "^4.0.3",
+    "hamming-distance": "^1.0.0",
+    "image-hash": "^5.3.2",
+    "jimp": "^1.6.0",
+    "mongoose": "^8.16.0",
+    "music-metadata": "^11.4.0",
+    "natural": "^8.1.0",
+    "new": "file:",
+    "node-cache": "^5.1.2"
+  }
+}

@@ -1,0 +1,985 @@
+{
+  "greetings": [
+    {
+      "lebenglish": "Marhaba",
+      "arabic": "مرحبا",
+      "english": "Hello/Hi (informal greeting)"
+    },
+    {
+      "lebenglish": "Mar7aba",
+      "arabic": "مرحبا",
+      "english": "Hello/Hi (informal greeting) [alternative spelling]"
+    },
+    {
+      "lebenglish": "Hi",
+      "arabic": "هاي",
+      "english": "Hi (casual greeting in English)"
+    },
+    {
+      "lebenglish": "Hala!",
+      "arabic": "هلا",
+      "english": "Hey there! (very informal greeting)"
+    },
+    {
+      "lebenglish": "Hiii",
+      "arabic": "هاي",
+      "english": "Hiii (very informal greeting with elongated 'i')"
+    },
+    {
+      "lebenglish": "Heyy",
+      "arabic": "هاي",
+      "english": "Hey (casual greeting)"
+    },
+    {
+      "lebenglish": "Bonjour",
+      "arabic": "بونجور",
+      "english": "Hello (French 'bonjour', used by some Lebanese)"
+    },
+    {
+      "lebenglish": "Kifak?",
+      "arabic": "كيفك؟",
+      "english": "How are you? (to a male)"
+    },
+    {
+      "lebenglish": "Kifek?",
+      "arabic": "كيفك؟",
+      "english": "How are you? (to a female)"
+    },
+    {
+      "lebenglish": "Kifkon?",
+      "arabic": "كيفكن؟",
+      "english": "How are you? (to a group)",
+      "response": "alhamdullilah"
+    },
+    {
+      "lebenglish": "Ca va?",
+      "arabic": "Ça va?",
+      "english": "How are you? (French 'Ça va?', common in Lebanon)"
+    },
+    {
+      "lebenglish": "Kif el 7al?",
+      "arabic": "كيف الحال؟",
+      "english": "How is everything? (how are things?)"
+    },
+    {
+      "lebenglish": "Nharkon sa3id",
+      "arabic": "نهاركن سعيد",
+      "english": "Good day (Have a nice day) [semi-formal]"
+    },
+    {
+      "lebenglish": "Sabah el khayr",
+      "arabic": "صباح الخير",
+      "english": "Good morning"
+    },
+    {
+      "lebenglish": "Masa el khayr",
+      "arabic": "مساء الخير",
+      "english": "Good evening"
+    }
+  ],
+  "politeness": [
+    {
+      "lebenglish": "Ya3tikom l 3afye",
+      "arabic": "يعطيكم العافية",
+      "english": "May God give you (pl.) health (common greeting/thanks)"
+    },
+    {
+      "lebenglish": "Ya3tik el 3afye",
+      "arabic": "يعطيك العافية",
+      "english": "May God give you health (to one person, used to thank or greet)"
+    },
+    {
+      "lebenglish": "Merci kteer",
+      "arabic": "مرسي كتير",
+      "english": "Thanks a lot"
+    },
+    {
+      "lebenglish": "Merci ktir",
+      "arabic": "مرسي كتير",
+      "english": "Thanks a lot [variant spelling]"
+    },
+    {
+      "lebenglish": "Choukran",
+      "arabic": "شكراً",
+      "english": "Thank you (shukran)"
+    },
+    {
+      "lebenglish": "Yeslamo",
+      "arabic": "يسلمو",
+      "english": "Thanks (short for 'may your hands be kept safe')"
+    },
+    {
+      "lebenglish": "Tekram",
+      "arabic": "تكرم",
+      "english": "Sure (literally 'you honor me', said when accepting a request)"
+    },
+    {
+      "lebenglish": "Iza btreed",
+      "arabic": "إذا بتريد",
+      "english": "Please (if you may, to a male)"
+    },
+    {
+      "lebenglish": "Iza btreedi",
+      "arabic": "إذا بتريدي",
+      "english": "Please (if you may, to a female)"
+    },
+    {
+      "lebenglish": "Min fadlak",
+      "arabic": "من فضلك",
+      "english": "Please (formal to a male)"
+    },
+    {
+      "lebenglish": "Min fadlik",
+      "arabic": "من فضلك",
+      "english": "Please (formal to a female)"
+    },
+    {
+      "lebenglish": "3mol ma3rouf",
+      "arabic": "عمول معروف",
+      "english": "Do me a favor (please do that)"
+    },
+    {
+      "lebenglish": "Walaw",
+      "arabic": "ولو",
+      "english": "Oh come on / No need (in response to thanks, meaning 'it's nothing')"
+    },
+    {
+      "lebenglish": "Eh",
+      "arabic": "إيه",
+      "english": "Yes (casual)"
+    },
+    {
+      "lebenglish": "La2",
+      "arabic": "لأ",
+      "english": "No (informal 'nope')"
+    },
+    {
+      "lebenglish": "Thank you so much",
+      "arabic": "ثانكيو سو ماتش",
+      "english": "Thank you so much (in English, used informally)"
+    },
+    {
+      "lebenglish": "Ma2assart",
+      "arabic": "ما قصّرت",
+      "english": "You didn't fall short (i.e., thanks, you did well)"
+    }
+  ],
+  "product_inquiry": [
+    {
+      "lebenglish": "3endkon ___?",
+      "arabic": "عندكن ___؟",
+      "english": "Do you have ___? (asking if an item/service is available)"
+    },
+    {
+      "lebenglish": "Fi menno ___?",
+      "arabic": "في منّو ___؟",
+      "english": "Do you have it in ___? (asking about color, size, etc.)"
+    },
+    {
+      "lebenglish": "Mawjoude hayda l shi?",
+      "arabic": "موجودة هيدا الشي؟",
+      "english": "Is this thing available? (feminine item)"
+    },
+    {
+      "lebenglish": "Mawjoud hayda l shi?",
+      "arabic": "موجود هيدا الشي؟",
+      "english": "Is this available? (masculine item)"
+    },
+    {
+      "lebenglish": "Baado mawjouD?",
+      "arabic": "بعدو موجود؟",
+      "english": "Is it still available? (still in stock)"
+    },
+    {
+      "lebenglish": "Still available?",
+      "arabic": "بعده متوفر؟",
+      "english": "Is it still available? (phrase mixing English)"
+    },
+    {
+      "lebenglish": "Fi stock?",
+      "arabic": "في ستوك؟",
+      "english": "Is it in stock?"
+    },
+    {
+      "lebenglish": "Addé fi menno 7abet?",
+      "arabic": "قدّي في منّو حبّة؟",
+      "english": "How many pieces of it are available?"
+    },
+    {
+      "lebenglish": "Fi sizes mkhtalife?",
+      "arabic": "في قياسات مختلفة؟",
+      "english": "Are different sizes available?"
+    },
+    {
+      "lebenglish": "Ayya 2yasat mawjoudeen?",
+      "arabic": "أيّ قياسات موجودين؟",
+      "english": "Which sizes are available?"
+    },
+    {
+      "lebenglish": "Fi lawn tene?",
+      "arabic": "في لون تاني؟",
+      "english": "Is there another color?"
+    },
+    {
+      "lebenglish": "Shou l alwan l mawjoude?",
+      "arabic": "شو الألوان الموجودة؟",
+      "english": "What colors are available?"
+    },
+    {
+      "lebenglish": "Fi model jdeed?",
+      "arabic": "في موديل جديد؟",
+      "english": "Is there a new model?"
+    },
+    {
+      "lebenglish": "El version l adeeme mawjoude?",
+      "arabic": "الفيرجن القديمة موجودة؟",
+      "english": "Is the old version available?"
+    },
+    {
+      "lebenglish": "3endkon shi aghla?",
+      "arabic": "عندكن شي أغلى؟",
+      "english": "Do you have something more expensive (higher-end)?"
+    },
+    {
+      "lebenglish": "3endkon shi arkhas?",
+      "arabic": "عندكن شي أرخص؟",
+      "english": "Do you have something cheaper?"
+    },
+    {
+      "lebenglish": "Fi accessories ma3o?",
+      "arabic": "في أكسسوارات معه؟",
+      "english": "Are there accessories with it? (does it come with accessories)"
+    },
+    {
+      "lebenglish": "Shou byeji ma3o?",
+      "arabic": "شو بيجي معه؟",
+      "english": "What comes with it? (what is included)"
+    },
+    {
+      "lebenglish": "Fi kafale 3aley?",
+      "arabic": "في كفالة عليه؟",
+      "english": "Is there a warranty on it?"
+    },
+    {
+      "lebenglish": "Original aw copy?",
+      "arabic": "أوريجينال أو كوبي؟",
+      "english": "Original or copy? (authentic or knock-off?)"
+    },
+    {
+      "lebenglish": "Made in wen?",
+      "arabic": "مصنوع وين؟",
+      "english": "Where is it made?"
+    },
+    {
+      "lebenglish": "Msta3mel aw jdeed?",
+      "arabic": "مستعمل أو جديد؟",
+      "english": "Used or new? (item condition)"
+    },
+    {
+      "lebenglish": "Fiyye shouf sowar aktar?",
+      "arabic": "فيني شوف صور أكتر؟",
+      "english": "Can I see more photos?"
+    },
+    {
+      "lebenglish": "B3atouli kam sora law sama7to",
+      "arabic": "بعتولي كم صورة لو سمحتوا",
+      "english": "Send me a few pictures please"
+    },
+    {
+      "lebenglish": "Video iza fi",
+      "arabic": "فيديو إذا في",
+      "english": "A video if available (do you have a video of it?)"
+    },
+    {
+      "lebenglish": "Addé 7ajmo?",
+      "arabic": "قدي حجمو؟",
+      "english": "How big is it? (asking about size/dimensions)"
+    },
+    {
+      "lebenglish": "3endkon ___ plz?",
+      "arabic": "عندكن ___ لو سمحتوا؟",
+      "english": "Do you have ___, please?"
+    },
+    {
+      "lebenglish": "Fi menno ___ plz?",
+      "arabic": "في منّو ___ لو سمحت؟",
+      "english": "Is it available in ___, please?"
+    }
+  ],
+  "ordering": [
+    {
+      "lebenglish": "Kif fiyye itlob?",
+      "arabic": "كيف فيي اطلب؟",
+      "english": "How can I order? (how to place an order)"
+    },
+    {
+      "lebenglish": "Kif btsir el talbiye?",
+      "arabic": "كيف بتصير الطلبية؟",
+      "english": "How does the ordering work? (what's the process)"
+    },
+    {
+      "lebenglish": "Shou lazim a3mel la etlob?",
+      "arabic": "شو لازم اعمل ل اطلب؟",
+      "english": "What do I need to do to order?"
+    },
+    {
+      "lebenglish": "Badde itlob ___",
+      "arabic": "بدي اطلب ___",
+      "english": "I want to order ___ (item name/quantity)"
+    },
+    {
+      "lebenglish": "Fiyye zid 3al order?",
+      "arabic": "فيني زيد عالأوردر؟",
+      "english": "Can I add to the order? (add more items)"
+    },
+    {
+      "lebenglish": "3mol order plz",
+      "arabic": "عمل أوردر بليز",
+      "english": "Please make an order (possibly asking the seller to take the order)"
+    },
+    {
+      "lebenglish": "Cancel l order",
+      "arabic": "كنسل الأوردر",
+      "english": "Cancel the order (calling off the order)"
+    },
+    {
+      "lebenglish": "Khalas cancelo",
+      "arabic": "خلاص كانسلو",
+      "english": "Fine, cancel it (forget it)"
+    },
+    {
+      "lebenglish": "Akid 7ajzoulé yeh",
+      "arabic": "أكيد حاجزولي ياه",
+      "english": "Please definitely reserve it for me"
+    },
+    {
+      "lebenglish": "Badde 2akid el talab",
+      "arabic": "بدي أكّد الطلب",
+      "english": "I want to confirm the order"
+    },
+    {
+      "lebenglish": "Wayn wosel l order taba3i?",
+      "arabic": "وين وصل الأوردر تبعي؟",
+      "english": "Where has my order reached? (checking status)"
+    },
+    {
+      "lebenglish": "Feek tet2assal fiyye?",
+      "arabic": "فيك تتصل فيي؟",
+      "english": "Can you call me? (asking the store to call them)"
+    },
+    {
+      "lebenglish": "Badde tnen menno",
+      "arabic": "بدي تنين منّو",
+      "english": "I want two of it (ordering two pieces)"
+    },
+    {
+      "lebenglish": "Shu badkon men tafasil?",
+      "arabic": "شو بدكن من تفاصيل؟",
+      "english": "What details do you need? (for the order)"
+    },
+    {
+      "lebenglish": "Bb3atlkon 3enwane w raqam?",
+      "arabic": "ببعتلكن العنوان والرقم؟",
+      "english": "Should I send you my address and number?"
+    },
+    {
+      "lebenglish": "Kif fiyye itlob plz?",
+      "arabic": "كيف فيي اطلب لو سمحت؟",
+      "english": "How can I order, please?"
+    },
+    {
+      "lebenglish": "5alas cancelo ya bro",
+      "arabic": "خلاص كانسلو يا برو",
+      "english": "Fine, cancel it bro (very informal slang)"
+    }
+  ],
+  "pricing": [
+    {
+      "lebenglish": "Addesh se3ro?",
+      "arabic": "قديش سعرو؟",
+      "english": "How much does it cost? (what's its price)"
+    },
+    {
+      "lebenglish": "Adday se3ro?",
+      "arabic": "قدّي سعره؟",
+      "english": "How much is this?:contentReference[oaicite:14]{index=14}"
+    },
+    {
+      "lebenglish": "Chou se3ro?",
+      "arabic": "شو سعرو؟",
+      "english": "What’s its price? (what is it priced at)"
+    },
+    {
+      "lebenglish": "Bi addé?",
+      "arabic": "بقدّي؟",
+      "english": "For how much? (asking price)"
+    },
+    {
+      "lebenglish": "Addé 7a22o?",
+      "arabic": "قدّي حقّو؟",
+      "english": "How much is it? (literally, how much is its price)"
+    },
+    {
+      "lebenglish": "Shou l as3ar lyom?",
+      "arabic": "شو الأسعار اليوم؟",
+      "english": "What are today’s prices?:contentReference[oaicite:15]{index=15}"
+    },
+    {
+      "lebenglish": "Ghalé?",
+      "arabic": "غالي؟",
+      "english": "Is it expensive?"
+    },
+    {
+      "lebenglish": "Fi discount?",
+      "arabic": "في ديسكاونت؟",
+      "english": "Is there a discount?"
+    },
+    {
+      "lebenglish": "Ma fi shi arkhas?",
+      "arabic": "ما في شي أرخص؟",
+      "english": "Nothing cheaper available? (looking for lower price)"
+    },
+    {
+      "lebenglish": "Akhir se3er?",
+      "arabic": "آخر سعر؟",
+      "english": "Final price? (last price you'll accept)"
+    },
+    {
+      "lebenglish": "Ma btenzlo shway?",
+      "arabic": "ما بتنزلوا شوي؟",
+      "english": "Can you lower it a bit? (lower the price)"
+    },
+    {
+      "lebenglish": "Fi tawfi2a aw sale?",
+      "arabic": "في توفئة أو سيل؟",
+      "english": "Any sale or special offer? (tawfi'a = sale)"
+    },
+    {
+      "lebenglish": "Addé l 2eset?",
+      "arabic": "قدي القسط؟",
+      "english": "How much is the installment (payment)?"
+    },
+    {
+      "lebenglish": "La2ayto arkhas bm7al tene",
+      "arabic": "لقيتو أرخص بمحل تاني",
+      "english": "I found it cheaper at another shop"
+    },
+    {
+      "lebenglish": "Bi addé dollar?",
+      "arabic": "بقدي دولار؟",
+      "english": "How much in dollars? (price in USD)"
+    },
+    {
+      "lebenglish": "Se3er Lira aw Dollar?",
+      "arabic": "سعر بالليرة أو الدولار؟",
+      "english": "Is the price in Lira or Dollar?"
+    },
+    {
+      "lebenglish": "Price?",
+      "arabic": "السعر؟",
+      "english": "Price? (what is the price)"
+    },
+    {
+      "lebenglish": "Price plz",
+      "arabic": "السعر لو سمحت",
+      "english": "Price please"
+    },
+    {
+      "lebenglish": "Addesh se3ro plz?",
+      "arabic": "قديش سعرو بليز؟",
+      "english": "How much is it, please?"
+    },
+    {
+      "lebenglish": "Iza akter men wa7de, fi discount?",
+      "arabic": "اذا أكتر من واحدة، في ديسكاونت؟",
+      "english": "If I take more than one, is there a discount?"
+    }
+  ],
+  "payment": [
+    {
+      "lebenglish": "Kif el daf3?",
+      "arabic": "كيف الدفع؟",
+      "english": "How is payment done? (what's the payment method)"
+    },
+    {
+      "lebenglish": "Cash aw card?",
+      "arabic": "كاش أو كارد؟",
+      "english": "Cash or card? (asking accepted payment types)"
+    },
+    {
+      "lebenglish": "Fi COD (dafa3 3al istelam)?",
+      "arabic": "في دفع عند الاستلام؟",
+      "english": "Is Cash on Delivery available?"
+    },
+    {
+      "lebenglish": "Bt2ablo Visa?",
+      "arabic": "بتقبلوا فيزا؟",
+      "english": "Do you accept Visa (credit card)?"
+    },
+    {
+      "lebenglish": "Fi ta2siit?",
+      "arabic": "في تقسيط؟",
+      "english": "Is installment payment available?"
+    },
+    {
+      "lebenglish": "Badfa3 3al delivery aw 2abl?",
+      "arabic": "بدفع عالديليفري أو قبل؟",
+      "english": "Do I pay on delivery or in advance?"
+    },
+    {
+      "lebenglish": "Fi online payment?",
+      "arabic": "في دفع أونلاين؟",
+      "english": "Is online payment available?"
+    }
+  ],
+  "delivery": [
+    {
+      "lebenglish": "3endkon delivery?",
+      "arabic": "عندكن ديليفري؟",
+      "english": "Do you have delivery service?"
+    },
+    {
+      "lebenglish": "Btwasslo ___?",
+      "arabic": "بتوصّلو ___؟",
+      "english": "Do you deliver to ___? (e.g., a location)"
+    },
+    {
+      "lebenglish": "Btwasslo 3a l jnoub?",
+      "arabic": "بتوصّلو عالجنوب؟",
+      "english": "Do you deliver to the South?:contentReference[oaicite:16]{index=16}"
+    },
+    {
+      "lebenglish": "Leh ma btwasslo 3a Ba3abda?",
+      "arabic": "ليه ما بتوصّلو ع بعبدا؟",
+      "english": "Why don't you deliver to Baabda? (complaint):contentReference[oaicite:17]{index=17}"
+    },
+    {
+      "lebenglish": "Lawen btwasslo?",
+      "arabic": "لوين بتوصّلو؟",
+      "english": "Up to where do you deliver? (which areas do you cover)"
+    },
+    {
+      "lebenglish": "Addé bya5od l tawseel?",
+      "arabic": "قدي بياخد التوصيل؟",
+      "english": "How much is the delivery (fee)?"
+    },
+    {
+      "lebenglish": "3ala 7sab meen el tawseel?",
+      "arabic": "على حساب مين التوصيل؟",
+      "english": "Who pays for delivery? (is delivery free or paid by who)"
+    },
+    {
+      "lebenglish": "Kam yom bya5od la yoosal?",
+      "arabic": "كم يوم بياخد ل يوصل؟",
+      "english": "How many days will it take to arrive?"
+    },
+    {
+      "lebenglish": "Iza btolob lyom, emta byowasal?",
+      "arabic": "إذا بطلب اليوم، ايمتى بيوصل؟",
+      "english": "If I order today, when will it arrive?"
+    },
+    {
+      "lebenglish": "Tracking number?",
+      "arabic": "رقم التتبع؟",
+      "english": "Tracking number? (do you have a tracking number)"
+    },
+    {
+      "lebenglish": "B3atouli raqm el tracking",
+      "arabic": "بعتولي رقم التتبع",
+      "english": "Send me the tracking number"
+    },
+    {
+      "lebenglish": "Ma3 meen shay7een?",
+      "arabic": "مع مين شاحنين؟",
+      "english": "With whom are you shipping? (which courier)"
+    },
+    {
+      "lebenglish": "B shi7né aw delivery zati?",
+      "arabic": "بشحنة أو ديليفري ذاتي؟",
+      "english": "Is it via postal shipping or self-delivery?"
+    },
+    {
+      "lebenglish": "Btsh7ano barra?",
+      "arabic": "بتشحنوا برا؟",
+      "english": "Do you ship abroad (outside Lebanon)?"
+    },
+    {
+      "lebenglish": "Shipping addé la Canada?",
+      "arabic": "الشحن قدي لكندا؟",
+      "english": "How much is shipping to Canada?"
+    },
+    {
+      "lebenglish": "Aramex aw DHL?",
+      "arabic": "أرامكس أو DHL؟",
+      "english": "Aramex or DHL? (asking which courier is used)"
+    },
+    {
+      "lebenglish": "Fini estalim ana?",
+      "arabic": "فيني استلم أنا؟",
+      "english": "Can I pick it up myself? (self-pickup instead of delivery)"
+    },
+    {
+      "lebenglish": "Delivery free?",
+      "arabic": "التوصيل ببلاش؟",
+      "english": "Is delivery free?"
+    },
+    {
+      "lebenglish": "Btwasslo la ___ plz?",
+      "arabic": "بتوصّلو ل ___ بليز؟",
+      "english": "Do you deliver to ___, please?"
+    }
+  ],
+  "working_hours": [
+    {
+      "lebenglish": "Emta btefta7u?",
+      "arabic": "ايمتى بتفتحوا؟",
+      "english": "When do you open?"
+    },
+    {
+      "lebenglish": "Emta btesakru?",
+      "arabic": "ايمتى بتسكروا؟",
+      "english": "When do you close?"
+    },
+    {
+      "lebenglish": "Ayya se3a btefta7u?",
+      "arabic": "أيّ ساعة بتفتحوا؟",
+      "english": "What time do you open?"
+    },
+    {
+      "lebenglish": "Ayya se3a btesakru?",
+      "arabic": "أيّ ساعة بتسكروا؟",
+      "english": "What time do you close?"
+    },
+    {
+      "lebenglish": "Btefta7u b weekend?",
+      "arabic": "بتفتحوا بالويك إند؟",
+      "english": "Are you open on the weekend?"
+    },
+    {
+      "lebenglish": "Btesakru l A7ad?",
+      "arabic": "بتسكروا الأحد؟",
+      "english": "Do you close on Sunday?"
+    },
+    {
+      "lebenglish": "Btefta7u bel-leil?",
+      "arabic": "بتفتحوا بالليل؟",
+      "english": "Are you open at night (late hours)?"
+    },
+    {
+      "lebenglish": "3endkon break wosta nhar?",
+      "arabic": "عندكن بريك وسط النهار؟",
+      "english": "Do you close for a midday break?"
+    },
+    {
+      "lebenglish": "La ayya se3a maftu7?",
+      "arabic": "لأيّ ساعة مفتوح؟",
+      "english": "Until what time are you open?"
+    },
+    {
+      "lebenglish": "Dawamkon kyif?",
+      "arabic": "دوامكن كيف؟",
+      "english": "What are your working hours? (general)"
+    },
+    {
+      "lebenglish": "Btefta7u bkkeer?",
+      "arabic": "بتفتحوا بكير؟",
+      "english": "Do you open early?"
+    },
+    {
+      "lebenglish": "Btesakru bkkeer?",
+      "arabic": "بتسكروا بكير؟",
+      "english": "Do you close early?"
+    },
+    {
+      "lebenglish": "Hala2 maftu7?",
+      "arabic": "هلّق مفتوح؟",
+      "english": "Are you open now?"
+    },
+    {
+      "lebenglish": "Emta btefta7u plz?",
+      "arabic": "ايمتى بتفتحوا بليز؟",
+      "english": "When do you open, please?"
+    }
+  ],
+  "customer_support": [
+    {
+      "lebenglish": "Ma 7ada radd 3alayye",
+      "arabic": "ما حدا ردّ عليي",
+      "english": "Nobody replied to me"
+    },
+    {
+      "lebenglish": "3am ba7ke ma3 7ada?",
+      "arabic": "عم بحكي مع حدا؟",
+      "english": "Am I talking to a person? (is anyone there)"
+    },
+    {
+      "lebenglish": "Hello???",
+      "arabic": "مرحبا؟؟؟",
+      "english": "Hello??? (are you there?)"
+    },
+    {
+      "lebenglish": "Please raddo 3alayye",
+      "arabic": "بليز ردّوا عليي",
+      "english": "Please reply to me"
+    },
+    {
+      "lebenglish": "Badde e7ki ma3 l mas'oul",
+      "arabic": "بدي احكي مع المسؤول",
+      "english": "I want to speak with the person in charge (manager)"
+    },
+    {
+      "lebenglish": "3ende moshkile",
+      "arabic": "عندي مشكلة",
+      "english": "I have an issue/problem"
+    },
+    {
+      "lebenglish": "Moshkile bil order",
+      "arabic": "مشكلة بالأوردر",
+      "english": "There's a problem with the order"
+    },
+    {
+      "lebenglish": "El mawdou3 mesta3jel",
+      "arabic": "الموضوع مستعجل",
+      "english": "The matter is urgent"
+    },
+    {
+      "lebenglish": "Bserca law sama7to",
+      "arabic": "بسرعة لو سمحتوا",
+      "english": "Quickly, please (requesting faster response)"
+    },
+    {
+      "lebenglish": "Mnih hek?",
+      "arabic": "منيح هيك؟",
+      "english": "Is this okay like this? (e.g., confirming if they did something correctly)"
+    },
+    {
+      "lebenglish": "Merci 3al musa3ade",
+      "arabic": "مرسي ع المساعدة",
+      "english": "Thanks for the help"
+    },
+    {
+      "lebenglish": "Fi 7ada hon?",
+      "arabic": "في حدا هون؟",
+      "english": "Is anyone here? (checking if support is active)"
+    },
+    {
+      "lebenglish": "Ma fhimt 3aleykon",
+      "arabic": "ما فهمت عليكن",
+      "english": "I didn't understand you (I didn't get what you mean)"
+    },
+    {
+      "lebenglish": "Call me plz",
+      "arabic": "دقلي بليز",
+      "english": "Call me please"
+    },
+    {
+      "lebenglish": "Mumken tsa3douné?",
+      "arabic": "ممكن تساعدوني؟",
+      "english": "Could you help me?"
+    },
+    {
+      "lebenglish": "Hii kifak, 3am de2elak WhatsApp ma 3am tred",
+      "arabic": "هايّ كيفك، عم دقلك واتساب ما عم ترد",
+      "english": "Hi, how are you? I'm calling you on WhatsApp and you're not answering:contentReference[oaicite:18]{index=18}"
+    },
+    {
+      "lebenglish": "3ende badal w ma 3am tred leh?",
+      "arabic": "عندي بدَل و ما عم ترد ليه؟",
+      "english": "I have an item to exchange and you're not answering, why?:contentReference[oaicite:19]{index=19}"
+    },
+    {
+      "lebenglish": "Ma 3am teshtghil",
+      "arabic": "ما عم تشتغل",
+      "english": "It's not working (e.g., device isn't functioning)"
+    },
+    {
+      "lebenglish": "Kif lazim esta3mlo?",
+      "arabic": "كيف لازم استعملو؟",
+      "english": "How should I use it? (asking how to use a product)"
+    },
+    {
+      "lebenglish": "Badde 7ajjez maw3ad",
+      "arabic": "بدي احجز موعد",
+      "english": "I want to book an appointment (service booking)"
+    },
+    {
+      "lebenglish": "Mumken tsa3douné plz?",
+      "arabic": "ممكن تساعدوني بليز؟",
+      "english": "Could you help me, please?"
+    },
+    {
+      "lebenglish": "Fi jdeed 3a talbiyté?",
+      "arabic": "في جديد ع طلبيتي؟",
+      "english": "Any update on my order? (any news)"
+    }
+  ],
+  "complaints": [
+    {
+      "lebenglish": "Ma wesel shi",
+      "arabic": "ما وصل شي",
+      "english": "Nothing arrived (I haven't received anything)"
+    },
+    {
+      "lebenglish": "Leish t2akhar l shi?",
+      "arabic": "ليش تأخر الشي؟",
+      "english": "Why is it taking so long? (why is it delayed?)"
+    },
+    {
+      "lebenglish": "Ktir t2akharit l talbiye",
+      "arabic": "كتير تأخرت الطلبية",
+      "english": "The order is very late"
+    },
+    {
+      "lebenglish": "Ba3da ma weslet",
+      "arabic": "بعدا ما وصلت",
+      "english": "It still hasn't arrived"
+    },
+    {
+      "lebenglish": "Wosel ghalat",
+      "arabic": "وصل غلط",
+      "english": "The wrong item arrived (it came incorrectly)"
+    },
+    {
+      "lebenglish": "Woslet ghalat",
+      "arabic": "وصلت غلط",
+      "english": "The order came wrong (feminine noun e.g. shipment)"
+    },
+    {
+      "lebenglish": "Gheir shi 3an l soura",
+      "arabic": "غير شي عن الصورة",
+      "english": "It's different from the picture"
+    },
+    {
+      "lebenglish": "Mish metel ma wareetouna",
+      "arabic": "مش متل ما ورّيتونا",
+      "english": "Not like you showed us (not as advertised)"
+    },
+    {
+      "lebenglish": "Nkassaro l ghrad",
+      "arabic": "نكسروا الغراض",
+      "english": "The stuff got broken (items broke during shipping)"
+    },
+    {
+      "lebenglish": "Wosel mkassar",
+      "arabic": "وصل مكسّر",
+      "english": "It arrived broken"
+    },
+    {
+      "lebenglish": "El ghrad mkassrin",
+      "arabic": "الغراض مكسّرين",
+      "english": "The items are broken"
+    },
+    {
+      "lebenglish": "Na2esni ghrad",
+      "arabic": "ناقصني غراض",
+      "english": "I'm missing an item (my order is incomplete)"
+    },
+    {
+      "lebenglish": "Ma 3ajabni l shi",
+      "arabic": "ما عجبني الشي",
+      "english": "I didn't like it (not satisfied with the item)"
+    },
+    {
+      "lebenglish": "Badde rja3o",
+      "arabic": "بدي رجعو",
+      "english": "I want to return it"
+    },
+    {
+      "lebenglish": "Fi rja3a?",
+      "arabic": "في رجعة؟",
+      "english": "Can it be returned? (is there a return policy)"
+    },
+    {
+      "lebenglish": "Kif fiye raja3 el ghrad?",
+      "arabic": "كيف فيي رجع الغراض؟",
+      "english": "How can I return the items?"
+    },
+    {
+      "lebenglish": "Badde refund",
+      "arabic": "بدي ريفوند",
+      "english": "I want a refund"
+    },
+    {
+      "lebenglish": "Mish mabsout men l khidme",
+      "arabic": "مش مبسوط من الخدمة",
+      "english": "I'm not happy with the service"
+    },
+    {
+      "lebenglish": "Ma ra7 et3amel ma3kon ba3d",
+      "arabic": "ما رح اتعامل معكن بعد",
+      "english": "I won't deal with you again (expressing dissatisfaction)"
+    },
+    {
+      "lebenglish": "7aram heik",
+      "arabic": "حرام هيك",
+      "english": "That's not fair (literally 'this is a shame')"
+    },
+    {
+      "lebenglish": "Mish 7elweh l shaghle",
+      "arabic": "مش حلوة الشغلة",
+      "english": "This is not okay (lit. 'the thing is not nice'; expressing disapproval)"
+    },
+    {
+      "lebenglish": "Mish hayda lli talabto",
+      "arabic": "مش هيدا اللي طلبتو",
+      "english": "This isn't what I ordered"
+    },
+    {
+      "lebenglish": "Badde rja3o plz",
+      "arabic": "بدي رجعو لو سمحت",
+      "english": "I want to return it, please"
+    }
+  ],
+  "other": [
+    {
+      "lebenglish": "Yalla",
+      "arabic": "يلا",
+      "english": "Alright / let's go / okay (common exclamation to move things along)"
+    },
+    {
+      "lebenglish": "Okay, mnih",
+      "arabic": "اوكي، منيح",
+      "english": "Okay, fine (all good)"
+    },
+    {
+      "lebenglish": "Akeed",
+      "arabic": "أكيد",
+      "english": "Sure / definitely"
+    },
+    {
+      "lebenglish": "Mafi mchkleh",
+      "arabic": "ما في مشكلة",
+      "english": "No problem (it's okay)"
+    },
+    {
+      "lebenglish": "Ta7t amarkon",
+      "arabic": "تحت أمركن",
+      "english": "At your service (at your command, happy to help)"
+    },
+    {
+      "lebenglish": "Shou esmak/ik?",
+      "arabic": "شو اسمك/اسمكِ؟",
+      "english": "What is your name? (asking for someone's name m/f)"
+    },
+    {
+      "lebenglish": "Allah ykhallik",
+      "arabic": "الله يخليك",
+      "english": "God keep you (said as thanks or pleading)"
+    },
+    {
+      "lebenglish": "Inshallah",
+      "arabic": "انشالله",
+      "english": "God willing / hopefully"
+    },
+    {
+      "lebenglish": "LOL",
+      "arabic": "لول",
+      "english": "LOL (laughing out loud, indicating laughter)"
+    },
+    {
+      "lebenglish": "Yalla bye",
+      "arabic": "يلا باي",
+      "english": "Alright, bye! (casual goodbye)"
+    }
+  ]
+}

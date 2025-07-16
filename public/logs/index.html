@@ -1,0 +1,77 @@
+<!-- public/logs/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logs Viewer</title>
+  <style>
+    body { font-family: Arial; background: #f7f7f7; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 8px; border: 1px solid #ccc; font-size: 14px; }
+    th { background-color: #eee; }
+    .model { background-color: #c8e6c9; }
+    .faq { background-color: #fff9c4; }
+    .cache { background-color: #b3e5fc; }
+    .ai { background-color: #ffcdd2; }
+    .error { background-color: #f8d7da; }
+    #filter { margin-bottom: 10px; padding: 6px; width: 250px; }
+  </style>
+</head>
+<body>
+  <h2>📊 Moaawen Logs Viewer</h2>
+  <input type="text" id="filter" placeholder="🔍 Filter logs..." />
+
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Layer</th>
+        <th>Sender</th>
+        <th>Intent</th>
+        <th>Duration (ms)</th>
+        <th>Message</th>
+        <th>Matched</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadLogs() {
+      const res = await fetch('/api/logs');
+      const logs = await res.json();
+      const tbody = document.querySelector('#logTable tbody');
+      tbody.innerHTML = '';
+
+      logs.forEach(log => {
+        const row = document.createElement('tr');
+        row.className = log.layer;
+
+        row.innerHTML = `
+          <td>${new Date(log.timestamp).toLocaleString()}</td>
+          <td>${log.layer}</td>
+          <td>${log.senderId}</td>
+          <td>${log.intent || '-'}</td>
+          <td>${log.duration || '-'}</td>
+          <td>${log.message || '-'}</td>
+          <td>${log.matchedWith || '-'}</td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById('filter').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('#logTable tbody tr').forEach(row => {
+        row.style.display = [...row.children].some(td =>
+          td.textContent.toLowerCase().includes(q)
+        ) ? '' : 'none';
+      });
+    });
+
+    loadLogs();
+    
+  </script>
+</body>
+</html>

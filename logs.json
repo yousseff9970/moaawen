@@ -1,0 +1,84 @@
+[
+  {
+    "timestamp": "2025-06-29T09:11:34.247Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "688011837729201",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T09:12:00.014Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "688011837729201",
+    "intent": "product_info",
+    "duration": 2738,
+    "tokens": {
+      "prompt_tokens": 35,
+      "completion_tokens": 27,
+      "total_tokens": 62,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho fe products"
+  },
+  {
+    "timestamp": "2025-06-29T09:13:09.860Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "688011837729201",
+    "intent": "product_info",
+    "duration": 1243,
+    "tokens": {
+      "prompt_tokens": 72,
+      "completion_tokens": 47,
+      "total_tokens": 119,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Products list"
+  },
+  {
+    "timestamp": "2025-06-29T09:13:22.891Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "688011837729201",
+    "intent": "general",
+    "duration": 1511,
+    "tokens": {
+      "prompt_tokens": 132,
+      "completion_tokens": 26,
+      "total_tokens": 158,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho wsm l mahal"
+  }
+]

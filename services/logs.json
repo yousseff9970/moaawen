@@ -1,0 +1,2827 @@
+[
+  {
+    "timestamp": "2025-06-28T10:50:24.453Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "intent": "general",
+    "duration": 1723,
+    "tokens": {
+      "prompt_tokens": 170,
+      "completion_tokens": 21,
+      "total_tokens": 191,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Merci"
+  },
+  {
+    "timestamp": "2025-06-28T10:57:06.252Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "intent": "greeting",
+    "duration": 1434,
+    "tokens": {
+      "prompt_tokens": 149,
+      "completion_tokens": 16,
+      "total_tokens": 165,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi"
+  },
+  {
+    "timestamp": "2025-06-29T10:01:35.612Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 4,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T10:01:50.765Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2496,
+    "tokens": {
+      "prompt_tokens": 434,
+      "completion_tokens": 56,
+      "total_tokens": 490,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade 3 hoodies large"
+  },
+  {
+    "timestamp": "2025-06-29T10:02:05.127Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2032,
+    "tokens": {
+      "prompt_tokens": 508,
+      "completion_tokens": 52,
+      "total_tokens": 560,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "W zed 3layhon 2 small"
+  },
+  {
+    "timestamp": "2025-06-29T10:02:26.114Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1623,
+    "tokens": {
+      "prompt_tokens": 569,
+      "completion_tokens": 53,
+      "total_tokens": 622,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Azde 3 large w 2 small"
+  },
+  {
+    "timestamp": "2025-06-29T10:02:43.193Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1939,
+    "tokens": {
+      "prompt_tokens": 568,
+      "completion_tokens": 99,
+      "total_tokens": 667,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Ade total ma3 delivery"
+  },
+  {
+    "timestamp": "2025-06-29T10:03:09.674Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1981,
+    "tokens": {
+      "prompt_tokens": 518,
+      "completion_tokens": 63,
+      "total_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Metzelekr sho talabet awal shi?"
+  },
+  {
+    "timestamp": "2025-06-29T10:06:20.185Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 7,
+    "message": "سلام",
+    "matchedWith": "سلام"
+  },
+  {
+    "timestamp": "2025-06-29T10:06:30.797Z",
+    "layer": "model_general",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "سلام",
+    "matchedWith": "سلام"
+  },
+  {
+    "timestamp": "2025-06-29T10:23:01.778Z",
+    "layer": "model_general",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 27,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T10:31:31.819Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2094,
+    "tokens": {
+      "prompt_tokens": 154,
+      "completion_tokens": 38,
+      "total_tokens": 192,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "ما هذا المنتج في الصورة؟"
+  },
+  {
+    "timestamp": "2025-06-29T10:41:14.020Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2563,
+    "tokens": {
+      "prompt_tokens": 149,
+      "completion_tokens": 16,
+      "total_tokens": 165,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Ho"
+  },
+  {
+    "timestamp": "2025-06-29T10:48:39.653Z",
+    "layer": "model_general",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T11:33:56.063Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1961,
+    "tokens": {
+      "prompt_tokens": 180,
+      "completion_tokens": 57,
+      "total_tokens": 237,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Kef bestafed menak"
+  },
+  {
+    "timestamp": "2025-06-29T11:34:12.712Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2071,
+    "tokens": {
+      "prompt_tokens": 249,
+      "completion_tokens": 36,
+      "total_tokens": 285,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho id l instagram"
+  },
+  {
+    "timestamp": "2025-06-29T11:34:31.394Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1646,
+    "tokens": {
+      "prompt_tokens": 298,
+      "completion_tokens": 49,
+      "total_tokens": 347,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho l domain lwebsite"
+  },
+  {
+    "timestamp": "2025-06-29T12:58:29.021Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 3041,
+    "tokens": {
+      "prompt_tokens": 365,
+      "completion_tokens": 39,
+      "total_tokens": 404,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Meztkr sho sa2ltak abel"
+  },
+  {
+    "timestamp": "2025-06-29T12:58:55.448Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2123,
+    "tokens": {
+      "prompt_tokens": 411,
+      "completion_tokens": 33,
+      "total_tokens": 444,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Ente kter zake"
+  },
+  {
+    "timestamp": "2025-06-29T13:58:17.481Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T13:58:35.364Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1968,
+    "tokens": {
+      "prompt_tokens": 425,
+      "completion_tokens": 63,
+      "total_tokens": 488,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade hoodies"
+  },
+  {
+    "timestamp": "2025-06-29T14:02:39.865Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1967,
+    "tokens": {
+      "prompt_tokens": 429,
+      "completion_tokens": 60,
+      "total_tokens": 489,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Fe discount"
+  },
+  {
+    "timestamp": "2025-06-29T15:10:00.076Z",
+    "layer": "error",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": null,
+    "message": "hi",
+    "error": "Missing phone_number_id or page_id in metadata"
+  },
+  {
+    "timestamp": "2025-06-29T15:10:09.361Z",
+    "layer": "error",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": null,
+    "message": "hi",
+    "error": "Missing phone_number_id or page_id in metadata"
+  },
+  {
+    "timestamp": "2025-06-29T15:13:44.074Z",
+    "layer": "model_general",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 7,
+    "message": "hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T15:13:55.621Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 972,
+    "tokens": {
+      "prompt_tokens": 152,
+      "completion_tokens": 25,
+      "total_tokens": 177,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho esm l mahal"
+  },
+  {
+    "timestamp": "2025-06-29T15:14:05.589Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1670,
+    "tokens": {
+      "prompt_tokens": 189,
+      "completion_tokens": 77,
+      "total_tokens": 266,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "bade hoodies"
+  },
+  {
+    "timestamp": "2025-06-29T15:23:52.476Z",
+    "layer": "model_general",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 29,
+    "message": "hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T15:26:48.706Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2620,
+    "tokens": {
+      "prompt_tokens": 152,
+      "completion_tokens": 41,
+      "total_tokens": 193,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho esm lm hal"
+  },
+  {
+    "timestamp": "2025-06-29T15:28:00.161Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1122,
+    "tokens": {
+      "prompt_tokens": 209,
+      "completion_tokens": 41,
+      "total_tokens": 250,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "metzkr sho sa2ltak"
+  },
+  {
+    "timestamp": "2025-06-29T15:28:13.184Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1812,
+    "tokens": {
+      "prompt_tokens": 262,
+      "completion_tokens": 50,
+      "total_tokens": 312,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "bade hoodies"
+  },
+  {
+    "timestamp": "2025-06-29T15:28:19.330Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1179,
+    "tokens": {
+      "prompt_tokens": 328,
+      "completion_tokens": 65,
+      "total_tokens": 393,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "metzkr sho sa2ltak"
+  },
+  {
+    "timestamp": "2025-06-29T15:28:36.545Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1283,
+    "tokens": {
+      "prompt_tokens": 409,
+      "completion_tokens": 59,
+      "total_tokens": 468,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "metzkr awal so2al?"
+  },
+  {
+    "timestamp": "2025-06-29T15:29:51.403Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1766,
+    "tokens": {
+      "prompt_tokens": 470,
+      "completion_tokens": 45,
+      "total_tokens": 515,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "ade delivery"
+  },
+  {
+    "timestamp": "2025-06-29T15:30:03.272Z",
+    "layer": "model_business",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "delivery_info",
+    "duration": 3,
+    "message": "delivery",
+    "matchedWith": "delivery"
+  },
+  {
+    "timestamp": "2025-06-29T15:34:07.563Z",
+    "layer": "model_general",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 11,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T15:34:18.899Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1549,
+    "tokens": {
+      "prompt_tokens": 152,
+      "completion_tokens": 55,
+      "total_tokens": 207,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade hoodies"
+  },
+  {
+    "timestamp": "2025-06-29T15:34:32.467Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "Hello",
+    "matchedWith": "hello"
+  },
+  {
+    "timestamp": "2025-06-29T15:34:52.661Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1074,
+    "tokens": {
+      "prompt_tokens": 156,
+      "completion_tokens": 26,
+      "total_tokens": 182,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Metzkr sho sa2ltak"
+  },
+  {
+    "timestamp": "2025-06-29T15:35:16.758Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1342,
+    "tokens": {
+      "prompt_tokens": 229,
+      "completion_tokens": 85,
+      "total_tokens": 314,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade 3 large w 2 small ade total m3 delivery"
+  },
+  {
+    "timestamp": "2025-06-29T15:35:22.886Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1511,
+    "tokens": {
+      "prompt_tokens": 194,
+      "completion_tokens": 63,
+      "total_tokens": 257,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade hoodies"
+  },
+  {
+    "timestamp": "2025-06-29T15:35:35.441Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1173,
+    "tokens": {
+      "prompt_tokens": 276,
+      "completion_tokens": 111,
+      "total_tokens": 387,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "4 large w 2 small ma3 delivery ade total"
+  },
+  {
+    "timestamp": "2025-06-29T15:45:40.749Z",
+    "layer": "model_general",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 4,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T15:45:56.569Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1403,
+    "tokens": {
+      "prompt_tokens": 325,
+      "completion_tokens": 25,
+      "total_tokens": 350,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade hoodie"
+  },
+  {
+    "timestamp": "2025-06-29T15:46:08.259Z",
+    "layer": "model_business",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "product_info",
+    "duration": 5,
+    "message": "Products list",
+    "matchedWith": "products list"
+  },
+  {
+    "timestamp": "2025-06-29T15:46:15.792Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1941,
+    "tokens": {
+      "prompt_tokens": 361,
+      "completion_tokens": 110,
+      "total_tokens": 471,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Kel l products"
+  },
+  {
+    "timestamp": "2025-06-29T16:49:11.905Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2034,
+    "tokens": {
+      "prompt_tokens": 480,
+      "completion_tokens": 13,
+      "total_tokens": 493,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Morning"
+  },
+  {
+    "timestamp": "2025-06-29T16:49:21.493Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1620,
+    "tokens": {
+      "prompt_tokens": 496,
+      "completion_tokens": 39,
+      "total_tokens": 535,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Kifak"
+  },
+  {
+    "timestamp": "2025-06-29T16:49:34.220Z",
+    "layer": "ai",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 747,
+    "tokens": {
+      "prompt_tokens": 469,
+      "completion_tokens": 33,
+      "total_tokens": 502,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho esmak"
+  },
+  {
+    "timestamp": "2025-06-29T17:06:48.837Z",
+    "layer": "model_general",
+    "senderId": "5e5e25ef-9eba-4c8f-ab0e-c1f00f9b012f",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T17:41:51.497Z",
+    "layer": "model_general",
+    "senderId": "8aa81632-5a3e-4e41-aed2-9e07305eb72c",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T18:52:51.361Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-29T18:52:53.311Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1577,
+    "tokens": {
+      "prompt_tokens": 398,
+      "completion_tokens": 20,
+      "total_tokens": 418,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Kifak"
+  },
+  {
+    "timestamp": "2025-06-29T18:52:55.134Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1437,
+    "tokens": {
+      "prompt_tokens": 429,
+      "completion_tokens": 43,
+      "total_tokens": 472,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade hoodie"
+  },
+  {
+    "timestamp": "2025-06-29T19:28:50.778Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2041,
+    "tokens": {
+      "prompt_tokens": 473,
+      "completion_tokens": 58,
+      "total_tokens": 531,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi kifak bade hoodie"
+  },
+  {
+    "timestamp": "2025-06-30T07:05:59.768Z",
+    "layer": "model_general",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 11,
+    "message": "hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T10:23:27.985Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 16,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T12:29:04.824Z",
+    "layer": "model_general",
+    "senderId": "5e5e25ef-9eba-4c8f-ab0e-c1f00f9b012f",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 13,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T12:29:22.624Z",
+    "layer": "ai",
+    "senderId": "5e5e25ef-9eba-4c8f-ab0e-c1f00f9b012f",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1917,
+    "tokens": {
+      "prompt_tokens": 151,
+      "completion_tokens": 81,
+      "total_tokens": 232,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade instagram"
+  },
+  {
+    "timestamp": "2025-06-30T17:30:33.101Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 5,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T18:33:52.252Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 27,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T18:34:32.238Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2356,
+    "tokens": {
+      "prompt_tokens": 153,
+      "completion_tokens": 15,
+      "total_tokens": 168,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi\nKifak"
+  },
+  {
+    "timestamp": "2025-06-30T19:29:31.027Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1935,
+    "tokens": {
+      "prompt_tokens": 153,
+      "completion_tokens": 21,
+      "total_tokens": 174,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi\nKifak"
+  },
+  {
+    "timestamp": "2025-06-30T19:29:41.672Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T19:30:13.166Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2606,
+    "tokens": {
+      "prompt_tokens": 187,
+      "completion_tokens": 22,
+      "total_tokens": 209,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi\nKifak"
+  },
+  {
+    "timestamp": "2025-06-30T19:30:49.986Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2234,
+    "tokens": {
+      "prompt_tokens": 236,
+      "completion_tokens": 63,
+      "total_tokens": 299,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi\nHi\nKifak\nBade products list\nW eza fe hoodies"
+  },
+  {
+    "timestamp": "2025-06-30T19:31:12.840Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2917,
+    "tokens": {
+      "prompt_tokens": 158,
+      "completion_tokens": 148,
+      "total_tokens": 306,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi\nKifak\nBade products list"
+  },
+  {
+    "timestamp": "2025-06-30T19:31:21.922Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1050,
+    "tokens": {
+      "prompt_tokens": 312,
+      "completion_tokens": 30,
+      "total_tokens": 342,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Okay\nAde\nL hoodie"
+  },
+  {
+    "timestamp": "2025-06-30T19:31:57.455Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 4201,
+    "tokens": {
+      "prompt_tokens": 330,
+      "completion_tokens": 144,
+      "total_tokens": 474,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade 2 large w 2small\nAde total\nM3 delivery"
+  },
+  {
+    "timestamp": "2025-06-30T19:32:12.003Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1614,
+    "tokens": {
+      "prompt_tokens": 372,
+      "completion_tokens": 93,
+      "total_tokens": 465,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "2 large w 2 small\nAde total\nW 3 large\nSde total\nMa3 delivery"
+  },
+  {
+    "timestamp": "2025-06-30T19:32:45.162Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2257,
+    "tokens": {
+      "prompt_tokens": 469,
+      "completion_tokens": 68,
+      "total_tokens": 537,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "3 large mesh tnen"
+  },
+  {
+    "timestamp": "2025-06-30T19:32:51.728Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1232,
+    "tokens": {
+      "prompt_tokens": 487,
+      "completion_tokens": 88,
+      "total_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "4 large mesh tben"
+  },
+  {
+    "timestamp": "2025-06-30T19:33:30.671Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 3507,
+    "tokens": {
+      "prompt_tokens": 588,
+      "completion_tokens": 69,
+      "total_tokens": 657,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "4 large mesh tnen"
+  },
+  {
+    "timestamp": "2025-06-30T19:34:10.683Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2091,
+    "tokens": {
+      "prompt_tokens": 670,
+      "completion_tokens": 95,
+      "total_tokens": 765,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "4 large hoddies"
+  },
+  {
+    "timestamp": "2025-06-30T19:40:03.793Z",
+    "layer": "model_general",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 28,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-06-30T19:40:31.205Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2521,
+    "tokens": {
+      "prompt_tokens": 156,
+      "completion_tokens": 102,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Kifak\nBade products list"
+  },
+  {
+    "timestamp": "2025-06-30T19:40:41.101Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2639,
+    "tokens": {
+      "prompt_tokens": 159,
+      "completion_tokens": 153,
+      "total_tokens": 312,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Hi\nKifak\nBade products list pls"
+  },
+  {
+    "timestamp": "2025-06-30T19:41:20.146Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1397,
+    "tokens": {
+      "prompt_tokens": 325,
+      "completion_tokens": 82,
+      "total_tokens": 407,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "3 cloud hodie large"
+  },
+  {
+    "timestamp": "2025-06-30T19:41:25.879Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1279,
+    "tokens": {
+      "prompt_tokens": 270,
+      "completion_tokens": 38,
+      "total_tokens": 308,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "2 cloud hoodie small"
+  },
+  {
+    "timestamp": "2025-06-30T19:42:11.747Z",
+    "layer": "ai",
+    "senderId": "1425546801700785",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 1880,
+    "tokens": {
+      "prompt_tokens": 321,
+      "completion_tokens": 58,
+      "total_tokens": 379,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Ade total ma3 delivery"
+  },
+  {
+    "timestamp": "2025-06-30T19:42:18.903Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2650,
+    "tokens": {
+      "prompt_tokens": 420,
+      "completion_tokens": 77,
+      "total_tokens": 497,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Ade total ma3 delivery"
+  },
+  {
+    "timestamp": "2025-07-13T17:25:18.859Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 66,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T17:26:01.576Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 35,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T17:31:00.889Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "thanks",
+    "duration": 3,
+    "message": "Tnx",
+    "matchedWith": "tnx"
+  },
+  {
+    "timestamp": "2025-07-13T17:38:37.837Z",
+    "layer": "model_general",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T18:10:58.765Z",
+    "layer": "ai",
+    "senderId": "16465894168",
+    "businessId": "685e94e32387ff3077aec7ed",
+    "intent": "general",
+    "duration": 2090,
+    "tokens": {
+      "prompt_tokens": 215,
+      "completion_tokens": 144,
+      "total_tokens": 359,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "*Reach new and existing customers at scale using WhatsApp*\n\nUsing ads that click to WhatsApp, customers can start meaningful conversations with your business in just one click. This innovative ad format gives you more opportunities to reach customers directly — initiating informative conversations while driving purchases.\n\n*Get started*: https://www.facebook.com/business/m/ctwa"
+  },
+  {
+    "timestamp": "2025-07-13T18:40:40.762Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "6873fb7b3e2a7309edd0144d",
+    "intent": "greeting",
+    "duration": 30,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T18:40:51.130Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "6873fb7b3e2a7309edd0144d",
+    "intent": "general",
+    "duration": 1378,
+    "tokens": {
+      "prompt_tokens": 536,
+      "completion_tokens": 27,
+      "total_tokens": 563,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho esm l store"
+  },
+  {
+    "timestamp": "2025-07-13T18:41:04.836Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "6873fb7b3e2a7309edd0144d",
+    "intent": "general",
+    "duration": 4188,
+    "tokens": {
+      "prompt_tokens": 574,
+      "completion_tokens": 350,
+      "total_tokens": 924,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho fe products"
+  },
+  {
+    "timestamp": "2025-07-13T18:56:44.091Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 7,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T18:56:54.693Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1353,
+    "tokens": {
+      "prompt_tokens": 412,
+      "completion_tokens": 69,
+      "total_tokens": 481,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho fe products"
+  },
+  {
+    "timestamp": "2025-07-13T18:57:58.895Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2160,
+    "tokens": {
+      "prompt_tokens": 491,
+      "completion_tokens": 43,
+      "total_tokens": 534,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Minimal snowboard"
+  },
+  {
+    "timestamp": "2025-07-13T19:08:12.704Z",
+    "layer": "model_general",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 5,
+    "message": "hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T19:08:22.784Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2666,
+    "tokens": {
+      "prompt_tokens": 658,
+      "completion_tokens": 295,
+      "total_tokens": 953,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho fe products"
+  },
+  {
+    "timestamp": "2025-07-13T19:08:48.684Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1140,
+    "tokens": {
+      "prompt_tokens": 657,
+      "completion_tokens": 34,
+      "total_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Minimal snowboard"
+  },
+  {
+    "timestamp": "2025-07-13T19:41:53.144Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 55,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T19:42:03.169Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 73,
+    "message": "Hello",
+    "matchedWith": "hello"
+  },
+  {
+    "timestamp": "2025-07-13T19:50:14.914Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 71,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T19:50:24.801Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 4897,
+    "tokens": {
+      "prompt_tokens": 656,
+      "completion_tokens": 321,
+      "total_tokens": 977,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Products"
+  },
+  {
+    "timestamp": "2025-07-13T19:50:52.049Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2440,
+    "tokens": {
+      "prompt_tokens": 987,
+      "completion_tokens": 39,
+      "total_tokens": 1026,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Minimal snowboard"
+  },
+  {
+    "timestamp": "2025-07-13T19:56:44.656Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2639,
+    "tokens": {
+      "prompt_tokens": 1035,
+      "completion_tokens": 25,
+      "total_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Ok"
+  },
+  {
+    "timestamp": "2025-07-13T20:02:46.421Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 41,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-13T20:02:55.666Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1718,
+    "tokens": {
+      "prompt_tokens": 657,
+      "completion_tokens": 41,
+      "total_tokens": 698,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Minimal snowboard"
+  },
+  {
+    "timestamp": "2025-07-13T20:03:08.871Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1634,
+    "tokens": {
+      "prompt_tokens": 710,
+      "completion_tokens": 32,
+      "total_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade otlob"
+  },
+  {
+    "timestamp": "2025-07-14T09:58:54.693Z",
+    "layer": "ai",
+    "senderId": "16465894168",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2254,
+    "tokens": {
+      "prompt_tokens": 739,
+      "completion_tokens": 79,
+      "total_tokens": 818,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "*Lean into convenience to build loyalty that lasts*\n\nDiscover a new way of captivating leads and existing customers with ads that click to WhatsApp. Watch this video for instructions on how to create your ads, so you can encourage repeat business and foster long-term loyalty through personalized conversations: https://www.youtube.com/watch?v=t753Fr5w4UE\n\n*Get started:* https://www.facebook.com/business/m/ctwa"
+  },
+  {
+    "timestamp": "2025-07-14T11:33:48.109Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 39,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-14T11:40:06.905Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T08:44:05.903Z",
+    "layer": "model_general",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 5,
+    "message": "hello",
+    "matchedWith": "hello"
+  },
+  {
+    "timestamp": "2025-07-15T08:44:11.014Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1673,
+    "tokens": {
+      "prompt_tokens": 670,
+      "completion_tokens": 37,
+      "total_tokens": 707,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho 3ndkon"
+  },
+  {
+    "timestamp": "2025-07-15T08:44:48.963Z",
+    "layer": "ai",
+    "senderId": "bb7d721f-b94d-40ae-b64b-38deb98d7614",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 5855,
+    "tokens": {
+      "prompt_tokens": 144,
+      "completion_tokens": 46,
+      "total_tokens": 190,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho 3ndkon"
+  },
+  {
+    "timestamp": "2025-07-15T08:46:24.531Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 33,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T08:46:29.487Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2452,
+    "tokens": {
+      "prompt_tokens": 94,
+      "completion_tokens": 26,
+      "total_tokens": 120,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho 3endkon"
+  },
+  {
+    "timestamp": "2025-07-15T08:46:43.184Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2344,
+    "tokens": {
+      "prompt_tokens": 137,
+      "completion_tokens": 61,
+      "total_tokens": 198,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Eh sho 3ndkon bl zabt"
+  },
+  {
+    "timestamp": "2025-07-15T08:49:50.452Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 29,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T08:49:56.694Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1639,
+    "tokens": {
+      "prompt_tokens": 117,
+      "completion_tokens": 40,
+      "total_tokens": 157,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho fe 3ndkon"
+  },
+  {
+    "timestamp": "2025-07-15T08:50:12.814Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2296,
+    "tokens": {
+      "prompt_tokens": 171,
+      "completion_tokens": 55,
+      "total_tokens": 226,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho l 5edmay"
+  },
+  {
+    "timestamp": "2025-07-15T08:50:38.217Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2172,
+    "tokens": {
+      "prompt_tokens": 240,
+      "completion_tokens": 87,
+      "total_tokens": 327,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho l 5adamet"
+  },
+  {
+    "timestamp": "2025-07-15T08:54:38.664Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 28,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T08:54:46.959Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2389,
+    "tokens": {
+      "prompt_tokens": 299,
+      "completion_tokens": 72,
+      "total_tokens": 371,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho 3ndkon"
+  },
+  {
+    "timestamp": "2025-07-15T08:55:17.494Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2951,
+    "tokens": {
+      "prompt_tokens": 390,
+      "completion_tokens": 156,
+      "total_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho l 5adamet w sho bestafed"
+  },
+  {
+    "timestamp": "2025-07-15T08:55:41.181Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2428,
+    "tokens": {
+      "prompt_tokens": 557,
+      "completion_tokens": 91,
+      "total_tokens": 648,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Fe whatsapp ?"
+  },
+  {
+    "timestamp": "2025-07-15T08:56:01.393Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2614,
+    "tokens": {
+      "prompt_tokens": 664,
+      "completion_tokens": 96,
+      "total_tokens": 760,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Fe whatsapp etwasal m3kon?"
+  },
+  {
+    "timestamp": "2025-07-15T08:56:58.420Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2617,
+    "tokens": {
+      "prompt_tokens": 774,
+      "completion_tokens": 57,
+      "total_tokens": 831,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Fe ra2m telefon?"
+  },
+  {
+    "timestamp": "2025-07-15T09:18:50.119Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 30,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T11:52:15.402Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 27,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T11:58:10.174Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 29,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T12:10:25.308Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 46,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T12:15:06.081Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 27,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T13:31:48.088Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 7,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:03:50.125Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 29,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:09:52.538Z",
+    "layer": "model_general",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "howareyou",
+    "duration": 3,
+    "message": "Kifaaaaaak",
+    "matchedWith": "kifak"
+  },
+  {
+    "timestamp": "2025-07-15T18:13:09.130Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 29,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:14:17.691Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 29,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:14:51.263Z",
+    "layer": "error",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "duration": 11133,
+    "message": "Bade e3ref ma3lomat aktr",
+    "error": "getaddrinfo ENOTFOUND api.openai.com"
+  },
+  {
+    "timestamp": "2025-07-15T18:17:14.352Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 27,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:18:12.565Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 3576,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 69,
+      "total_tokens": 359,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade a3rf ma3lomat aktar"
+  },
+  {
+    "timestamp": "2025-07-15T18:18:59.600Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:45:39.666Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 28,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:46:15.999Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 27,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T18:46:22.953Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2307,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 73,
+      "total_tokens": 363,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade a3rf aktr"
+  },
+  {
+    "timestamp": "2025-07-15T19:09:37.398Z",
+    "layer": "model_general",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T19:59:49.591Z",
+    "layer": "model_general",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "Hello",
+    "matchedWith": "hello"
+  },
+  {
+    "timestamp": "2025-07-15T20:00:17.527Z",
+    "layer": "ai",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1728,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 69,
+      "total_tokens": 359,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "What do you actually do?"
+  },
+  {
+    "timestamp": "2025-07-15T20:00:23.186Z",
+    "layer": "ai",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1573,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 49,
+      "total_tokens": 339,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Can you give more information"
+  },
+  {
+    "timestamp": "2025-07-15T20:01:53.800Z",
+    "layer": "ai",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1527,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 72,
+      "total_tokens": 362,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "I want to know the services you have"
+  },
+  {
+    "timestamp": "2025-07-15T20:03:23.787Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1386,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 47,
+      "total_tokens": 337,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade e3ref ma3lomat aktr"
+  },
+  {
+    "timestamp": "2025-07-15T20:05:25.946Z",
+    "layer": "ai",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2643,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 92,
+      "total_tokens": 382,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "??"
+  },
+  {
+    "timestamp": "2025-07-15T20:07:34.868Z",
+    "layer": "model_general",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "Hi",
+    "matchedWith": "hi"
+  },
+  {
+    "timestamp": "2025-07-15T20:08:01.205Z",
+    "layer": "ai",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 7205,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 109,
+      "total_tokens": 399,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Bade ma3loumat 3an moaawen"
+  },
+  {
+    "timestamp": "2025-07-15T20:08:02.079Z",
+    "layer": "ai",
+    "senderId": "96171587848",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 3892,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 71,
+      "total_tokens": 361,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Shou bta3emlo"
+  },
+  {
+    "timestamp": "2025-07-15T20:11:57.739Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1723,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 64,
+      "total_tokens": 354,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho bta3mlo"
+  },
+  {
+    "timestamp": "2025-07-15T20:12:12.509Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1536,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 91,
+      "total_tokens": 381,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho 3endkon"
+  },
+  {
+    "timestamp": "2025-07-15T20:12:58.118Z",
+    "layer": "ai",
+    "senderId": "96176962469",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1087,
+    "tokens": {
+      "prompt_tokens": 290,
+      "completion_tokens": 45,
+      "total_tokens": 335,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "Sho 3endkon"
+  }
+]

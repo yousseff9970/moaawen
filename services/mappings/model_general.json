@@ -1,0 +1,424 @@
+[
+    {
+        "intent": "greeting",
+        "lebenglish": ["marhabaa",
+            "marhabaaa",
+            "mar7abaa",
+            "mar7aba",
+            "ahlan",
+            "ahlein",
+            "hi",
+            "hala",
+            "salam",
+            "hii",
+            "helloo",
+            "heey",
+            "heyy"
+        ],
+        "arabic": [
+            "مرحبا",
+            "هلا",
+            "سلام",
+            "أهلاً",
+            "أهلا وسهلا",
+            "السلام عليكم"
+        ],
+        "english": [
+            "hello",
+            "hi",
+            "hey",
+            "hi there",
+            "hey there",
+            "good morning",
+            "good afternoon",
+            "good evening"
+        ],
+        "response": {
+            "lebenglish": "Ahla w sahla! Kif fini sa3dak?",
+            "arabic": "أهلاً وسهلاً! كيف فيني ساعدك؟",
+            "english": "Hello and welcome! How can I help you?"
+        }
+    },
+    {
+        "intent": "thanks",
+        "lebenglish": [
+            "merci",
+            "shukran",
+            "choukran",
+            "chukran",
+            "tnx",
+            "thx",
+            "thanx",
+            "thank u",
+            "yeslamo",
+            "yislamo",
+            "merci kteer"
+        ],
+        "arabic": [
+            "شكراً",
+            "شكراً جزيلاً",
+            "مرسي",
+            "ميرسي",
+            "يسلمو"
+        ],
+        "english": [
+            "thank you",
+            "thanks",
+            "thanks a lot",
+            "thank you very much",
+            "thank you so much",
+            "thanks so much",
+            "many thanks"
+        ],
+        "response": {
+            "lebenglish": "Ahla w sahla! Ana hon lal mose3ade be aya wa2et",
+            "arabic": "أهلا وسهلا! أنا هون لأي مساعدة بأي وقت",
+            "english": "You’re welcome! I’m here to help you at any time"
+        }
+    }
+    ,
+    {
+        "intent": "goodbye",
+        "lebenglish": [
+            "bye",
+            "bbye",
+            "bye bye",
+            "yalla bye",
+            "ciao",
+            "cya"
+        ],
+        "arabic": [
+            "مع السلامة",
+            "باي",
+            "باي باي",
+            "يلا باي",
+            "الله معك",
+            "تصبح على خير"
+        ],
+        "english": [
+            "bye",
+            "goodbye",
+            "bye bye",
+            "see you",
+            "see ya",
+            "see you later",
+            "later",
+            "take care",
+            "good night",
+            "see you soon"
+        ],
+        "response": {
+            "lebenglish": "Bye!",
+            "arabic": "مع السلامة!",
+            "english": "Goodbye!"
+        }
+    },
+    {
+        "intent": "howareyou",
+        "lebenglish": [
+            "kifak",
+            "kifek",
+            "kifkon",
+            "keefak",
+            "keefek",
+            "ca va",
+            "sava",
+            "shu fi ma fi",
+            "shu el akhbar",
+            "how r u",
+            "how are u"
+        ],
+        "arabic": [
+            "كيفك",
+            "كيف حالك",
+            "كيف أحوالك",
+            "كيف الحال",
+            "شو الأخبار",
+            "شو في ما في",
+            "كيفكن"
+        ],
+        "english": [
+            "how are you",
+            "how are you doing",
+            "how's it going",
+            "what's up"
+        ],
+        "response": {
+            "lebenglish": "Tamam elhamdellah, shukran 3al So2al! kif fini se3dak?",
+            "arabic": "تمام الحمد لله، شكراً على سؤالك! كيف فيني ساعدك؟",
+            "english": "I'm good, thank you for asking! How can I assist you today?"
+        }
+    },
+    {
+        "intent": "apology",
+        "lebenglish": [
+            "Be3tezer",
+            "bet2asaf",
+            "3afwan",
+            "7a2ak 3leye"
+        ],
+        "arabic": [
+            "آسف",
+            "آسفة",
+            "متأسف",
+            "متأسفة",
+            "عذرًا",
+            "بعتذر",
+            "حقك علي"
+        ],
+        "english": [
+            "sorry",
+            "I'm sorry",
+            "my bad",
+            "I apologize",
+            "sorry about that",
+            "oops"
+        ],
+        "response": {
+            "lebenglish": "Wala yhimmak!",
+            "arabic": "ولا يهمك!",
+            "english": "No worries!"
+        }
+    },
+    {
+        "intent": "confirmation",
+        "lebenglish": [
+            "done",
+            "tamam",
+            "khallas",
+            "ok done",
+            "okey tamam",
+            "ok fine"
+        ],
+        "arabic": [
+            "خلص",
+            "تم",
+            "خلصنا",
+            "تمام",
+            "اوكي تمام",
+            "طيب ماشي"
+        ],
+        "english": [
+            "done",
+            "all set",
+            "confirmed",
+            "ok done",
+            "got it",
+            "fine"
+        ],
+        "response": {
+            "lebenglish": "Tamam! iza baddak shi teni 5aberni",
+            "arabic": "تمام! إذا بدك شي تاني خبرني",
+            "english": "Great! If you need anything else, just let me know"
+        }
+    },
+    {
+        "intent": "good_wishes",
+        "lebenglish": [
+            "y3tik l3afye",
+            "allah ywaf2ak",
+            "bitwafi2",
+            "bonne chance",
+            "good luck",
+            "all the best"
+        ],
+        "arabic": [
+            "يعطيك العافية",
+            "الله يوفقك",
+            "بتوفيق",
+            "بالتوفيق",
+            "حظ موفق"
+        ],
+        "english": [
+            "good luck",
+            "wish you the best",
+            "all the best",
+            "best of luck",
+            "take care"
+        ],
+        "response": {
+            "lebenglish": "Merci kteer!",
+            "arabic": "مرسي كتير!",
+            "english": "Thanks a lot!"
+        }
+    },
+    {
+        "intent": "encouragement",
+        "lebenglish": [
+            "bravo",
+            "kteer helo",
+            "hayda shoghl kbeer",
+            "btjanen",
+            "bterfa3 el ras"
+        ],
+        "arabic": [
+            "برافو",
+            "كتير حلو",
+            "هيدا شغل كبير",
+            "بتجنن",
+            "بترفع الراس"
+        ],
+        "english": [
+            "bravo",
+            "nice job",
+            "great work",
+            "well done",
+            "impressive"
+        ],
+        "response": {
+            "lebenglish": "Merci kteer!",
+            "arabic": "مرسي كتير!",
+            "english": "Thank you so much!"
+        }
+    },
+    
+    {
+        "intent": "urgency",
+        "lebenglish": [
+            "pls bser3a",
+            "ضروري",
+            "3ajil",
+            "urgent",
+            "3ayzak hala2",
+            "mest3jel"
+        ],
+        "arabic": [
+            "بسرعة لو سمحت",
+            "ضروري",
+            "عاجل",
+            "مستعجل",
+            "بدي اياها هلق"
+        ],
+        "english": [
+            "please hurry",
+            "urgent",
+            "asap",
+            "it's urgent",
+            "need quickly"
+        ],
+        "response": {
+            "lebenglish": "Wosel el talab! 3am besra3 add ma fiyyi 🚀",
+            "arabic": "وصل الطلب! عم بسرع قد ما فيني 🚀",
+            "english": "Got it! I'm moving as fast as I can 🚀"
+        }
+    },
+    {
+        "intent": "follow_up_later",
+        "lebenglish": [
+            "berja3 ba3den",
+            "bshufak ba3d shway",
+            "men7ki ba3den",
+            "later",
+            "brb"
+        ],
+        "arabic": [
+            "برجع بعدين",
+            "منحكي بعد شوي",
+            "برجع بحكيك",
+            "لاحقًا",
+            "دقايق وبرجع"
+        ],
+        "english": [
+            "I'll get back later",
+            "talk later",
+            "I'll message again",
+            "be right back",
+            "brb"
+        ],
+        "response": {
+            "lebenglish": "Tamam! ana jehez be aya wa2et!",
+            "arabic": "تمام، ناطرك!",
+            "english": "Alright, I'll be here when you're back"
+        }
+    },
+    {
+        "intent": "holiday_greetings",
+        "lebenglish": [
+            "kel 3am w enta bkheir",
+            "3eed sa3eed",
+            "merry christmas",
+            "happy eid",
+            "ramadan kareem",
+            "happy new year"
+        ],
+        "arabic": [
+            "كل عام وانت بخير",
+            "عيد سعيد",
+            "ميلاد مجيد",
+            "رمضان كريم",
+            "عيد مبارك",
+            "سنة سعيدة"
+        ],
+        "english": [
+            "happy holidays",
+            "merry christmas",
+            "happy eid",
+            "happy ramadan",
+            "happy new year"
+        ],
+        "response": {
+            "lebenglish": "W enta bkheir! yn3ad 3leik",
+            "arabic": "وانت بخير! ينعاد عليك 😊🎉",
+            "english": "Happy holidays to you too!"
+        }
+    }
+    ,
+    {
+        "intent": "busy_response",
+        "lebenglish": [
+            "meshghoul",
+            "hala2 mesh fade",
+            "3andi shee",
+            "berja3 ba3dain",
+            "mish fadi"
+        ],
+        "arabic": [
+            "مشغول",
+            "هلأ مش فاضي",
+            "عندي شي",
+            "برجع بعدين",
+            "مش قادر رد"
+        ],
+        "english": [
+            "busy now",
+            "can't talk now",
+            "occupied",
+            "later please",
+            "I'm busy"
+        ],
+        "response": {
+            "lebenglish": "Wala yhemmak! bentezarak wa2t ma tekoun fade 😊",
+            "arabic": "ولا يهمك! بانتظارك وقت ما تكون فاضي 😊",
+            "english": "No worries! I'm here whenever you're free 😊"
+        }
+    },
+    {
+        "intent": "request_patience",
+        "lebenglish": [
+            "sawene bas",
+            "de2i2a",
+            "3tini waqt",
+            "shway w berja3",
+            "raja2an entezer"
+        ],
+        "arabic": [
+            "ثواني بس",
+            "دقيقة",
+            "عطيني وقت",
+            "شوي وبرجع",
+            "رجاءً انتظر"
+        ],
+        "english": [
+            "one moment",
+            "give me a minute",
+            "hold on",
+            "I'll get back shortly",
+            "please wait"
+        ],
+        "response": {
+            "lebenglish": "Akeed, khod ra7tak!",
+            "arabic": "أكيد، خد راحتك!",
+            "english": "Of course, take your time!"
+        }
+    }
+]
