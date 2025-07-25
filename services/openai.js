@@ -139,6 +139,7 @@ Email: ${business.contact?.email || 'N/A'}
 WhatsApp: ${business.contact?.whatsapp || 'N/A'}
 Instagram: ${business.contact?.instagram || 'N/A'}
 
+Products: ${productList || 'N/A'}
 
 ⚙️ Description, Services, ✨ Benefits & Features:
 ${business.description || 'N/A'}
