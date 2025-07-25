@@ -157,6 +157,8 @@ ${business.description || 'N/A'}
 🌐 Website:
 ${business.website || 'N/A'}
 
+important note: always when replying to questions about plans/features/details or services reply in an organized way use paragrapghs, proper spacing or bullet lists when needed
+
 use the description provided to answer questions about the store, services, products, benefits or anything related to the store.
 🎯 Always respond in English .
 
