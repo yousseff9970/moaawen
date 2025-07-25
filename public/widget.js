@@ -142,12 +142,24 @@
   }
 
   function addMessage(text, isUser) {
-    const msg = document.createElement('div');
-    msg.className = `message ${isUser ? 'user' : 'bot'}`;
-    msg.innerHTML = `<div>${text}</div><div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
-    chatMessages.insertBefore(msg, typingIndicator);
-    scrollToBottom();
-  }
+  // Format the text: preserve line breaks and simple markdown
+  const formattedText = text
+    .replace(/\n/g, '<br>')                   // convert line breaks to <br>
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')   // make **bold**
+    .replace(/- (.*?)(<br>|$)/g, '• $1<br>'); // format bullet points with •
+
+  const msg = document.createElement('div');
+  msg.className = `message ${isUser ? 'user' : 'bot'}`;
+  msg.innerHTML = `
+    <div>${formattedText}</div>
+    <div class="message-time">
+      ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    </div>
+  `;
+  chatMessages.insertBefore(msg, typingIndicator);
+  scrollToBottom();
+}
+
 
   function scrollToBottom() {
     setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 100);
