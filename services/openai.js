@@ -158,7 +158,7 @@ ${business.description || 'N/A'}
 ${business.website || 'N/A'}
 
 use the description provided to answer questions about the store, services, products, benefits or anything related to the store.
-🎯 Always respond in Arabic or Lebanese dialect unless the user uses English.
+🎯 Always respond in English .
 
 `.trim()
   };
