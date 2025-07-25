@@ -70,21 +70,31 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
 
     if (orderSession.step === 'ready') {
       try {
-        const client = shopifyClient(business.shop, business.accessToken);
-        const order = await client.createOrder({
-          variant_id: orderSession.variant.id,
-          email: `${orderSession.data.phone}@autobot.local`,
-          name: orderSession.data.name,
-          phone: orderSession.data.phone,
-          address: orderSession.data.address
-        });
-        clear(senderId);
-        return {
-          reply: `✅ تم إنشاء طلبك لمنتج **${orderSession.variant.title}** بنجاح! رقم الطلب: #${order.id}. سيتم التواصل معك قريبًا.`,
-          source: 'shopify',
-          layer_used: 'order_created'
-        };
-      } catch (e) {
+  const client = shopifyClient(business.shop, business.accessToken);
+  const order = await client.createOrder({
+    variant_id: orderSession.variant.id,
+    email: `${orderSession.data.phone}@autobot.local`,
+    name: orderSession.data.name,
+    phone: orderSession.data.phone,
+    address: orderSession.data.address
+  });
+
+  clear(senderId);
+
+  // Extract order details
+  const orderNumber = order.order_number;  // e.g. 1003
+  const status = order.fulfillment_status || 'قيد المعالجة'; // fallback if null
+  const trackUrl = order.order_status_url || '';
+
+  return {
+    reply: `✅ تم إنشاء طلبك لمنتج **${orderSession.variant.title}** بنجاح!\n\n` +
+           `🔢 رقم الطلب: **${orderNumber}**\n` +
+           `📦 حالة الطلب: **${status}**\n` +
+           (trackUrl ? `🌐 تتبع طلبك: ${trackUrl}` : ''),
+    source: 'shopify',
+    layer_used: 'order_created'
+  };
+} catch (e) {
         const errorData = e.response?.data?.errors;
         console.error('Shopify order error:', errorData);
         throw new Error(`Shopify order creation failed: ${JSON.stringify(errorData)}`);
