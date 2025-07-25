@@ -1,5 +1,5 @@
 (function () {
-  const apiEndpoint = 'https://2db2ce3daa96.ngrok-free.app/api/chat'; 
+  const apiEndpoint = 'https://moaawen.onrender.com/api/chat'; 
 
   let sessionId = localStorage.getItem('moaawen_session_id');
   if (!sessionId) {
