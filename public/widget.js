@@ -67,6 +67,18 @@
       .chat-window { width: calc(100vw - 32px); height: calc(100vh - 100px); }
       .chat-widget { bottom: 16px; right: 16px; }
     }
+    @media (min-width: 992px) {
+  .chat-window {
+    width: 420px;    /* bigger width for PC */
+    height: 600px;   /* taller height for PC */
+  }
+
+  .chat-bubble {
+    width: 70px; 
+    height: 70px;
+  }
+}
+
   `;
   shadow.appendChild(style);
 
