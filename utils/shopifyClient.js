@@ -35,7 +35,7 @@ function normalizePhone(phone) {
 createOrder: async ({ variant_id, email, name, phone, address }) => {
   const [first_name, ...rest] = name.trim().split(' ');
   const last_name = rest.join(' ') || 'Customer';
-variant_id = "45209434325181";
+variant_id = "45209434554557";
   const res = await api.post('/orders.json', {
     order: {
       line_items: [{ variant_id: Number(variant_id), quantity: 1 }],
