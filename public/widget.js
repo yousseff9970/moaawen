@@ -92,9 +92,18 @@
 
   function toggleChat() {
     isOpen = !isOpen;
-    chatBubble.style.display = isOpen ? 'none' : 'flex';
-    chatWindow.style.display = isOpen ? 'flex' : 'none';
-    if (isOpen) messageInput.focus();
+  chatBubble.style.display = isOpen ? 'none' : 'flex';
+  chatWindow.style.display = isOpen ? 'flex' : 'none';
+
+  if (isOpen) {
+    messageInput.focus();
+
+    // Show welcome message only the first time chat is opened
+    if (!localStorage.getItem('moaawen_welcome_shown')) {
+      addMessage("👋 Welcome to our website! How can I assist you today?", false);
+      localStorage.setItem('moaawen_welcome_shown', 'true');
+    }
+  }
   }
 
   function formatMessage(text) {
