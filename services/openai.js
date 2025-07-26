@@ -83,7 +83,7 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
 
   // Extract order details
   const orderNumber = order.order_number;  // e.g. 1003
-  const status = order.fulfillment_status || 'قيد المعالجة'; // fallback if null
+  const status = order.fulfillment_status || 'Processing...'; // fallback if null
   const trackUrl = order.order_status_url || '';
 
 return {
