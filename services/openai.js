@@ -27,7 +27,7 @@ function updateSession(senderId, role, content) {
     sessionHistory.delete(senderId);
     sessionTimeouts.delete(senderId);
     console.log(`🗑️ Cleared session history for ${senderId} after 10 min`);
-  }, 10 * 60 * 1000);
+  }, 10 * 60 * 500);
 
   sessionTimeouts.set(senderId, timeout);
 }
