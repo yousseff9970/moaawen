@@ -6,6 +6,7 @@ const { matchModelResponse, matchFAQSmart} = require('./modelMatcher');
 const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
 const { logToJson} = require('./jsonLog');
 const sessionHistory = new Map();
+const sessionTimeouts = new Map();
 const replyTimeouts = new Map();
 const pendingMessages = new Map();
 const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
@@ -16,6 +17,19 @@ function updateSession(senderId, role, content) {
   const history = sessionHistory.get(senderId);
   history.push({ role, content });
   if (history.length > 10) history.shift();
+  
+  // Reset the timer (10 min)
+  if (sessionTimeouts.has(senderId)) {
+    clearTimeout(sessionTimeouts.get(senderId));
+  }
+
+  const timeout = setTimeout(() => {
+    sessionHistory.delete(senderId);
+    sessionTimeouts.delete(senderId);
+    console.log(`🗑️ Cleared session history for ${senderId} after 10 min`);
+  }, 10 * 60 * 1000);
+
+  sessionTimeouts.set(senderId, timeout);
 }
 
 const generateReply = async (senderId, userMessage, metadata = {}) => {
