@@ -51,18 +51,18 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
         title: match.title,
         price: match.variants[0].price
       });
-      return { reply: `تمام، شو اسمك الكامل؟`, source: 'order_wizard', layer_used: 'order_flow' };
+      return { reply: `What is your name please?`, source: 'order_wizard', layer_used: 'order_flow' };
     }
   }
 
   if (orderSession) {
     if (orderSession.step === 'need_name') {
       advance(senderId, 'name', userMessage.trim());
-      return { reply: '👍 عطيني رقم تليفونك لو سمحت.', source: 'order_wizard', layer_used: 'order_flow' };
+      return { reply: 'Whats your phone number?', source: 'order_wizard', layer_used: 'order_flow' };
     }
     if (orderSession.step === 'need_phone') {
       advance(senderId, 'phone', userMessage.trim());
-      return { reply: 'تمام، وعنوان التوصيل بالتفصيل؟', source: 'order_wizard', layer_used: 'order_flow' };
+      return { reply: 'Okay, now please provide us with your full address in details.', source: 'order_wizard', layer_used: 'order_flow' };
     }
     if (orderSession.step === 'need_address') {
       advance(senderId, 'address', userMessage.trim());
@@ -86,14 +86,15 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   const status = order.fulfillment_status || 'قيد المعالجة'; // fallback if null
   const trackUrl = order.order_status_url || '';
 
-  return {
-    reply: `✅ تم إنشاء طلبك لمنتج **${orderSession.variant.title}** بنجاح!\n\n` +
-           `🔢 رقم الطلب: **${orderNumber}**\n` +
-           `📦 حالة الطلب: **${status}**\n` +
-           (trackUrl ? `🌐 تتبع طلبك: ${trackUrl}` : ''),
-    source: 'shopify',
-    layer_used: 'order_created'
-  };
+return {
+  reply: `✅ Your order for **${orderSession.variant.title}** has been created successfully!\n\n` +
+         `🔢 Order Number: **${orderNumber}**\n` +
+         `📦 Order Status: **${status}**\n` +
+         (trackUrl ? `🌐 Track your order: ${trackUrl}` : ''),
+  source: 'shopify',
+  layer_used: 'order_created'
+};
+
 } catch (e) {
         const errorData = e.response?.data?.errors;
         console.error('Shopify order error:', errorData);
