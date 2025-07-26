@@ -177,6 +177,8 @@ important note: always when replying to questions about plans/features/details o
 use the description provided to answer questions about the store, services, products, benefits or anything related to the store.
 🎯 Always respond in English .
 
+VERY IMPORTANT: Never reply to religious or political questions or even general life questions, only reply to business related questions. 
+
 `.trim()
   };
   const messages = [systemPrompt, ...(sessionHistory.get(senderId) || [])];
