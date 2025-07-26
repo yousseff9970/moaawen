@@ -35,7 +35,7 @@ router.post('/chat', async (req, res) => {
       delete sessionHistory[sessionId];
       delete sessionTimeouts[sessionId];
       console.log(`🗑️ Cleared session history for ${sessionId} after 10 min`);
-    }, 10 * 60 * 1000); // 10 minutes
+    }, 10 * 60 * 500); // 10 minutes
 
     // Pass the last 10 messages as context to OpenAI
     const reply = await generateReply(sessionId, message, {
