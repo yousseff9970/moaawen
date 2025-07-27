@@ -26,7 +26,7 @@ function updateSession(senderId, role, content) {
   const timeout = setTimeout(() => {
     sessionHistory.delete(senderId);
     sessionTimeouts.delete(senderId);
-    console.log(`🗑️ Cleared session history for ${senderId} after 10 min`);
+    console.log(🗑️ Cleared session history for ${senderId} after 10 min);
   }, 10 * 60 * 500);
 
   sessionTimeouts.set(senderId, timeout);
@@ -65,7 +65,7 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
         title: match.title,
         price: match.variants[0].price
       });
-      return { reply: `What is your name please?`, source: 'order_wizard', layer_used: 'order_flow' };
+      return { reply: What is your name please?, source: 'order_wizard', layer_used: 'order_flow' };
     }
   }
 
@@ -87,7 +87,7 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   const client = shopifyClient(business.shop, business.accessToken);
   const order = await client.createOrder({
     variant_id: orderSession.variant.id,
-    email: `${orderSession.data.phone}@autobot.local`,
+    email: ${orderSession.data.phone}@autobot.local,
     name: orderSession.data.name,
     phone: orderSession.data.phone,
     address: orderSession.data.address
@@ -101,10 +101,10 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   const trackUrl = order.order_status_url || '';
 
 return {
-  reply: `✅ Your order for **${orderSession.variant.title}** has been created successfully!\n\n` +
-         `🔢 Order Number: **${orderNumber}**\n` +
-         `📦 Order Status: **${status}**\n` +
-         (trackUrl ? `🌐 Track your order: ${trackUrl}` : ''),
+  reply: ✅ Your order for **${orderSession.variant.title}** has been created successfully!\n\n +
+         🔢 Order Number: **${orderNumber}**\n +
+         📦 Order Status: **${status}**\n +
+         (trackUrl ? 🌐 Track your order: ${trackUrl} : ''),
   source: 'shopify',
   layer_used: 'order_created'
 };
@@ -112,7 +112,7 @@ return {
 } catch (e) {
         const errorData = e.response?.data?.errors;
         console.error('Shopify order error:', errorData);
-        throw new Error(`Shopify order creation failed: ${JSON.stringify(errorData)}`);
+        throw new Error(Shopify order creation failed: ${JSON.stringify(errorData)});
         clear(senderId);
         return {
           reply: '⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.',
@@ -147,15 +147,15 @@ return {
   updateSession(senderId, 'user', userMessage);
   const productList = (business.products || []).map((p, i) => {
     const variant = p.variants?.[0] || {};
-    const price = variant.price ? `$${variant.price}` : 'Price not available';
+    const price = variant.price ? $${variant.price} : 'Price not available';
     const stockStatus = variant.inStock === false ? '❌ Out of stock' : '✅ In stock';
 
-    return `${i + 1}. **${p.title}**\n   - Price: ${price}\n   - ${stockStatus}\n   - Description: ${p.description || 'No description.'}`;
+    return ${i + 1}. **${p.title}**\n   - Price: ${price}\n   - ${stockStatus}\n   - Description: ${p.description || 'No description.'};
   }).join('\n\n');
 
   const systemPrompt = {
     role: 'system',
-    content: `
+    content: 
 You are Moaawen, the helpful assistant for ${business.name} in Lebanon.
 
 📞 Contact:
@@ -183,7 +183,7 @@ ${business.website || 'N/A'}
 
 4. **Always respond in English.**
 
-`.trim()
+.trim()
   };
   const messages = [systemPrompt, ...(sessionHistory.get(senderId) || [])];
   try {
@@ -193,7 +193,7 @@ ${business.website || 'N/A'}
       temperature: 0.6,
       max_tokens: 600
     }, {
-      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
+      headers: { Authorization: Bearer ${process.env.OPENAI_API_KEY} }
     });
     const replyText = response.data.choices[0].message.content;
     const duration = Date.now() - start;
@@ -212,15 +212,16 @@ ${business.website || 'N/A'}
   } catch (err) {
     const duration = Date.now() - start;
     logToJson({
-  layer: 'ai',
-  senderId,
-  businessId: business.id,
-  intent: 'general',
-  duration,
-  tokens: response.data.usage || {},
-  message: userMessage,
-  ai_reply: replyText   // <-- added this field
-});
+      layer: 'error',
+      senderId,
+      businessId: business.id,
+      duration,
+      message: userMessage,
+      error: err.response?.data?.error?.message || err.message
+    });
+    return { reply: 'عذرًا، لم أفهم تمامًا. ممكن توضّح أكثر؟', source: 'error', layer_used: 'error', duration };
+  }
+};
 
 const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
   if (!pendingMessages.has(senderId)) {
