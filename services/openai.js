@@ -2,9 +2,10 @@ const axios = require('axios');
 const path = require('path');
 const { getBusinessInfo } = require('./business');
 const { normalize } = require('./normalize');
-const { matchModelResponse, matchFAQSmart} = require('./modelMatcher');
+const { matchModelResponse, matchFAQSmart } = require('./modelMatcher');
 const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
-const { logToJson} = require('./jsonLog');
+const { logToJson } = require('./jsonLog');
+
 const sessionHistory = new Map();
 const sessionTimeouts = new Map();
 const replyTimeouts = new Map();
@@ -17,8 +18,8 @@ function updateSession(senderId, role, content) {
   const history = sessionHistory.get(senderId);
   history.push({ role, content });
   if (history.length > 10) history.shift();
-  
-  // Reset the timer (10 min)
+
+  // Reset timer (10 min)
   if (sessionTimeouts.has(senderId)) {
     clearTimeout(sessionTimeouts.get(senderId));
   }
@@ -26,8 +27,8 @@ function updateSession(senderId, role, content) {
   const timeout = setTimeout(() => {
     sessionHistory.delete(senderId);
     sessionTimeouts.delete(senderId);
-    console.log(🗑️ Cleared session history for ${senderId} after 10 min);
-  }, 10 * 60 * 500);
+    console.log(`🗑️ Cleared session history for ${senderId} after 10 min`);
+  }, 10 * 60 * 1000); // 10 min (corrected)
 
   sessionTimeouts.set(senderId, timeout);
 }
@@ -65,7 +66,7 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
         title: match.title,
         price: match.variants[0].price
       });
-      return { reply: What is your name please?, source: 'order_wizard', layer_used: 'order_flow' };
+      return { reply: `What is your name please?`, source: 'order_wizard', layer_used: 'order_flow' };
     }
   }
 
@@ -84,41 +85,35 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
 
     if (orderSession.step === 'ready') {
       try {
-  const client = shopifyClient(business.shop, business.accessToken);
-  const order = await client.createOrder({
-    variant_id: orderSession.variant.id,
-    email: ${orderSession.data.phone}@autobot.local,
-    name: orderSession.data.name,
-    phone: orderSession.data.phone,
-    address: orderSession.data.address
-  });
+        const client = shopifyClient(business.shop, business.accessToken);
+        const order = await client.createOrder({
+          variant_id: orderSession.variant.id,
+          email: `${orderSession.data.phone}@autobot.local`,
+          name: orderSession.data.name,
+          phone: orderSession.data.phone,
+          address: orderSession.data.address
+        });
 
-  clear(senderId);
+        clear(senderId);
 
-  // Extract order details
-  const orderNumber = order.order_number;  // e.g. 1003
-  const status = order.fulfillment_status || 'Processing...'; // fallback if null
-  const trackUrl = order.order_status_url || '';
+        // Extract order details
+        const orderNumber = order.order_number;
+        const status = order.fulfillment_status || 'Processing...';
+        const trackUrl = order.order_status_url || '';
 
-return {
-  reply: ✅ Your order for **${orderSession.variant.title}** has been created successfully!\n\n +
-         🔢 Order Number: **${orderNumber}**\n +
-         📦 Order Status: **${status}**\n +
-         (trackUrl ? 🌐 Track your order: ${trackUrl} : ''),
-  source: 'shopify',
-  layer_used: 'order_created'
-};
+        return {
+          reply: `✅ Your order for **${orderSession.variant.title}** has been created successfully!\n\n` +
+                 `🔢 Order Number: **${orderNumber}**\n` +
+                 `📦 Order Status: **${status}**\n` +
+                 (trackUrl ? `🌐 Track your order: ${trackUrl}` : ''),
+          source: 'shopify',
+          layer_used: 'order_created'
+        };
 
-} catch (e) {
+      } catch (e) {
         const errorData = e.response?.data?.errors;
         console.error('Shopify order error:', errorData);
-        throw new Error(Shopify order creation failed: ${JSON.stringify(errorData)});
-        clear(senderId);
-        return {
-          reply: '⚠️ حدث خطأ أثناء إنشاء الطلب. جرّب مرة ثانية لاحقًا.',
-          source: 'error',
-          layer_used: 'order_failed'
-        };
+        throw new Error(`Shopify order creation failed: ${JSON.stringify(errorData)}`);
       }
     }
   }
@@ -126,36 +121,64 @@ return {
   const modelMatch = matchModelResponse(normalizedMsg, businessModel);
   if (modelMatch) {
     const duration = Date.now() - start;
-    logToJson({ layer: 'model_business', senderId, businessId: business.id, intent: modelMatch.intent, language: modelMatch.language, duration, message: userMessage, matchedWith: normalizedMsg });
+    logToJson({
+      layer: 'model_business',
+      senderId,
+      businessId: business.id,
+      intent: modelMatch.intent,
+      language: modelMatch.language,
+      duration,
+      message: userMessage,
+      matchedWith: normalizedMsg,
+      ai_reply: modelMatch.reply
+    });
     return { reply: modelMatch.reply, source: 'model', layer_used: 'model_business', duration };
   }
 
   const generalMatch = matchModelResponse(normalizedMsg, generalModel);
   if (generalMatch) {
     const duration = Date.now() - start;
-    logToJson({ layer: 'model_general', senderId, businessId: business.id, intent: generalMatch.intent, duration, message: userMessage, matchedWith: normalizedMsg });
+    logToJson({
+      layer: 'model_general',
+      senderId,
+      businessId: business.id,
+      intent: generalMatch.intent,
+      duration,
+      message: userMessage,
+      matchedWith: normalizedMsg,
+      ai_reply: generalMatch.reply
+    });
     return { reply: generalMatch.reply, source: 'model', layer_used: 'model_general', duration };
   }
 
   const faqAnswer = matchFAQSmart(userMessage, business.faqs || []);
   if (faqAnswer) {
     const duration = Date.now() - start;
-    logToJson({ layer: 'faq', senderId, businessId: business.id, duration, message: userMessage, matched: true });
+    logToJson({
+      layer: 'faq',
+      senderId,
+      businessId: business.id,
+      duration,
+      message: userMessage,
+      matched: true,
+      ai_reply: faqAnswer
+    });
     return { reply: faqAnswer, source: 'faq', layer_used: 'faq', duration };
   }
 
   updateSession(senderId, 'user', userMessage);
+
   const productList = (business.products || []).map((p, i) => {
     const variant = p.variants?.[0] || {};
-    const price = variant.price ? $${variant.price} : 'Price not available';
+    const price = variant.price ? `$${variant.price}` : 'Price not available';
     const stockStatus = variant.inStock === false ? '❌ Out of stock' : '✅ In stock';
 
-    return ${i + 1}. **${p.title}**\n   - Price: ${price}\n   - ${stockStatus}\n   - Description: ${p.description || 'No description.'};
+    return `${i + 1}. **${p.title}**\n   - Price: ${price}\n   - ${stockStatus}\n   - Description: ${p.description || 'No description.'}`;
   }).join('\n\n');
 
   const systemPrompt = {
     role: 'system',
-    content: 
+    content: `
 You are Moaawen, the helpful assistant for ${business.name} in Lebanon.
 
 📞 Contact:
@@ -174,7 +197,7 @@ ${business.website || 'N/A'}
 
 --- IMPORTANT RULES ---
 1. Only answer questions strictly related to the business, its services, plans, features, products, or benefits.  
-2. **DO NOT answer any question that is not business-related.** If the user asks about politics, religion, life advice, news,  simply respond with:  
+2. **DO NOT answer any question that is not business-related.** If the user asks about politics, religion, life advice, news, simply respond with:  
    > "I can only answer questions related to ${business.name}'s services, products, or business information."
 3. When answering business-related questions:  
    - Be structured and organized.  
@@ -182,10 +205,11 @@ ${business.website || 'N/A'}
    - Be concise but clear.
 
 4. **Always respond in English.**
-
-.trim()
+`.trim()
   };
+
   const messages = [systemPrompt, ...(sessionHistory.get(senderId) || [])];
+
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-4.1-nano',
@@ -193,10 +217,13 @@ ${business.website || 'N/A'}
       temperature: 0.6,
       max_tokens: 600
     }, {
-      headers: { Authorization: Bearer ${process.env.OPENAI_API_KEY} }
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
     });
+
     const replyText = response.data.choices[0].message.content;
     const duration = Date.now() - start;
+
+    // Log AI reply too
     logToJson({
       layer: 'ai',
       senderId,
@@ -204,7 +231,8 @@ ${business.website || 'N/A'}
       intent: 'general',
       duration,
       tokens: response.data.usage || {},
-      message: userMessage
+      message: userMessage,
+      ai_reply: replyText
     });
 
     updateSession(senderId, 'assistant', replyText);
@@ -228,9 +256,11 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
     pendingMessages.set(senderId, []);
   }
   pendingMessages.get(senderId).push(userMessage);
+
   if (replyTimeouts.has(senderId)) {
     clearTimeout(replyTimeouts.get(senderId));
   }
+
   const timeout = setTimeout(async () => {
     const allMessages = pendingMessages.get(senderId).join('\n');
     pendingMessages.delete(senderId);
