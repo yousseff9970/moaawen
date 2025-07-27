@@ -31,6 +31,7 @@
         <th>Duration (ms)</th>
         <th>Message</th>
         <th>Matched</th>
+        <th>AI Reply</th> <!-- NEW COLUMN -->
       </tr>
     </thead>
     <tbody></tbody>
@@ -55,6 +56,7 @@
           <td>${log.duration || '-'}</td>
           <td>${log.message || '-'}</td>
           <td>${log.matchedWith || '-'}</td>
+          <td>${log.ai_reply || '-'}</td> <!-- Display AI reply -->
         `;
 
         tbody.appendChild(row);
@@ -71,7 +73,6 @@
     });
 
     loadLogs();
-    
   </script>
 </body>
 </html>
