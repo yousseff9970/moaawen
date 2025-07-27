@@ -212,16 +212,15 @@ ${business.website || 'N/A'}
   } catch (err) {
     const duration = Date.now() - start;
     logToJson({
-      layer: 'error',
-      senderId,
-      businessId: business.id,
-      duration,
-      message: userMessage,
-      error: err.response?.data?.error?.message || err.message
-    });
-    return { reply: 'عذرًا، لم أفهم تمامًا. ممكن توضّح أكثر؟', source: 'error', layer_used: 'error', duration };
-  }
-};
+  layer: 'ai',
+  senderId,
+  businessId: business.id,
+  intent: 'general',
+  duration,
+  tokens: response.data.usage || {},
+  message: userMessage,
+  ai_reply: replyText   // <-- added this field
+});
 
 const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
   if (!pendingMessages.has(senderId)) {
