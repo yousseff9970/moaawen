@@ -1,5 +1,20 @@
 # Ignore environment variables
 .env
 
+# ignore logs
+logs.json
+logs/conversations.json
+
 # Ignore dependencies
 node_modules/
+
+# Ignore conv
+logs/
+
+#ignore media files
+tmp/
+media/
+
+# Ignore json
+services/logs.json
+
