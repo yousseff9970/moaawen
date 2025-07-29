@@ -38,8 +38,15 @@
   </table>
 
   <script>
+    const apiKey = "moaawen2025";
     async function loadLogs() {
-      const res = await fetch('/api/logs');
+      const res =await fetch('/api/logs', {
+      
+      headers: {
+        'x-api-key': apiKey
+      }
+     
+    });
       const logs = await res.json();
       const tbody = document.querySelector('#logTable tbody');
       tbody.innerHTML = '';
