@@ -6,6 +6,7 @@ const { downloadVoiceFile, transcribeWithWhisper } = require('../services/transc
 const { logConversation } = require('../utils/logger');
 const { downloadMedia } = require('../services/downloadMedia');
 const { matchImageAndGenerateReply } = require('../services/imageMatcher');
+const xss = require('xss'); // ✅ Add XSS sanitizer
 
 const processedMessages = new Set();
 
@@ -115,8 +116,11 @@ router.post('/', async (req, res) => {
         messageText = transcript;
       }
 
-      if (!messageText) continue;
+      
 
+      if (!messageText) continue;
+messageText = messageText.trim().substring(0, 1000);
+messageText = xss(messageText);
       console.log(`📲 WhatsApp ${isVoice ? 'Voice' : 'Text'} from ${from}: "${messageText}"`);
 
       // ⏳ BATCHED REPLY AFTER DELAY
@@ -127,7 +131,7 @@ router.post('/', async (req, res) => {
           messaging_product: 'whatsapp',
           to: from,
           type: 'text',
-          text: { body: reply }
+          text: { body: xss(reply) }
         }, {
           headers: {
             Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,

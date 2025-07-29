@@ -6,6 +6,7 @@ const { downloadVoiceFile, transcribeWithWhisper } = require('../services/transc
 const { downloadMedia } = require('../services/downloadMedia');
 const { matchImageAndGenerateReply } = require('../services/imageMatcher');
 const { logConversation } = require('../utils/logger');
+const xss = require('xss');
 
 const processedMessages = new Set();
 

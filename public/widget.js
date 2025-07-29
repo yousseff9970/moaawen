@@ -1,5 +1,15 @@
 (function () {
-  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
+  // Find the <script> tag that loaded this widget
+  const currentScript = document.currentScript || 
+                        document.querySelector('script[src*="widget.js"]');
+  const apiKey = currentScript?.dataset.apiKey || null;
+
+  if (!apiKey) {
+    console.error('❌ Moaawen Widget: Missing API key. Please add data-api-key attribute.');
+    return;
+  }
+
+  const apiEndpoint = 'https://5a4439a78b3a.ngrok-free.app/api/chat';
   const storageKey = 'moaawen_chat_history';
 
   // 1. Create widget root
@@ -61,10 +71,14 @@
           <button id="closeBtn" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;">×</button>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
-        <div style="padding:12px;border-top:1px solid #ddd;display:flex;gap:8px;">
-          <textarea id="messageInput" placeholder="Type your message..." style="flex:1;border-radius:8px;padding:8px;"></textarea>
-          <button id="sendBtn" disabled style="background:#007bff;color:white;border:none;border-radius:8px;padding:0 16px;">Send</button>
-        </div>
+
+          <div id="typingIndicator" style="display:none; padding:8px 16px; font-size:13px; color:#555;">
+      <em> Typing...</em>
+    </div>
+    <div style="padding:12px; border-top:1px solid #ddd; display:flex; gap:8px;">
+      <textarea id="messageInput" placeholder="Type your message..." style="flex:1;border-radius:8px;padding:8px;"></textarea>
+      <button id="sendBtn" disabled style="background:#007bff;color:white;border:none;border-radius:8px;padding:0 16px;">Send</button>
+    </div>
       </div>
     </div>
   `;
@@ -122,6 +136,11 @@
     chatHistory.forEach(renderMessage);
   }
 
+  function generateSessionId() {
+  return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+}
+
+
   function renderMessage(msg) {
     const div = document.createElement('div');
     div.className = `message ${msg.isUser ? 'user' : 'bot'}`;
@@ -135,31 +154,55 @@
   }
 
   async function sendMessage() {
-    const text = messageInput.value.trim();
-    if (!text) return;
-    messageInput.value = '';
-    sendBtn.disabled = true;
+  const text = messageInput.value.trim();
+  if (!text) return;
+  messageInput.value = '';
+  sendBtn.disabled = true;
 
-    // Add user message with "sent"
-    addMessage(text, true, '✓ Sent');
+  addMessage(text, true, '✓ Sent');
 
-    try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, sessionId: crypto.randomUUID(), domain: window.location.hostname })
-      });
-      const data = await response.json();
+  // Show typing indicator
+  const typingIndicator = shadow.getElementById('typingIndicator');
+  typingIndicator.style.display = 'block';
 
-      // Update last user message receipt to "✓✓ Read"
-      chatHistory = chatHistory.map((m, i) => (i === chatHistory.length - 1 && m.isUser ? { ...m, receipt: '✓✓ Read' } : m));
-      localStorage.setItem(storageKey, JSON.stringify(chatHistory));
-      renderChatHistory();
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey
+      },
+      body: JSON.stringify({
+        message: text,
+        sessionId: generateSessionId(),
+        domain: window.location.hostname
+      })
+    });
 
-      // Add bot message
-      addMessage(data.reply || 'Sorry, no response received.', false);
-    } catch (err) {
-      addMessage('⚠️ Error sending message.', false);
+    if (response.status === 429) {
+      typingIndicator.style.display = 'none';
+      addMessage('⚠️ You’re sending too many messages. Please wait a minute.', false);
+      return;
     }
+
+    const data = await response.json();
+
+    // Hide typing indicator before showing reply
+    typingIndicator.style.display = 'none';
+
+    // Update receipt and render
+    chatHistory = chatHistory.map((m, i) =>
+      i === chatHistory.length - 1 && m.isUser ? { ...m, receipt: '✓✓ Read' } : m
+    );
+    localStorage.setItem(storageKey, JSON.stringify(chatHistory));
+    renderChatHistory();
+
+    // Simulate small delay for realism
+    setTimeout(() => addMessage(data.reply || 'Sorry, no response received.', false), 500);
+  } catch (err) {
+    typingIndicator.style.display = 'none';
+    addMessage('⚠️ Error sending message.', false);
   }
+}
+
 })();

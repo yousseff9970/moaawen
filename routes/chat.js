@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { generateReply } = require('../services/openai');
-
+const { validateChatRequest } = require('../middlewares/validate');
+const xss = require('xss'); 
 // Temporary in-memory store (you can later replace with DB)
 const sessionHistory = {};
-const sessionTimeouts = {}; // Track timers per session
 
-router.post('/chat', async (req, res) => {
+
+router.post('/chat', validateChatRequest, async (req, res) => {
   const { message, domain, sessionId } = req.body;
 
   if (!message || !domain || !sessionId) {
@@ -27,15 +28,7 @@ router.post('/chat', async (req, res) => {
       sessionHistory[sessionId] = sessionHistory[sessionId].slice(-10);
     }
 
-    // Reset the 10-min timer for this session
-    if (sessionTimeouts[sessionId]) {
-      clearTimeout(sessionTimeouts[sessionId]);
-    }
-    sessionTimeouts[sessionId] = setTimeout(() => {
-      delete sessionHistory[sessionId];
-      delete sessionTimeouts[sessionId];
-      console.log(`🗑️ Cleared session history for ${sessionId} after 10 min`);
-    }, 10 * 60 * 500); // 10 minutes
+ 
 
     // Pass the last 10 messages as context to OpenAI
     const reply = await generateReply(sessionId, message, {
@@ -51,7 +44,7 @@ router.post('/chat', async (req, res) => {
       sessionHistory[sessionId] = sessionHistory[sessionId].slice(-10);
     }
 
-    return res.json({ reply: reply.reply });
+    return res.json({ reply: xss(reply.reply) });
   } catch (err) {
     console.error('Chat API error:', err.message);
     return res.status(500).json({ error: 'Internal server error' });

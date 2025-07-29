@@ -2823,5 +2823,1115 @@
       }
     },
     "message": "Sho 3endkon"
+  },
+  {
+    "timestamp": "2025-07-27T18:11:48.923Z",
+    "layer": "model_general",
+    "senderId": "w1ffi4urmdlzx9di",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 37,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:12:18.469Z",
+    "layer": "model_general",
+    "senderId": "10fe0qwzmdlzxw7n",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:06.788Z",
+    "layer": "model_general",
+    "senderId": "gembl2s5mdlzyxe1",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 35,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:14.904Z",
+    "layer": "ai",
+    "senderId": "h9aujno8mdlzz32m",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1159,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.118Z",
+    "layer": "ai",
+    "senderId": "p090nrf2mdlzz37l",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1195,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 28,
+      "total_tokens": 423,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions related to our business."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.162Z",
+    "layer": "ai",
+    "senderId": "h7j25bz1mdlzz2xg",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1593,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 39,
+      "total_tokens": 434,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! Please let me know how I can assist you with moaawen's services or products. If you have any questions about our features, plans, or benefits, I'm here to help!"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.413Z",
+    "layer": "ai",
+    "senderId": "v15g3wukmdlzz2rz",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1917,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.495Z",
+    "layer": "ai",
+    "senderId": "kqcr9a01mdlzz3r6",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 867,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 28,
+      "total_tokens": 423,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions related to our business."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.516Z",
+    "layer": "ai",
+    "senderId": "dpqo5467mdlzz3hd",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1238,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 31,
+      "total_tokens": 426,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! If you have any questions about moaawen's services, features, plans, or benefits, please let me know. I'm here to help!"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.635Z",
+    "layer": "ai",
+    "senderId": "i6mybe9kmdlzz3m6",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1185,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 28,
+      "total_tokens": 423,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! Please let me know how I can assist you with moaawen's services, features, or plans. I'm here to help!"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.786Z",
+    "layer": "ai",
+    "senderId": "z2d2212qmdlzz46d",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 612,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 20,
+      "total_tokens": 415,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services, features, or plans today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.836Z",
+    "layer": "ai",
+    "senderId": "cbehil07mdlzz4be",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 481,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 17,
+      "total_tokens": 412,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:15.972Z",
+    "layer": "ai",
+    "senderId": "y61fffv9mdlzz3cg",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1872,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 27,
+      "total_tokens": 422,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your specific questions or needs."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:16.084Z",
+    "layer": "ai",
+    "senderId": "mo1ed7qjmdlzz3w6",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1277,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 29,
+      "total_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or information today? Please let me know your questions related to our business offerings."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:16.403Z",
+    "layer": "ai",
+    "senderId": "a2b031g0mdlzz415",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1419,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 27,
+      "total_tokens": 422,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you today regarding moaawen's services, plans, or features? Please let me know your questions."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:18.306Z",
+    "layer": "ai",
+    "senderId": "kcgbb8h9mdlzz682",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 470,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:18.453Z",
+    "layer": "ai",
+    "senderId": "l1wm3kfrmdlzz62y",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 654,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 30,
+      "total_tokens": 425,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "11",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs related to our offerings."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.196Z",
+    "layer": "ai",
+    "senderId": "rvsiqpd1mdlzz6ng",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 578,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 22,
+      "total_tokens": 417,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services, plans, features, or benefits today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.243Z",
+    "layer": "ai",
+    "senderId": "evxx0ht7mdlzz6i9",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1040,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 24,
+      "total_tokens": 419,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! Please let me know how I can assist you with moaawen's services, products, or business information."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.418Z",
+    "layer": "ai",
+    "senderId": "ymtbakx7mdlzz6d8",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1387,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 17,
+      "total_tokens": 412,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.474Z",
+    "layer": "ai",
+    "senderId": "fihrbt7smdlzz72s",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 541,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 17,
+      "total_tokens": 412,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.511Z",
+    "layer": "ai",
+    "senderId": "gls2hgylmdlzz6xo",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 628,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 22,
+      "total_tokens": 417,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services, features, plans, or products today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.779Z",
+    "layer": "ai",
+    "senderId": "s64uvcoymdlzz6sh",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1027,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 29,
+      "total_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today? Please let me know your questions related to our offerings."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:19.875Z",
+    "layer": "ai",
+    "senderId": "95th7cz7mdlzz7d5",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 569,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:20.169Z",
+    "layer": "ai",
+    "senderId": "birfxduwmdlzz77y",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1051,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 26,
+      "total_tokens": 421,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you today with moaawen's services or products? Please let me know your questions or needs."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:20.343Z",
+    "layer": "ai",
+    "senderId": "fzjwz8bsmdlzz7if",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 846,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 38,
+      "total_tokens": 433,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! It seems like your message is just \"1.\" How can I assist you today regarding moaawen's services or products? Please provide more details or ask any questions you have!"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:20.460Z",
+    "layer": "ai",
+    "senderId": "84ccqek1mdlzz7o4",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 762,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:20.587Z",
+    "layer": "ai",
+    "senderId": "pk4uzhk8mdlzz7ti",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 691,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 26,
+      "total_tokens": 421,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:21.031Z",
+    "layer": "ai",
+    "senderId": "sncmfqcnmdlzz846",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 750,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 30,
+      "total_tokens": 425,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs related to our business."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:21.342Z",
+    "layer": "ai",
+    "senderId": "wofo0zc7mdlzz8ez",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 675,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:21.534Z",
+    "layer": "ai",
+    "senderId": "eklc9ya1mdlzz8k5",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 683,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 30,
+      "total_tokens": 425,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or features today? Please let me know your questions or needs related to our business."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:21.557Z",
+    "layer": "ai",
+    "senderId": "v6oe1tv9mdlzz89k",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1084,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 29,
+      "total_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions related to our business offerings."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:21.740Z",
+    "layer": "ai",
+    "senderId": "3d25h7l7mdlzz7yq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1657,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 30,
+      "total_tokens": 425,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs related to our business."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:21.967Z",
+    "layer": "ai",
+    "senderId": "00g63wcemdlzz8uy",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 726,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 29,
+      "total_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or how I can help."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:22.201Z",
+    "layer": "ai",
+    "senderId": "5aua39uemdlzz8pe",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1155,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 24,
+      "total_tokens": 419,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:22.250Z",
+    "layer": "ai",
+    "senderId": "d7llhpixmdlzz90c",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 814,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 45,
+      "total_tokens": 440,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? If you have any questions related to our website chat widget integration, Shopify & WooCommerce sync, or other features, please let me know!"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:22.606Z",
+    "layer": "ai",
+    "senderId": "jhhk5i6lmdlzz95k",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 980,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 27,
+      "total_tokens": 422,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your specific questions or needs."
+  },
+  {
+    "timestamp": "2025-07-27T18:13:22.655Z",
+    "layer": "ai",
+    "senderId": "dewi6o9ymdlzz9gk",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 634,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:23.000Z",
+    "layer": "ai",
+    "senderId": "m2y4belkmdlzz9m5",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 772,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 37,
+      "total_tokens": 432,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? If you have any questions related to our offerings, plans, or features, please let me know!"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:23.018Z",
+    "layer": "ai",
+    "senderId": "b6xfa6lgmdlzz9rq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 598,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 17,
+      "total_tokens": 412,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:23.069Z",
+    "layer": "ai",
+    "senderId": "cns7jitxmdlzz9b5",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1244,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 17,
+      "total_tokens": 412,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:13:23.236Z",
+    "layer": "ai",
+    "senderId": "9fv1wf6umdlzz9xf",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 609,
+    "tokens": {
+      "prompt_tokens": 395,
+      "completion_tokens": 18,
+      "total_tokens": 413,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "1",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
+  },
+  {
+    "timestamp": "2025-07-27T18:14:29.867Z",
+    "layer": "model_general",
+    "senderId": "eclptevsmdm00pgi",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 1,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:17:33.882Z",
+    "layer": "model_general",
+    "senderId": "56ybly2xmdm04nj2",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 31,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:17:33.999Z",
+    "layer": "model_general",
+    "senderId": "2bs9kxc9mdm04nvn",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:17:34.430Z",
+    "layer": "model_general",
+    "senderId": "pu0w5a2fmdm04o7l",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:17:34.817Z",
+    "layer": "model_general",
+    "senderId": "9dnuclhjmdm04oig",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 2,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:17:35.250Z",
+    "layer": "model_general",
+    "senderId": "bpq56g46mdm04ou7",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 3,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:27:32.887Z",
+    "layer": "model_general",
+    "senderId": "o78zp5brmdm0hhpm",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 5,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-27T18:27:45.109Z",
+    "layer": "ai",
+    "senderId": "jsh5o9qqmdm0hq66",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1449,
+    "tokens": {
+      "prompt_tokens": 390,
+      "completion_tokens": 31,
+      "total_tokens": 421,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you with moaawen's services or features today? Please let me know your specific questions or needs related to our offerings."
   }
 ]

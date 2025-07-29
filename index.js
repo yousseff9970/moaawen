@@ -6,29 +6,30 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-
-//routes
-const dashboardRoutes = require('./routes/dashboard');
-const webhookRoutes = require('./routes/webhook');
-const logsRoute = require('./routes/logs');
-const chatRoute = require('./routes/chat');
-const shopifyRoutes = require('./routes/shopify');
-
-
-
+// Middlewares
+const rateLimiter = require('./middlewares/rateLimit');
+const apiKeyMiddleware = require('./middlewares/apiKey');
 
 const app = express();
 app.use(cors());
+app.use(rateLimiter); // 🌟 Apply globally
+
+// Static + view engine
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
-app.use('/dashboard', dashboardRoutes);
-app.use('/shopify', shopifyRoutes);
+
+// Routes
+app.use('/dashboard', require('./routes/dashboard'));
+app.use('/shopify', require('./routes/shopify'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/api', chatRoute);
-app.use('/webhook', webhookRoutes);
+
+// Secure the widget API endpoint with API key
+app.use('/api', apiKeyMiddleware, require('./routes/chat')); // ✅
+
+app.use('/webhook', require('./routes/webhook'));
 app.use('/whatsapp', require('./routes/whatsapp'));
 app.use(session({
   secret: 'moaawen_super_secret',
@@ -37,7 +38,7 @@ app.use(session({
   cookie: { secure: false } 
 }));
 app.use('/admin', require('./routes/admin'));
-app.use(logsRoute);
+app.use(require('./routes/logs'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
