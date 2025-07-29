@@ -9,7 +9,7 @@
     return;
   }
 
-  const apiEndpoint = 'https://5a4439a78b3a.ngrok-free.app/api/chat';
+  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
   const storageKey = 'moaawen_chat_history';
 
   // 1. Create widget root
