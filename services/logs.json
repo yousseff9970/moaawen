@@ -4013,5 +4013,91 @@
     "message": "hi",
     "matchedWith": "hi",
     "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-30T16:56:19.602Z",
+    "layer": "model_general",
+    "senderId": "jnwd5mgbmdq7jq9y",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 52,
+    "message": "hello",
+    "matchedWith": "hello",
+    "ai_reply": "Hello and welcome! How can I help you?"
+  },
+  {
+    "timestamp": "2025-07-30T16:56:26.315Z",
+    "layer": "ai",
+    "senderId": "45p035y1mdq7jubl",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2118,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 32,
+      "total_tokens": 953,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you today regarding moaawen's products or services? If you have any specific questions or need information, please let me know!"
+  },
+  {
+    "timestamp": "2025-07-30T16:56:32.998Z",
+    "layer": "ai",
+    "senderId": "knpapdrumdq7jzp9",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1654,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 68,
+      "total_tokens": 989,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "services",
+    "ai_reply": "At moaawen, we offer a variety of products related to snowboarding, including different snowboard models and ski wax. \n\nFor more detailed information about our services, benefits, and features, you can visit our website: moaawen.myshopify.com. \n\nIf you have specific questions or need further assistance, please let me know!"
+  },
+  {
+    "timestamp": "2025-07-30T16:56:47.593Z",
+    "layer": "ai",
+    "senderId": "ko9w5egymdq7k6cu",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 7608,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 502,
+      "total_tokens": 1423,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "products",
+    "ai_reply": "Here are the products available at moaawen:\n\n1. **The Inventory Not Tracked Snowboard**  \n   - Price: $949.95  \n   - Status: Out of stock\n\n2. **Gift Card**  \n   - Price: $10.00  \n   - Status: Out of stock  \n   - Description: This is a gift card for the store\n\n3. **The Compare at Price Snowboard**  \n   - Price: $785.95  \n   - Status: In stock\n\n4. **The Collection Snowboard: Hydrogen**  \n   - Price: $600.00  \n   - Status: In stock\n\n5. **The Archived Snowboard**  \n   - Price: $629.95  \n   - Status: In stock\n\n6. **The Draft Snowboard**  \n   - Price: $2629.95  \n   - Status: In stock\n\n7. **The Videographer Snowboard**  \n   - Price: $885.95  \n   - Status: In stock\n\n8. **The Out of Stock Snowboard**  \n   - Price: $885.95  \n   - Status: Out of stock\n\n9. **Selling Plans Ski Wax**  \n   - Price: $24.95  \n   - Status: In stock\n\n10. **The Minimal Snowboard**  \n    - Price: $885.95  \n    - Status: In stock\n\n11. **The Complete Snowboard**  \n    - Price: $699.95  \n    - Status: In stock  \n    - Description: This PREMIUM snowboard is so SUPER Duper awesome!\n\n12. **The Hidden Snowboard**  \n    - Price: $749.95  \n    - Status: In stock\n\n13. **The Collection Snowboard: Oxygen**  \n    - Price: $1025.00  \n    - Status: In stock\n\n14. **The Multi-location Snowboard**  \n    - Price: $729.95  \n    - Status: In stock\n\n15. **The Multi-managed Snowboard**  \n    - Price: $629.95  \n    - Status: In stock\n\n16. **The 3p Fulfilled Snowboard**  \n    - Price: $2629.95  \n    - Status: In stock\n\n17. **The Collection Snowboard: Liquid**  \n    - Price: $749.95  \n    - Status: In stock\n\nIf you need more details or assistance with specific products, feel free to ask!"
   }
 ]

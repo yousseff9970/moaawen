@@ -8,7 +8,7 @@
     return;
   }
 
-  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
+  const apiEndpoint = 'https://2631cd64b19b.ngrok-free.app/api/chat';
   const storageKey = 'moaawen_chat_history';
   let userMarket = null;
 
@@ -806,9 +806,19 @@ messageInput.oninput = () => {
     }
   }
 
-  function formatMessage(text) {
-    return text.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-  }
+function formatMessage(text) {
+  return text
+    // Bold **text**
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Bullet points or numbered lists: keep <br> before
+    .replace(/\n\d+\.\s/g, '<br><br>$&')
+    .replace(/\n-\s/g, '<br>• ')
+    // New lines into <br><br> for better spacing
+    .replace(/\n/g, '<br>')
+    // Links
+    .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+}
+
 
   function addMessage(text, isUser, receipt = null) {
     // Hide welcome message when first message is sent
