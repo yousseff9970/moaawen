@@ -906,59 +906,66 @@ resizeBtn.onclick = () => {
   }
 
   async function sendMessage() {
-    const text = messageInput.value.trim();
-if (!text) return;
+  const text = messageInput.value.trim();
+  if (!text) return;
 
-messageInput.value = '';
-sendBtn.disabled = true;
-autoResize();
+  messageInput.value = '';
+  sendBtn.disabled = true;
+  autoResize();
 
+  // Add user message
+  addMessage(text, true, '✓ Sent');
+  typingIndicator.style.display = 'flex';
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    addMessage(text, true, '✓ Sent');
-    typingIndicator.style.display = 'flex';
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey
+      },
+      body: JSON.stringify({
+        message: text,
+        sessionId: generateSessionId(),
+        domain: window.location.hostname
+      })
+    });
 
-    try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey
-        },
-        body: JSON.stringify({
-          message: text,
-          sessionId: generateSessionId(),
-          domain: window.location.hostname
-        })
-      });
-
-      if (response.status === 429) {
-        typingIndicator.style.display = 'none';
-        addMessage('⚠️ You\'re sending too many messages. Please wait a minute before trying again.', false);
-        return;
-      }
-
-      const data = await response.json();
+    if (response.status === 429) {
       typingIndicator.style.display = 'none';
-
-      // Update last user message receipt status
-      chatHistory = chatHistory.map((m, i) => 
-        i === chatHistory.length - 1 && m.isUser 
-          ? { ...m, receipt: '✓✓ Read' } 
-          : m
-      );
-      localStorage.setItem(storageKey, JSON.stringify(chatHistory));
-      renderChatHistory();
-
-      // Simulate typing delay for better UX
-      setTimeout(() => {
-        addMessage(data.reply || 'Sorry, I didn\'t receive a proper response. Please try again.', false);
-      }, 800);
-      
-    } catch (err) {
-      typingIndicator.style.display = 'none';
-      addMessage('⚠️ Connection error. Please check your internet and try again.', false);
-      console.error('Chat widget error:', err);
+      addMessage('⚠️ You\'re sending too many messages. Please wait a minute before trying again.', false);
+      return;
     }
+
+    const data = await response.json();
+    typingIndicator.style.display = 'none';
+
+    // ✅ Update receipt directly without re-rendering all messages
+    const lastUserMsg = chatMessages.querySelector('.message.user:last-child .receipt');
+    if (lastUserMsg) {
+      lastUserMsg.textContent = '✓✓ Read';
+      lastUserMsg.classList.add('delivered');
+    }
+
+    // Update chatHistory in localStorage (but don't re-render)
+    chatHistory = chatHistory.map((m, i) =>
+      i === chatHistory.length - 1 && m.isUser
+        ? { ...m, receipt: '✓✓ Read' }
+        : m
+    );
+    localStorage.setItem(storageKey, JSON.stringify(chatHistory));
+
+    // Simulate typing delay before AI reply
+    setTimeout(() => {
+      addMessage(data.reply || 'Sorry, I didn\'t receive a proper response. Please try again.', false);
+    }, 800);
+
+  } catch (err) {
+    typingIndicator.style.display = 'none';
+    addMessage('⚠️ Connection error. Please check your internet and try again.', false);
+    console.error('Chat widget error:', err);
   }
+}
+
 })();
