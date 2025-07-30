@@ -307,8 +307,7 @@
       padding: 16px 20px;
       border-radius: 20px;
       font-size: 14px;
-      line-height: 1.5;
-      font-weight: 400;
+      
       position: relative;
       box-shadow: var(--shadow-soft);
     }
