@@ -3933,5 +3933,85 @@
     },
     "message": "help",
     "ai_reply": "Hello! How can I assist you with moaawen's services or features today? Please let me know your specific questions or needs related to our offerings."
+  },
+  {
+    "timestamp": "2025-07-30T10:56:01.514Z",
+    "layer": "model_general",
+    "senderId": "8if04iykmdpuodzs",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 31,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-30T10:56:17.659Z",
+    "layer": "ai",
+    "senderId": "sekn2g4vmdpuoky0",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 7204,
+    "tokens": {
+      "prompt_tokens": 923,
+      "completion_tokens": 341,
+      "total_tokens": 1264,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho fe products",
+    "ai_reply": "Here are the products available at moaawen:\n\n1. **The Inventory Not Tracked Snowboard** - $949.95 (Out of stock)\n2. **Gift Card** - $10.00 (Out of stock)\n3. **The Compare at Price Snowboard** - $785.95 (In stock)\n4. **The Collection Snowboard: Hydrogen** - $600.00 (In stock)\n5. **The Archived Snowboard** - $629.95 (In stock)\n6. **The Draft Snowboard** - $2629.95 (In stock)\n7. **The Videographer Snowboard** - $885.95 (In stock)\n8. **The Out of Stock Snowboard** - $885.95 (Out of stock)\n9. **Selling Plans Ski Wax** - $24.95 (In stock)\n10. **The Minimal Snowboard** - $885.95 (In stock)\n11. **The Complete Snowboard** - $699.95 (In stock)\n12. **The Hidden Snowboard** - $749.95 (In stock)\n13. **The Collection Snowboard: Oxygen** - $1025.00 (In stock)\n14. **The Multi-location Snowboard** - $729.95 (In stock)\n15. **The Multi-managed Snowboard** - $629.95 (In stock)\n16. **The 3p Fulfilled Snowboard** - $2629.95 (In stock)\n17. **The Collection Snowboard: Liquid** - $749.95 (In stock)\n\nIf you'd like more details about any product or assistance with purchasing, please let me know!"
+  },
+  {
+    "timestamp": "2025-07-30T11:03:13.348Z",
+    "layer": "model_general",
+    "senderId": "o14g82dvmdpuxn3h",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 35,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-30T11:19:16.040Z",
+    "layer": "model_general",
+    "senderId": "na0pnwbimdpvi9uj",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 32,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-30T11:19:20.558Z",
+    "layer": "model_general",
+    "senderId": "b6kcc4wwmdpvidnp",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 4,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-07-30T11:42:09.196Z",
+    "layer": "model_general",
+    "senderId": "o1v4xfhvmdpwbpg6",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 34,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
   }
 ]
