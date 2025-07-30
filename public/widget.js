@@ -8,7 +8,7 @@
     return;
   }
 
-  const apiEndpoint = 'https://2631cd64b19b.ngrok-free.app/api/chat';
+  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
   const storageKey = 'moaawen_chat_history';
   let userMarket = null;
 
