@@ -8,7 +8,7 @@
     return;
   }
 
-  const apiEndpoint = 'https://968b592f923f.ngrok-free.app/api/chat';
+  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
   const storageKey = 'moaawen_chat_history';
   let userMarket = null;
 
@@ -656,84 +656,88 @@
   shadow.appendChild(style);
 
   // Enhanced HTML with advanced UI components
-  const container = document.createElement('div');
-  container.innerHTML = `
-    <div class="chat-widget">
-      <div class="chat-bubble" id="chatBubble">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="26" height="26">
-  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-</svg>
-
-        <div class="notification-badge" id="notificationBadge" style="display: none;">1</div>
-      </div>
-      <div class="chat-window" id="chatWindow">
-        <div class="chat-header">
-          <div class="header-info">
-            <div class="status-indicator"></div>
-            <div>
-              <div>Moaawen Assistant</div>
-              <div style="font-size: 12px; opacity: 0.8; font-weight: 400;">Online</div>
-            </div>
-          </div>
-          <button class="resize-btn" id="resizeBtn">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18">
-    <path d="M15 3h6v6m-6-6 6 6M9 21H3v-6m6 6-6-6M21 15v6h-6m6-6-6 6M3 9V3h6M3 9l6-6"/>
-  </svg>
-</button>
-          <button class="close-btn" id="closeBtn">
-           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20">
-  <line x1="18" y1="6" x2="6" y2="18"/>
-  <line x1="6" y1="6" x2="18" y2="18"/>
-</svg>
-
-          </button>
-        </div>
-        
-        <div class="welcome-message" id="welcomeMessage">
-          <h3>👋 Welcome to Moaawen</h3>
-          <p>I'm here to help you with any questions you might have. How can I assist you today?</p>
-          <div class="quick-actions">
-            <div class="quick-action" data-message="Help me get started">Get Started</div>
-            <div class="quick-action" data-message="What can you do?">Features</div>
-            <div class="quick-action" data-message="Contact support">Support</div>
-          </div>
-        </div>
-        
-        <div class="chat-messages" id="chatMessages"></div>
-        
-        <div class="typing-indicator" id="typingIndicator">
-          <div class="avatar">AI</div>
+ const container = document.createElement('div');
+container.innerHTML = `
+  <div class="chat-widget">
+    <div class="chat-bubble" id="chatBubble">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="26" height="26">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <div class="notification-badge" id="notificationBadge" style="display: none;">1</div>
+    </div>
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <div class="header-info">
+          <div class="status-indicator"></div>
           <div>
-            <em>Assistant is typing</em>
-            <div class="typing-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+            <div>Moaawen Assistant</div>
+            <div style="font-size: 12px; opacity: 0.8; font-weight: 400;">Online</div>
           </div>
         </div>
-        
-        <div class="chat-footer">
-          <div class="input-container">
-            <textarea 
-              id="messageInput" 
-              class="message-input"
-              placeholder="Type your message..."
-              rows="1"
-            ></textarea>
+        <button class="resize-btn" id="resizeBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18">
+            <path d="M15 3h6v6m-6-6 6 6M9 21H3v-6m6 6-6-6M21 15v6h-6m6-6-6 6M3 9V3h6M3 9l6-6"/>
+          </svg>
+        </button>
+        <button class="close-btn" id="closeBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="welcome-message" id="welcomeMessage">
+        <h3>👋 Welcome to Moaawen</h3>
+        <p>I'm here to help you with any questions you might have. How can I assist you today?</p>
+        <div class="quick-actions">
+          <div class="quick-action" data-message="Help me get started">Get Started</div>
+          <div class="quick-action" data-message="What can you do?">Features</div>
+          <div class="quick-action" data-message="Contact support">Support</div>
+        </div>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages"></div>
+      
+      <div class="typing-indicator" id="typingIndicator">
+        <div class="avatar">AI</div>
+        <div>
+          <em>Assistant is typing</em>
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <button class="send-button" id="sendBtn" disabled>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18">
-  <line x1="22" y1="2" x2="11" y2="13"/>
-  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-</svg>
+        </div>
+      </div>
+      
+      <div class="chat-footer">
+        <div class="input-container">
+          <textarea 
+            id="messageInput" 
+            class="message-input"
+            placeholder="Type your message..."
+            rows="1"
+          ></textarea>
+        </div>
+        <button class="send-button" id="sendBtn" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
 
-          </button>
-        </div>
+      <!-- ✅ Branding Section -->
+      <div class="chat-branding" style="text-align:center; padding:6px 0; font-size:11px; background:#f8f9fa; color:#555; border-top:1px solid #ddd;">
+        <strong>MOAAWEN</strong> &copy; ${new Date().getFullYear()} <br>
+        <span style="font-size:10px; opacity:0.7;">Beta Build v0.1</span>
       </div>
     </div>
-  `;
-  shadow.appendChild(container);
+  </div>
+`;
+shadow.appendChild(container);
+
 
   // DOM refs
   const $ = (id) => shadow.getElementById(id);
