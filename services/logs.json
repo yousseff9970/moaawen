@@ -4099,5 +4099,529 @@
     },
     "message": "products",
     "ai_reply": "Here are the products available at moaawen:\n\n1. **The Inventory Not Tracked Snowboard**  \n   - Price: $949.95  \n   - Status: Out of stock\n\n2. **Gift Card**  \n   - Price: $10.00  \n   - Status: Out of stock  \n   - Description: This is a gift card for the store\n\n3. **The Compare at Price Snowboard**  \n   - Price: $785.95  \n   - Status: In stock\n\n4. **The Collection Snowboard: Hydrogen**  \n   - Price: $600.00  \n   - Status: In stock\n\n5. **The Archived Snowboard**  \n   - Price: $629.95  \n   - Status: In stock\n\n6. **The Draft Snowboard**  \n   - Price: $2629.95  \n   - Status: In stock\n\n7. **The Videographer Snowboard**  \n   - Price: $885.95  \n   - Status: In stock\n\n8. **The Out of Stock Snowboard**  \n   - Price: $885.95  \n   - Status: Out of stock\n\n9. **Selling Plans Ski Wax**  \n   - Price: $24.95  \n   - Status: In stock\n\n10. **The Minimal Snowboard**  \n    - Price: $885.95  \n    - Status: In stock\n\n11. **The Complete Snowboard**  \n    - Price: $699.95  \n    - Status: In stock  \n    - Description: This PREMIUM snowboard is so SUPER Duper awesome!\n\n12. **The Hidden Snowboard**  \n    - Price: $749.95  \n    - Status: In stock\n\n13. **The Collection Snowboard: Oxygen**  \n    - Price: $1025.00  \n    - Status: In stock\n\n14. **The Multi-location Snowboard**  \n    - Price: $729.95  \n    - Status: In stock\n\n15. **The Multi-managed Snowboard**  \n    - Price: $629.95  \n    - Status: In stock\n\n16. **The 3p Fulfilled Snowboard**  \n    - Price: $2629.95  \n    - Status: In stock\n\n17. **The Collection Snowboard: Liquid**  \n    - Price: $749.95  \n    - Status: In stock\n\nIf you need more details or assistance with specific products, feel free to ask!"
+  },
+  {
+    "timestamp": "2025-08-01T07:55:51.260Z",
+    "layer": "model_general",
+    "senderId": "zabmcfq1mdsj4dms",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 93,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T07:56:03.279Z",
+    "layer": "ai",
+    "senderId": "iwv31omimdsj4lpn",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2170,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 34,
+      "total_tokens": 955,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you today with moaawen's products or services? If you have specific questions or need information about our offerings, please let me know!"
+  },
+  {
+    "timestamp": "2025-08-01T07:59:45.436Z",
+    "layer": "model_general",
+    "senderId": "lk2cscyemdsj9esh",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 30,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:00:10.607Z",
+    "layer": "ai",
+    "senderId": "qa1uc844mdsj9x7p",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1349,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 17,
+      "total_tokens": 938,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "h",
+    "ai_reply": "Hello! How can I assist you today with moaawen's products or services?"
+  },
+  {
+    "timestamp": "2025-08-01T08:01:55.521Z",
+    "layer": "model_general",
+    "senderId": "cz699apomdsjc75j",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 34,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:02:25.273Z",
+    "layer": "ai",
+    "senderId": "00yx94owmdsjct3p",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1338,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 22,
+      "total_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you today regarding moaawen's products, services, or any related inquiries?"
+  },
+  {
+    "timestamp": "2025-08-01T08:03:14.901Z",
+    "layer": "ai",
+    "senderId": "o0rxgeqxmdsjdt6h",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 4237,
+    "tokens": {
+      "prompt_tokens": 924,
+      "completion_tokens": 262,
+      "total_tokens": 1186,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "what do you have",
+    "ai_reply": "We have a variety of snowboards and related products available. Here's a list of our current offerings:\n\n**In Stock Snowboards:**\n- The Compare at Price Snowboard - $785.95\n- The Collection Snowboard: Hydrogen - $600.00\n- The Archived Snowboard - $629.95\n- The Draft Snowboard - $2629.95\n- The Videographer Snowboard - $885.95\n- The Minimal Snowboard - $885.95\n- The Complete Snowboard - $699.95\n- The Hidden Snowboard - $749.95\n- The Collection Snowboard: Oxygen - $1025.00\n- The Multi-location Snowboard - $729.95\n- The Multi-managed Snowboard - $629.95\n- The 3p Fulfilled Snowboard - $2629.95\n- The Collection Snowboard: Liquid - $749.95\n\n**Other Products:**\n- Gift Card - $10.00 (out of stock)\n- Selling Plans Ski Wax - $24.95\n\nPlease note that some items like \"The Inventory Not Tracked Snowboard\" and \"The Out of Stock Snowboard\" are currently unavailable.\n\nIf you're interested in any specific product or need more details, feel free to ask!"
+  },
+  {
+    "timestamp": "2025-08-01T08:04:06.840Z",
+    "layer": "ai",
+    "senderId": "n8g9ea09mdsjeynt",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2411,
+    "tokens": {
+      "prompt_tokens": 923,
+      "completion_tokens": 117,
+      "total_tokens": 1040,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "okay what else",
+    "ai_reply": "I can provide information about our products, services, and benefits. \n\nHere are some of our available items:\n\n- In-stock snowboards such as The Compare at Price Snowboard, The Collection Snowboard: Hydrogen, The Archived Snowboard, and more.\n- Gift cards available for purchase.\n- Ski wax and various snowboard models, each with unique features and prices.\n\nIf you need details about a specific product or service, or if you're interested in making a purchase, please let me know! For further assistance, you can also contact us via email at moaawenai@gmail.com."
+  },
+  {
+    "timestamp": "2025-08-01T08:07:13.254Z",
+    "layer": "model_general",
+    "senderId": "dvh8cdwtmdsjj0a9",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 31,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:07:18.608Z",
+    "layer": "ai",
+    "senderId": "r8u4uk7qmdsjj3mm",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1253,
+    "tokens": {
+      "prompt_tokens": 921,
+      "completion_tokens": 32,
+      "total_tokens": 953,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you today? If you have questions about our products, services, or anything related to moaawen, please let me know."
+  },
+  {
+    "timestamp": "2025-08-01T08:21:11.669Z",
+    "layer": "model_general",
+    "senderId": "dwsn72phmdsk0z2z",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 30,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:21:17.787Z",
+    "layer": "ai",
+    "senderId": "yvqfg4zmmdsk135d",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1256,
+    "tokens": {
+      "prompt_tokens": 1085,
+      "completion_tokens": 13,
+      "total_tokens": 1098,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you with moaawen today?"
+  },
+  {
+    "timestamp": "2025-08-01T08:21:34.217Z",
+    "layer": "ai",
+    "senderId": "vpyu3cckmdsk1dj1",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 4101,
+    "tokens": {
+      "prompt_tokens": 1086,
+      "completion_tokens": 330,
+      "total_tokens": 1416,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "your products",
+    "ai_reply": "مرحباً! هاي قائمة المنتجات اللي عندي:\n\n1. **The Inventory Not Tracked Snowboard** - بس للأسف خارج المخزون  \n2. **Gift Card** - كارت هدية بـ10 دولارات، برضه خارج المخزون  \n3. **The Compare at Price Snowboard** - متوفر بـ785.95 دولار  \n4. **The Collection Snowboard: Hydrogen** - متوفر بـ600 دولار  \n5. **The Archived Snowboard** - متوفر بـ629.95 دولار  \n6. **The Draft Snowboard** - متوفر بـ2629.95 دولار  \n7. **The Videographer Snowboard** - متوفر بـ885.95 دولار  \n8. **The Out of Stock Snowboard** - خارج المخزون  \n9. **Selling Plans Ski Wax** - متوفر بـ24.95 دولار  \n10. **The Minimal Snowboard** - متوفر بـ885.95 دولار  \n11. **The Complete Snowboard** - متوفر بـ699.95 دولار  \n12. **The Hidden Snowboard** - متوفر بـ749.95 دولار  \n13. **The Collection Snowboard: Oxygen** - متوفر بـ1025 دولار  \n14. **The Multi-location Snowboard** - متوفر بـ729.95 دولار  \n15. **The Multi-managed Snowboard** - متوفر بـ629.95 دولار  \n16. **The 3p Fulfilled Snowboard** - متوفر بـ2629.95 دولار  \n17. **The Collection Snowboard: Liquid** - متوفر بـ749.95 دولار\n\nهل حابب تعرف أكثر عن شي معين؟"
+  },
+  {
+    "timestamp": "2025-08-01T08:33:27.789Z",
+    "layer": "model_general",
+    "senderId": "qfezcb60mdskgr37",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 31,
+    "message": "hello",
+    "matchedWith": "hello",
+    "ai_reply": "Hello and welcome! How can I help you?"
+  },
+  {
+    "timestamp": "2025-08-01T08:34:33.844Z",
+    "layer": "ai",
+    "senderId": "i1t9jn1pmdski5do",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1139,
+    "tokens": {
+      "prompt_tokens": 1159,
+      "completion_tokens": 23,
+      "total_tokens": 1182,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you with moaawen today? Please let me know what you need help with."
+  },
+  {
+    "timestamp": "2025-08-01T08:34:51.746Z",
+    "layer": "ai",
+    "senderId": "e2ex5rpsmdskie9v",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 7505,
+    "tokens": {
+      "prompt_tokens": 1160,
+      "completion_tokens": 313,
+      "total_tokens": 1473,
+      "prompt_tokens_details": {
+        "cached_tokens": 1024,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "your products",
+    "ai_reply": "Here are the products available at moaawen:\n\n1. The Compare at Price Snowboard - $785.95 (In stock)  \n2. The Collection Snowboard: Hydrogen - $600.00 (In stock)  \n3. The Archived Snowboard - $629.95 (In stock)  \n4. The Draft Snowboard - $2629.95 (In stock)  \n5. The Videographer Snowboard - $885.95 (In stock)  \n6. The Minimal Snowboard - $885.95 (In stock)  \n7. The Complete Snowboard - $699.95 (In stock)  \n   - This PREMIUM snowboard is so SUPER DUPER awesome!  \n8. The Hidden Snowboard - $749.95 (In stock)  \n9. The Collection Snowboard: Oxygen - $1025.00 (In stock)  \n10. The Multi-location Snowboard - $729.95 (In stock)  \n11. The Multi-managed Snowboard - $629.95 (In stock)  \n12. The 3p Fulfilled Snowboard - $2629.95 (In stock)  \n13. The Collection Snowboard: Liquid - $749.95 (In stock)  \n14. Selling Plans Ski Wax - $24.95 (In stock)  \n\nProducts currently out of stock:  \n- The Inventory Not Tracked Snowboard  \n- Gift Card  \n- The Out of Stock Snowboard  \n\nIf you want information about a specific product or need help with anything else, please let me know!"
+  },
+  {
+    "timestamp": "2025-08-01T08:37:53.684Z",
+    "layer": "model_general",
+    "senderId": "lm3oue6rmdskmggd",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "howareyou",
+    "duration": 2,
+    "message": "kifak",
+    "matchedWith": "kifak",
+    "ai_reply": "Tamam elhamdellah, shukran 3al So2al! kif fini se3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:38:12.615Z",
+    "layer": "ai",
+    "senderId": "q6n4fl9amdskmqdc",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 6078,
+    "tokens": {
+      "prompt_tokens": 1167,
+      "completion_tokens": 275,
+      "total_tokens": 1442,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho 3nkon products ya kbir",
+    "ai_reply": "أهلاً! هلق بحكيلك عن المنتجات يلي عنا:\n\n- The Compare at Price Snowboard - $785.95 (متوفر)\n- The Collection Snowboard: Hydrogen - $600.00 (متوفر)\n- The Archived Snowboard - $629.95 (متوفر)\n- The Draft Snowboard - $2629.95 (متوفر)\n- The Videographer Snowboard - $885.95 (متوفر)\n- The Minimal Snowboard - $885.95 (متوفر)\n- The Complete Snowboard - $699.95 (متوفر) - هذا اللوح ممتاز وفاخر!\n- The Hidden Snowboard - $749.95 (متوفر)\n- The Collection Snowboard: Oxygen - $1025.00 (متوفر)\n- The Multi-location Snowboard - $729.95 (متوفر)\n- The Multi-managed Snowboard - $629.95 (متوفر)\n- The 3p Fulfilled Snowboard - $2629.95 (متوفر)\n- The Collection Snowboard: Liquid - $749.95 (متوفر)\n- Selling Plans Ski Wax - $24.95 (متوفر)\n\nفيه كمان منتجات مش متوفرة حالياً مثل The Inventory Not Tracked Snowboard و Gift Card.\n\nإذا بدك معلومات أكتر عن أي منتج، خبرني!"
+  },
+  {
+    "timestamp": "2025-08-01T08:38:30.626Z",
+    "layer": "ai",
+    "senderId": "p16ec7jxmdskn73e",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2422,
+    "tokens": {
+      "prompt_tokens": 1162,
+      "completion_tokens": 51,
+      "total_tokens": 1213,
+      "prompt_tokens_details": {
+        "cached_tokens": 1024,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "do you have delivery",
+    "ai_reply": "Yes, moaawen offers delivery services. If you need specific details about delivery areas, times, or costs, please let me know, and I’ll provide the information I have or guide you on how to proceed. How can I assist you further?"
+  },
+  {
+    "timestamp": "2025-08-01T08:48:51.554Z",
+    "layer": "model_general",
+    "senderId": "vccex768mdsl0jwm",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 4,
+    "message": "hiii",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:49:02.758Z",
+    "layer": "ai",
+    "senderId": "9oacil6amdsl0rn9",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1382,
+    "tokens": {
+      "prompt_tokens": 4206,
+      "completion_tokens": 24,
+      "total_tokens": 4230,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "help",
+    "ai_reply": "Hello! How can I assist you with Moaawen today? Please let me know what you need help with."
+  },
+  {
+    "timestamp": "2025-08-01T08:49:22.259Z",
+    "layer": "ai",
+    "senderId": "ueb7gcp5mdsl15bm",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 3154,
+    "tokens": {
+      "prompt_tokens": 4210,
+      "completion_tokens": 170,
+      "total_tokens": 4380,
+      "prompt_tokens_details": {
+        "cached_tokens": 4096,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho 3ndkon",
+    "ai_reply": "Hello! Here’s what we offer at Moaawen:\n\n**Products:**\n- Various snowboards available in different styles and prices (from $600 to $2629.95), some are in stock, some out of stock.\n- Ski Wax for $24.95.\n- Gift Cards (currently out of stock).\n\n**Services:**\n- AI-powered customer support and messaging platform for businesses.\n- Plans starting from $13/month offering features like AI replies, text messaging, multi-channel support, image and voice analysis, Shopify/WooCommerce sync, order management, and advanced analytics.\n- Fully customizable plans to fit your business needs.\n- Support for multiple channels like Instagram, WhatsApp, Facebook Messenger.\n- Integration with e-commerce platforms.\n\nIf you want details about a specific product or service, or pricing plans, just let me know!"
+  },
+  {
+    "timestamp": "2025-08-01T08:49:51.042Z",
+    "layer": "model_general",
+    "senderId": "3ouw4baomdsl1twv",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 41,
+    "message": "helloo",
+    "matchedWith": "helloo",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T08:50:03.235Z",
+    "layer": "ai",
+    "senderId": "pv8dajhamdsl2129",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2991,
+    "tokens": {
+      "prompt_tokens": 3627,
+      "completion_tokens": 140,
+      "total_tokens": 3767,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sho 3ndkon",
+    "ai_reply": "مرحباً! معك Moaawen، منصة ذكية بتساعدك تدير رسائل عملك ومبيعاتك على إنستغرام، واتساب، وفيسبوك وغيرها بسهولة وبسرعة.\n\nعنا باقات مختلفة تناسب كل حجم عمل، من باقة Starter للناس اللي بلشوا للتو، لباقات أكبر بتعطيك ميزات متطورة مثل تحليل الصور، الردود الصوتية، تكامل مع Shopify/WooCommerce، وإدارة الطلبات.\n\nإذا بتحب، فيني خبرك أكتر عن الباقات والأسعار أو كيف فينا نساعد بزنسك تحديداً. شو نوع عملك أو شو بدك بالضبط؟"
+  },
+  {
+    "timestamp": "2025-08-01T08:50:17.940Z",
+    "layer": "ai",
+    "senderId": "mb8zjmwamdsl2b3y",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 4534,
+    "tokens": {
+      "prompt_tokens": 3626,
+      "completion_tokens": 268,
+      "total_tokens": 3894,
+      "prompt_tokens_details": {
+        "cached_tokens": 3584,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "whats the plans",
+    "ai_reply": "Here are the Moaawen pricing plans (monthly, in USD):\n\n1. **Starter Plan - $13/month**\n   - 5,000 messages/month\n   - 1 channel\n   - 2 languages\n   - Features: AI replies, Text messaging, Business Knowledge & FAQ, Basic Analytics\n\n2. **Growth Plan - $25/month**\n   - 10,000 messages/month\n   - 2 channels\n   - 2 languages\n   - 150 voice minutes\n   - Includes all Starter features plus Image Analysis, Voice Input & Transcription\n\n3. **Scale Plan - $50/month**\n   - 20,000 messages/month\n   - 3 channels\n   - 2 languages\n   - 300 voice minutes\n   - Includes all Growth features plus Shopify/WooCommerce Sync\n\n4. **Enterprise Plan - $100/month**\n   - 40,000 messages/month\n   - 5 channels\n   - Multi-language support\n   - 600 voice minutes\n   - 100 advanced image analyses/month\n   - Includes all Scale features plus Advanced Analytics, Order Management, Advanced Image Processing\n\nYou can also add extra features or channels for additional monthly fees.\n\nIf you'd like, I can provide details on add-ons or help you choose the best plan for your needs!"
+  },
+  {
+    "timestamp": "2025-08-01T08:50:35.918Z",
+    "layer": "ai",
+    "senderId": "8evlgkn8mdsl2p8r",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 4341,
+    "tokens": {
+      "prompt_tokens": 3629,
+      "completion_tokens": 202,
+      "total_tokens": 3831,
+      "prompt_tokens_details": {
+        "cached_tokens": 3584,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "kef byesht8el",
+    "ai_reply": "مرحبا! شغلة Moaawen بسيطة وذكية. بشكل عام، Moaawen بيشتغل كمنصة ذكاء اصطناعي بتساعدك ترد على رسائل الزبائن بسرعة وبشكل تلقائي على قنوات مثل إنستغرام، واتساب، فيسبوك، وموقعك الإلكتروني.\n\nكيف بيشتغل بالضبط:\n- بتربط حساباتك على السوشيال ميديا أو متجرك الإلكتروني مع Moaawen.\n- بتدخل معلومات عن بزنسك، مثل الأسئلة الشائعة، المنتجات، وسياسة الخدمة.\n- لما يجيك رسالة من زبون، Moaawen بيقرأها وبيجاوب عليها أوتوماتيكياً بناءً على المعلومات اللي دخلتها.\n- كمان في ميزات مثل تحليل الصور، الرسائل الصوتية، وتتبع الطلبات حسب الباقة اللي بتختارها.\n\nإذا بدك شرح مفصل أكتر أو كيف تبدأ، خبرني!"
   }
 ]
