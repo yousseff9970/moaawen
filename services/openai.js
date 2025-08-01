@@ -209,7 +209,8 @@ Use the conversation history and memory summary as context to respond accurately
 - WhatsApp: ${business.contact?.whatsapp || 'N/A'}  
 - Instagram: ${business.contact?.instagram || 'N/A'}  
 
-
+🛒 **Products:**  
+${productList || 'N/A'}  
 
 ⚙️ **Description, Services, Benefits & Features:**  
 ${business.description || 'N/A'}  

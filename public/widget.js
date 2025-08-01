@@ -879,7 +879,7 @@ function formatMessage(text) {
         <div class="bot-message-container">
           <div class="avatar">AI</div>
           <div class="message-content">
-            <div class="message-bubble">${formatMessage(msg.text)}</div>
+            <div dir="auto" class="message-bubble">${formatMessage(msg.text)}</div>
             <div class="message-meta">
               <span class="message-time">${msg.timestamp}</span>
             </div>
