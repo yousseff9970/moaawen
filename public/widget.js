@@ -8,7 +8,7 @@
     return;
   }
 
-  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
+  const apiEndpoint = 'https://968b592f923f.ngrok-free.app/api/chat';
   const storageKey = 'moaawen_chat_history';
   let userMarket = null;
 
@@ -786,24 +786,32 @@ messageInput.oninput = () => {
     messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
   }
 
-  function toggleChat() {
-    isOpen = !isOpen;
-    chatBubble.style.display = isOpen ? 'none' : 'flex';
-    chatWindow.style.display = isOpen ? 'flex' : 'none';
-    notificationBadge.style.display = 'none';
-    
-    if (isOpen) {
-      messageInput.focus();
-      if (chatHistory.length === 0 && !localStorage.getItem('moaawen_welcome_shown')) {
-        welcomeMessage.style.display = 'block';
-        chatMessages.style.display = 'none';
-        localStorage.setItem('moaawen_welcome_shown', 'true');
-      } else {
-        welcomeMessage.style.display = 'none';
-        chatMessages.style.display = 'flex';
-      }
+let firstOpenScrollDone = false; // Track first open
+
+function toggleChat() {
+  isOpen = !isOpen;
+  chatBubble.style.display = isOpen ? 'none' : 'flex';
+  chatWindow.style.display = isOpen ? 'flex' : 'none';
+  notificationBadge.style.display = 'none';
+
+  if (isOpen) {
+    messageInput.focus();
+    if (chatHistory.length === 0 && !localStorage.getItem('moaawen_welcome_shown')) {
+      welcomeMessage.style.display = 'block';
+      chatMessages.style.display = 'none';
+      localStorage.setItem('moaawen_welcome_shown', 'true');
+    } else {
+      welcomeMessage.style.display = 'none';
+      chatMessages.style.display = 'flex';
+    }
+
+    // ✅ Scroll down only the first time widget is opened
+    if (!firstOpenScrollDone) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      firstOpenScrollDone = true;
     }
   }
+}
 
 function formatMessage(text) {
   return text
@@ -910,9 +918,15 @@ resizeBtn.onclick = () => {
     return '✓';
   }
 
-  function generateSessionId() {
-    return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+ function getOrCreateSessionId() {
+  let sessionId = localStorage.getItem('moaawen_session_id');
+  if (!sessionId) {
+    sessionId = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+    localStorage.setItem('moaawen_session_id', sessionId);
   }
+  return sessionId;
+}
+
 
   async function sendMessage() {
   const text = messageInput.value.trim();
@@ -936,7 +950,7 @@ resizeBtn.onclick = () => {
       },
       body: JSON.stringify({
         message: text,
-        sessionId: generateSessionId(),
+        sessionId: getOrCreateSessionId(),
         domain: window.location.hostname
       })
     });

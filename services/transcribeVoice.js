@@ -33,8 +33,8 @@ const transcribeWithWhisper = async (filePath) => {
 
   const form = new FormData();
   form.append('file', createReadStream(filePath));
-  form.append('model', 'whisper-1');
-  form.append('language', 'ar'); // You can switch to 'en' or detect dynamically
+  form.append('model', 'gpt-4o-mini-transcribe');
+  
 
   const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', form, {
     headers: {

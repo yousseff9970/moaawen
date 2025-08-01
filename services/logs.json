@@ -2729,16 +2729,16 @@
     "message": "Bade ma3loumat 3an moaawen"
   },
   {
-    "timestamp": "2025-07-15T20:08:02.079Z",
+    "timestamp": "2025-08-01T10:07:50.995Z",
     "layer": "ai",
-    "senderId": "96171587848",
+    "senderId": "7rpbmk3hmdsnu3c0",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
-    "duration": 3892,
+    "duration": 1834,
     "tokens": {
-      "prompt_tokens": 290,
-      "completion_tokens": 71,
-      "total_tokens": 361,
+      "prompt_tokens": 3633,
+      "completion_tokens": 19,
+      "total_tokens": 3652,
       "prompt_tokens_details": {
         "cached_tokens": 0,
         "audio_tokens": 0
@@ -2750,21 +2750,22 @@
         "rejected_prediction_tokens": 0
       }
     },
-    "message": "Shou bta3emlo"
+    "message": "hi kifak lyom",
+    "ai_reply": "I'm doing well, thank you! How can I assist you with Moaawen today?"
   },
   {
-    "timestamp": "2025-07-15T20:11:57.739Z",
+    "timestamp": "2025-08-01T10:07:58.687Z",
     "layer": "ai",
-    "senderId": "96176962469",
+    "senderId": "bem8ejxsmdsnu9lp",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
-    "duration": 1723,
+    "duration": 1767,
     "tokens": {
-      "prompt_tokens": 290,
-      "completion_tokens": 64,
-      "total_tokens": 354,
+      "prompt_tokens": 3634,
+      "completion_tokens": 40,
+      "total_tokens": 3674,
       "prompt_tokens_details": {
-        "cached_tokens": 0,
+        "cached_tokens": 3584,
         "audio_tokens": 0
       },
       "completion_tokens_details": {
@@ -2774,477 +2775,22 @@
         "rejected_prediction_tokens": 0
       }
     },
-    "message": "Sho bta3mlo"
+    "message": "bade e3ref aktar",
+    "ai_reply": "أنا هنا لأساعدك! شو حابب تعرف أكتر عن Moaawen؟ إذا عندك أي سؤال عن الباقات، الميزات، أو أي شي تاني، خبرني!"
   },
   {
-    "timestamp": "2025-07-15T20:12:12.509Z",
+    "timestamp": "2025-08-01T10:08:10.540Z",
     "layer": "ai",
-    "senderId": "96176962469",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1536,
-    "tokens": {
-      "prompt_tokens": 290,
-      "completion_tokens": 91,
-      "total_tokens": 381,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "Sho 3endkon"
-  },
-  {
-    "timestamp": "2025-07-15T20:12:58.118Z",
-    "layer": "ai",
-    "senderId": "96176962469",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1087,
-    "tokens": {
-      "prompt_tokens": 290,
-      "completion_tokens": 45,
-      "total_tokens": 335,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "Sho 3endkon"
-  },
-  {
-    "timestamp": "2025-07-27T18:11:48.923Z",
-    "layer": "model_general",
-    "senderId": "w1ffi4urmdlzx9di",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 37,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:12:18.469Z",
-    "layer": "model_general",
-    "senderId": "10fe0qwzmdlzxw7n",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 2,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:06.788Z",
-    "layer": "model_general",
-    "senderId": "gembl2s5mdlzyxe1",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 35,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:14.904Z",
-    "layer": "ai",
-    "senderId": "h9aujno8mdlzz32m",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1159,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.118Z",
-    "layer": "ai",
-    "senderId": "p090nrf2mdlzz37l",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1195,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 28,
-      "total_tokens": 423,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions related to our business."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.162Z",
-    "layer": "ai",
-    "senderId": "h7j25bz1mdlzz2xg",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1593,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 39,
-      "total_tokens": 434,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! Please let me know how I can assist you with moaawen's services or products. If you have any questions about our features, plans, or benefits, I'm here to help!"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.413Z",
-    "layer": "ai",
-    "senderId": "v15g3wukmdlzz2rz",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1917,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.495Z",
-    "layer": "ai",
-    "senderId": "kqcr9a01mdlzz3r6",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 867,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 28,
-      "total_tokens": 423,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions related to our business."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.516Z",
-    "layer": "ai",
-    "senderId": "dpqo5467mdlzz3hd",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1238,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 31,
-      "total_tokens": 426,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! If you have any questions about moaawen's services, features, plans, or benefits, please let me know. I'm here to help!"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.635Z",
-    "layer": "ai",
-    "senderId": "i6mybe9kmdlzz3m6",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1185,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 28,
-      "total_tokens": 423,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! Please let me know how I can assist you with moaawen's services, features, or plans. I'm here to help!"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.786Z",
-    "layer": "ai",
-    "senderId": "z2d2212qmdlzz46d",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 612,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 20,
-      "total_tokens": 415,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services, features, or plans today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.836Z",
-    "layer": "ai",
-    "senderId": "cbehil07mdlzz4be",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 481,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 17,
-      "total_tokens": 412,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:15.972Z",
-    "layer": "ai",
-    "senderId": "y61fffv9mdlzz3cg",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1872,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 27,
-      "total_tokens": 422,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your specific questions or needs."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:16.084Z",
-    "layer": "ai",
-    "senderId": "mo1ed7qjmdlzz3w6",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1277,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 29,
-      "total_tokens": 424,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or information today? Please let me know your questions related to our business offerings."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:16.403Z",
-    "layer": "ai",
-    "senderId": "a2b031g0mdlzz415",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1419,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 27,
-      "total_tokens": 422,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you today regarding moaawen's services, plans, or features? Please let me know your questions."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:18.306Z",
-    "layer": "ai",
-    "senderId": "kcgbb8h9mdlzz682",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 470,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:18.453Z",
-    "layer": "ai",
-    "senderId": "l1wm3kfrmdlzz62y",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 654,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 30,
-      "total_tokens": 425,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "11",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs related to our offerings."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:19.196Z",
-    "layer": "ai",
-    "senderId": "rvsiqpd1mdlzz6ng",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 578,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 22,
-      "total_tokens": 417,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services, plans, features, or benefits today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:19.243Z",
-    "layer": "ai",
-    "senderId": "evxx0ht7mdlzz6i9",
+    "senderId": "lealdejxmdsnujb8",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
     "duration": 1040,
     "tokens": {
-      "prompt_tokens": 395,
+      "prompt_tokens": 3633,
       "completion_tokens": 24,
-      "total_tokens": 419,
+      "total_tokens": 3657,
       "prompt_tokens_details": {
-        "cached_tokens": 0,
+        "cached_tokens": 3584,
         "audio_tokens": 0
       },
       "completion_tokens_details": {
@@ -3254,20 +2800,20 @@
         "rejected_prediction_tokens": 0
       }
     },
-    "message": "1",
-    "ai_reply": "Hello! Please let me know how I can assist you with moaawen's services, products, or business information."
+    "message": "sho 3ndkon",
+    "ai_reply": "أنا موجود لساعدك بمواضيع متعلقة بـ Moaawen. كيف فيني أساعدك اليوم؟"
   },
   {
-    "timestamp": "2025-07-27T18:13:19.418Z",
+    "timestamp": "2025-08-01T10:09:28.871Z",
     "layer": "ai",
-    "senderId": "ymtbakx7mdlzz6d8",
+    "senderId": "z590bf25mdsnw5ch",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
-    "duration": 1387,
+    "duration": 4140,
     "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 17,
-      "total_tokens": 412,
+      "prompt_tokens": 3633,
+      "completion_tokens": 221,
+      "total_tokens": 3854,
       "prompt_tokens_details": {
         "cached_tokens": 0,
         "audio_tokens": 0
@@ -3279,1287 +2825,47 @@
         "rejected_prediction_tokens": 0
       }
     },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+    "message": "sho 3ndkon",
+    "ai_reply": "مرحبا! معك Moaawen، منصة ذكية بتساعدك تدير رسائل عملك ومبيعاتك على إنستغرام، واتساب، وفيسبوك بسهولة وبسرعة.\n\nعنا باقات مختلفة حسب حجم عملك واحتياجاتك، مثلاً:\n\n- باقة Starter بـ13 دولار بالشهر: 5,000 رسالة، قناة واحدة، لغتين، مع ردود ذكية وتحليل أساسي.\n- باقة Growth بـ25 دولار: 10,000 رسالة، قناتين، ميزات إضافية مثل تحليل الصور والرسائل الصوتية.\n- باقة Scale بـ50 دولار: 20,000 رسالة، 3 قنوات، تكامل مع Shopify/WooCommerce.\n- باقة Enterprise بـ100 دولار: 40,000 رسالة، 5 قنوات، دعم لغات متعددة، ميزات متقدمة مثل إدارة الطلبات وتحليلات متطورة.\n\nفيك كمان تضيف ميزات خاصة حسب حاجتك.\n\nكيف فيني ساعدك اليوم؟ بدك تعرف أكتر عن باقة معينة أو خدمة؟"
   },
   {
-    "timestamp": "2025-07-27T18:13:19.474Z",
-    "layer": "ai",
-    "senderId": "fihrbt7smdlzz72s",
+    "timestamp": "2025-08-01T10:09:55.912Z",
+    "layer": "error",
+    "senderId": "9m30hi79mdsnwssf",
     "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 541,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 17,
-      "total_tokens": 412,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
+    "duration": 798,
+    "message": "sho 3ndkon",
+    "error": "The model `gpt-o4-mini` does not exist or you do not have access to it."
   },
   {
-    "timestamp": "2025-07-27T18:13:19.511Z",
-    "layer": "ai",
-    "senderId": "gls2hgylmdlzz6xo",
+    "timestamp": "2025-08-01T10:10:07.359Z",
+    "layer": "error",
+    "senderId": "5keewe2kmdsnx1lz",
     "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 628,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 22,
-      "total_tokens": 417,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services, features, plans, or products today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:19.779Z",
-    "layer": "ai",
-    "senderId": "s64uvcoymdlzz6sh",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1027,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 29,
-      "total_tokens": 424,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today? Please let me know your questions related to our offerings."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:19.875Z",
-    "layer": "ai",
-    "senderId": "95th7cz7mdlzz7d5",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 569,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:20.169Z",
-    "layer": "ai",
-    "senderId": "birfxduwmdlzz77y",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1051,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 26,
-      "total_tokens": 421,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you today with moaawen's services or products? Please let me know your questions or needs."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:20.343Z",
-    "layer": "ai",
-    "senderId": "fzjwz8bsmdlzz7if",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
     "duration": 846,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 38,
-      "total_tokens": 433,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! It seems like your message is just \"1.\" How can I assist you today regarding moaawen's services or products? Please provide more details or ask any questions you have!"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:20.460Z",
-    "layer": "ai",
-    "senderId": "84ccqek1mdlzz7o4",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 762,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:20.587Z",
-    "layer": "ai",
-    "senderId": "pk4uzhk8mdlzz7ti",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 691,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 26,
-      "total_tokens": 421,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:21.031Z",
-    "layer": "ai",
-    "senderId": "sncmfqcnmdlzz846",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 750,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 30,
-      "total_tokens": 425,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs related to our business."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:21.342Z",
-    "layer": "ai",
-    "senderId": "wofo0zc7mdlzz8ez",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 675,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:21.534Z",
-    "layer": "ai",
-    "senderId": "eklc9ya1mdlzz8k5",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 683,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 30,
-      "total_tokens": 425,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or features today? Please let me know your questions or needs related to our business."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:21.557Z",
-    "layer": "ai",
-    "senderId": "v6oe1tv9mdlzz89k",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1084,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 29,
-      "total_tokens": 424,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions related to our business offerings."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:21.740Z",
-    "layer": "ai",
-    "senderId": "3d25h7l7mdlzz7yq",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1657,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 30,
-      "total_tokens": 425,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or needs related to our business."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:21.967Z",
-    "layer": "ai",
-    "senderId": "00g63wcemdlzz8uy",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 726,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 29,
-      "total_tokens": 424,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions or how I can help."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:22.201Z",
-    "layer": "ai",
-    "senderId": "5aua39uemdlzz8pe",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1155,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 24,
-      "total_tokens": 419,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your questions."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:22.250Z",
-    "layer": "ai",
-    "senderId": "d7llhpixmdlzz90c",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 814,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 45,
-      "total_tokens": 440,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? If you have any questions related to our website chat widget integration, Shopify & WooCommerce sync, or other features, please let me know!"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:22.606Z",
-    "layer": "ai",
-    "senderId": "jhhk5i6lmdlzz95k",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 980,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 27,
-      "total_tokens": 422,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? Please let me know your specific questions or needs."
-  },
-  {
-    "timestamp": "2025-07-27T18:13:22.655Z",
-    "layer": "ai",
-    "senderId": "dewi6o9ymdlzz9gk",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 634,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:23.000Z",
-    "layer": "ai",
-    "senderId": "m2y4belkmdlzz9m5",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 772,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 37,
-      "total_tokens": 432,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today? If you have any questions related to our offerings, plans, or features, please let me know!"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:23.018Z",
-    "layer": "ai",
-    "senderId": "b6xfa6lgmdlzz9rq",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 598,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 17,
-      "total_tokens": 412,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:23.069Z",
-    "layer": "ai",
-    "senderId": "cns7jitxmdlzz9b5",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1244,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 17,
-      "total_tokens": 412,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or products today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:13:23.236Z",
-    "layer": "ai",
-    "senderId": "9fv1wf6umdlzz9xf",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 609,
-    "tokens": {
-      "prompt_tokens": 395,
-      "completion_tokens": 18,
-      "total_tokens": 413,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "1",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or business information today?"
-  },
-  {
-    "timestamp": "2025-07-27T18:14:29.867Z",
-    "layer": "model_general",
-    "senderId": "eclptevsmdm00pgi",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 1,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:17:33.882Z",
-    "layer": "model_general",
-    "senderId": "56ybly2xmdm04nj2",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 31,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:17:33.999Z",
-    "layer": "model_general",
-    "senderId": "2bs9kxc9mdm04nvn",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 3,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:17:34.430Z",
-    "layer": "model_general",
-    "senderId": "pu0w5a2fmdm04o7l",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 3,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:17:34.817Z",
-    "layer": "model_general",
-    "senderId": "9dnuclhjmdm04oig",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 2,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:17:35.250Z",
-    "layer": "model_general",
-    "senderId": "bpq56g46mdm04ou7",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 3,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:27:32.887Z",
-    "layer": "model_general",
-    "senderId": "o78zp5brmdm0hhpm",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 5,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-27T18:27:45.109Z",
-    "layer": "ai",
-    "senderId": "jsh5o9qqmdm0hq66",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1449,
-    "tokens": {
-      "prompt_tokens": 390,
-      "completion_tokens": 31,
-      "total_tokens": 421,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you with moaawen's services or features today? Please let me know your specific questions or needs related to our offerings."
-  },
-  {
-    "timestamp": "2025-07-30T10:56:01.514Z",
-    "layer": "model_general",
-    "senderId": "8if04iykmdpuodzs",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 31,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-30T10:56:17.659Z",
-    "layer": "ai",
-    "senderId": "sekn2g4vmdpuoky0",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 7204,
-    "tokens": {
-      "prompt_tokens": 923,
-      "completion_tokens": 341,
-      "total_tokens": 1264,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "sho fe products",
-    "ai_reply": "Here are the products available at moaawen:\n\n1. **The Inventory Not Tracked Snowboard** - $949.95 (Out of stock)\n2. **Gift Card** - $10.00 (Out of stock)\n3. **The Compare at Price Snowboard** - $785.95 (In stock)\n4. **The Collection Snowboard: Hydrogen** - $600.00 (In stock)\n5. **The Archived Snowboard** - $629.95 (In stock)\n6. **The Draft Snowboard** - $2629.95 (In stock)\n7. **The Videographer Snowboard** - $885.95 (In stock)\n8. **The Out of Stock Snowboard** - $885.95 (Out of stock)\n9. **Selling Plans Ski Wax** - $24.95 (In stock)\n10. **The Minimal Snowboard** - $885.95 (In stock)\n11. **The Complete Snowboard** - $699.95 (In stock)\n12. **The Hidden Snowboard** - $749.95 (In stock)\n13. **The Collection Snowboard: Oxygen** - $1025.00 (In stock)\n14. **The Multi-location Snowboard** - $729.95 (In stock)\n15. **The Multi-managed Snowboard** - $629.95 (In stock)\n16. **The 3p Fulfilled Snowboard** - $2629.95 (In stock)\n17. **The Collection Snowboard: Liquid** - $749.95 (In stock)\n\nIf you'd like more details about any product or assistance with purchasing, please let me know!"
-  },
-  {
-    "timestamp": "2025-07-30T11:03:13.348Z",
-    "layer": "model_general",
-    "senderId": "o14g82dvmdpuxn3h",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 35,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-30T11:19:16.040Z",
-    "layer": "model_general",
-    "senderId": "na0pnwbimdpvi9uj",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 32,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-30T11:19:20.558Z",
-    "layer": "model_general",
-    "senderId": "b6kcc4wwmdpvidnp",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 4,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-30T11:42:09.196Z",
-    "layer": "model_general",
-    "senderId": "o1v4xfhvmdpwbpg6",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 34,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-07-30T16:56:19.602Z",
-    "layer": "model_general",
-    "senderId": "jnwd5mgbmdq7jq9y",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 52,
-    "message": "hello",
-    "matchedWith": "hello",
-    "ai_reply": "Hello and welcome! How can I help you?"
-  },
-  {
-    "timestamp": "2025-07-30T16:56:26.315Z",
-    "layer": "ai",
-    "senderId": "45p035y1mdq7jubl",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 2118,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 32,
-      "total_tokens": 953,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you today regarding moaawen's products or services? If you have any specific questions or need information, please let me know!"
-  },
-  {
-    "timestamp": "2025-07-30T16:56:32.998Z",
-    "layer": "ai",
-    "senderId": "knpapdrumdq7jzp9",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1654,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 68,
-      "total_tokens": 989,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "services",
-    "ai_reply": "At moaawen, we offer a variety of products related to snowboarding, including different snowboard models and ski wax. \n\nFor more detailed information about our services, benefits, and features, you can visit our website: moaawen.myshopify.com. \n\nIf you have specific questions or need further assistance, please let me know!"
-  },
-  {
-    "timestamp": "2025-07-30T16:56:47.593Z",
-    "layer": "ai",
-    "senderId": "ko9w5egymdq7k6cu",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 7608,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 502,
-      "total_tokens": 1423,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "products",
-    "ai_reply": "Here are the products available at moaawen:\n\n1. **The Inventory Not Tracked Snowboard**  \n   - Price: $949.95  \n   - Status: Out of stock\n\n2. **Gift Card**  \n   - Price: $10.00  \n   - Status: Out of stock  \n   - Description: This is a gift card for the store\n\n3. **The Compare at Price Snowboard**  \n   - Price: $785.95  \n   - Status: In stock\n\n4. **The Collection Snowboard: Hydrogen**  \n   - Price: $600.00  \n   - Status: In stock\n\n5. **The Archived Snowboard**  \n   - Price: $629.95  \n   - Status: In stock\n\n6. **The Draft Snowboard**  \n   - Price: $2629.95  \n   - Status: In stock\n\n7. **The Videographer Snowboard**  \n   - Price: $885.95  \n   - Status: In stock\n\n8. **The Out of Stock Snowboard**  \n   - Price: $885.95  \n   - Status: Out of stock\n\n9. **Selling Plans Ski Wax**  \n   - Price: $24.95  \n   - Status: In stock\n\n10. **The Minimal Snowboard**  \n    - Price: $885.95  \n    - Status: In stock\n\n11. **The Complete Snowboard**  \n    - Price: $699.95  \n    - Status: In stock  \n    - Description: This PREMIUM snowboard is so SUPER Duper awesome!\n\n12. **The Hidden Snowboard**  \n    - Price: $749.95  \n    - Status: In stock\n\n13. **The Collection Snowboard: Oxygen**  \n    - Price: $1025.00  \n    - Status: In stock\n\n14. **The Multi-location Snowboard**  \n    - Price: $729.95  \n    - Status: In stock\n\n15. **The Multi-managed Snowboard**  \n    - Price: $629.95  \n    - Status: In stock\n\n16. **The 3p Fulfilled Snowboard**  \n    - Price: $2629.95  \n    - Status: In stock\n\n17. **The Collection Snowboard: Liquid**  \n    - Price: $749.95  \n    - Status: In stock\n\nIf you need more details or assistance with specific products, feel free to ask!"
-  },
-  {
-    "timestamp": "2025-08-01T07:55:51.260Z",
-    "layer": "model_general",
-    "senderId": "zabmcfq1mdsj4dms",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 93,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T07:56:03.279Z",
-    "layer": "ai",
-    "senderId": "iwv31omimdsj4lpn",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 2170,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 34,
-      "total_tokens": 955,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you today with moaawen's products or services? If you have specific questions or need information about our offerings, please let me know!"
-  },
-  {
-    "timestamp": "2025-08-01T07:59:45.436Z",
-    "layer": "model_general",
-    "senderId": "lk2cscyemdsj9esh",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 30,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T08:00:10.607Z",
-    "layer": "ai",
-    "senderId": "qa1uc844mdsj9x7p",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1349,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 17,
-      "total_tokens": 938,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "h",
-    "ai_reply": "Hello! How can I assist you today with moaawen's products or services?"
-  },
-  {
-    "timestamp": "2025-08-01T08:01:55.521Z",
-    "layer": "model_general",
-    "senderId": "cz699apomdsjc75j",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 34,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T08:02:25.273Z",
-    "layer": "ai",
-    "senderId": "00yx94owmdsjct3p",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1338,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 22,
-      "total_tokens": 943,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you today regarding moaawen's products, services, or any related inquiries?"
-  },
-  {
-    "timestamp": "2025-08-01T08:03:14.901Z",
-    "layer": "ai",
-    "senderId": "o0rxgeqxmdsjdt6h",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 4237,
-    "tokens": {
-      "prompt_tokens": 924,
-      "completion_tokens": 262,
-      "total_tokens": 1186,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "what do you have",
-    "ai_reply": "We have a variety of snowboards and related products available. Here's a list of our current offerings:\n\n**In Stock Snowboards:**\n- The Compare at Price Snowboard - $785.95\n- The Collection Snowboard: Hydrogen - $600.00\n- The Archived Snowboard - $629.95\n- The Draft Snowboard - $2629.95\n- The Videographer Snowboard - $885.95\n- The Minimal Snowboard - $885.95\n- The Complete Snowboard - $699.95\n- The Hidden Snowboard - $749.95\n- The Collection Snowboard: Oxygen - $1025.00\n- The Multi-location Snowboard - $729.95\n- The Multi-managed Snowboard - $629.95\n- The 3p Fulfilled Snowboard - $2629.95\n- The Collection Snowboard: Liquid - $749.95\n\n**Other Products:**\n- Gift Card - $10.00 (out of stock)\n- Selling Plans Ski Wax - $24.95\n\nPlease note that some items like \"The Inventory Not Tracked Snowboard\" and \"The Out of Stock Snowboard\" are currently unavailable.\n\nIf you're interested in any specific product or need more details, feel free to ask!"
-  },
-  {
-    "timestamp": "2025-08-01T08:04:06.840Z",
-    "layer": "ai",
-    "senderId": "n8g9ea09mdsjeynt",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 2411,
-    "tokens": {
-      "prompt_tokens": 923,
-      "completion_tokens": 117,
-      "total_tokens": 1040,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "okay what else",
-    "ai_reply": "I can provide information about our products, services, and benefits. \n\nHere are some of our available items:\n\n- In-stock snowboards such as The Compare at Price Snowboard, The Collection Snowboard: Hydrogen, The Archived Snowboard, and more.\n- Gift cards available for purchase.\n- Ski wax and various snowboard models, each with unique features and prices.\n\nIf you need details about a specific product or service, or if you're interested in making a purchase, please let me know! For further assistance, you can also contact us via email at moaawenai@gmail.com."
-  },
-  {
-    "timestamp": "2025-08-01T08:07:13.254Z",
-    "layer": "model_general",
-    "senderId": "dvh8cdwtmdsjj0a9",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 31,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T08:07:18.608Z",
-    "layer": "ai",
-    "senderId": "r8u4uk7qmdsjj3mm",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1253,
-    "tokens": {
-      "prompt_tokens": 921,
-      "completion_tokens": 32,
-      "total_tokens": 953,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you today? If you have questions about our products, services, or anything related to moaawen, please let me know."
-  },
-  {
-    "timestamp": "2025-08-01T08:21:11.669Z",
-    "layer": "model_general",
-    "senderId": "dwsn72phmdsk0z2z",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 30,
-    "message": "hi",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T08:21:17.787Z",
-    "layer": "ai",
-    "senderId": "yvqfg4zmmdsk135d",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1256,
-    "tokens": {
-      "prompt_tokens": 1085,
-      "completion_tokens": 13,
-      "total_tokens": 1098,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you with moaawen today?"
-  },
-  {
-    "timestamp": "2025-08-01T08:21:34.217Z",
-    "layer": "ai",
-    "senderId": "vpyu3cckmdsk1dj1",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 4101,
-    "tokens": {
-      "prompt_tokens": 1086,
-      "completion_tokens": 330,
-      "total_tokens": 1416,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "your products",
-    "ai_reply": "مرحباً! هاي قائمة المنتجات اللي عندي:\n\n1. **The Inventory Not Tracked Snowboard** - بس للأسف خارج المخزون  \n2. **Gift Card** - كارت هدية بـ10 دولارات، برضه خارج المخزون  \n3. **The Compare at Price Snowboard** - متوفر بـ785.95 دولار  \n4. **The Collection Snowboard: Hydrogen** - متوفر بـ600 دولار  \n5. **The Archived Snowboard** - متوفر بـ629.95 دولار  \n6. **The Draft Snowboard** - متوفر بـ2629.95 دولار  \n7. **The Videographer Snowboard** - متوفر بـ885.95 دولار  \n8. **The Out of Stock Snowboard** - خارج المخزون  \n9. **Selling Plans Ski Wax** - متوفر بـ24.95 دولار  \n10. **The Minimal Snowboard** - متوفر بـ885.95 دولار  \n11. **The Complete Snowboard** - متوفر بـ699.95 دولار  \n12. **The Hidden Snowboard** - متوفر بـ749.95 دولار  \n13. **The Collection Snowboard: Oxygen** - متوفر بـ1025 دولار  \n14. **The Multi-location Snowboard** - متوفر بـ729.95 دولار  \n15. **The Multi-managed Snowboard** - متوفر بـ629.95 دولار  \n16. **The 3p Fulfilled Snowboard** - متوفر بـ2629.95 دولار  \n17. **The Collection Snowboard: Liquid** - متوفر بـ749.95 دولار\n\nهل حابب تعرف أكثر عن شي معين؟"
-  },
-  {
-    "timestamp": "2025-08-01T08:33:27.789Z",
-    "layer": "model_general",
-    "senderId": "qfezcb60mdskgr37",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 31,
-    "message": "hello",
-    "matchedWith": "hello",
-    "ai_reply": "Hello and welcome! How can I help you?"
-  },
-  {
-    "timestamp": "2025-08-01T08:34:33.844Z",
-    "layer": "ai",
-    "senderId": "i1t9jn1pmdski5do",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1139,
-    "tokens": {
-      "prompt_tokens": 1159,
-      "completion_tokens": 23,
-      "total_tokens": 1182,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you with moaawen today? Please let me know what you need help with."
-  },
-  {
-    "timestamp": "2025-08-01T08:34:51.746Z",
-    "layer": "ai",
-    "senderId": "e2ex5rpsmdskie9v",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 7505,
-    "tokens": {
-      "prompt_tokens": 1160,
-      "completion_tokens": 313,
-      "total_tokens": 1473,
-      "prompt_tokens_details": {
-        "cached_tokens": 1024,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "your products",
-    "ai_reply": "Here are the products available at moaawen:\n\n1. The Compare at Price Snowboard - $785.95 (In stock)  \n2. The Collection Snowboard: Hydrogen - $600.00 (In stock)  \n3. The Archived Snowboard - $629.95 (In stock)  \n4. The Draft Snowboard - $2629.95 (In stock)  \n5. The Videographer Snowboard - $885.95 (In stock)  \n6. The Minimal Snowboard - $885.95 (In stock)  \n7. The Complete Snowboard - $699.95 (In stock)  \n   - This PREMIUM snowboard is so SUPER DUPER awesome!  \n8. The Hidden Snowboard - $749.95 (In stock)  \n9. The Collection Snowboard: Oxygen - $1025.00 (In stock)  \n10. The Multi-location Snowboard - $729.95 (In stock)  \n11. The Multi-managed Snowboard - $629.95 (In stock)  \n12. The 3p Fulfilled Snowboard - $2629.95 (In stock)  \n13. The Collection Snowboard: Liquid - $749.95 (In stock)  \n14. Selling Plans Ski Wax - $24.95 (In stock)  \n\nProducts currently out of stock:  \n- The Inventory Not Tracked Snowboard  \n- Gift Card  \n- The Out of Stock Snowboard  \n\nIf you want information about a specific product or need help with anything else, please let me know!"
-  },
-  {
-    "timestamp": "2025-08-01T08:37:53.684Z",
-    "layer": "model_general",
-    "senderId": "lm3oue6rmdskmggd",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "howareyou",
-    "duration": 2,
-    "message": "kifak",
-    "matchedWith": "kifak",
-    "ai_reply": "Tamam elhamdellah, shukran 3al So2al! kif fini se3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T08:38:12.615Z",
-    "layer": "ai",
-    "senderId": "q6n4fl9amdskmqdc",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 6078,
-    "tokens": {
-      "prompt_tokens": 1167,
-      "completion_tokens": 275,
-      "total_tokens": 1442,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "sho 3nkon products ya kbir",
-    "ai_reply": "أهلاً! هلق بحكيلك عن المنتجات يلي عنا:\n\n- The Compare at Price Snowboard - $785.95 (متوفر)\n- The Collection Snowboard: Hydrogen - $600.00 (متوفر)\n- The Archived Snowboard - $629.95 (متوفر)\n- The Draft Snowboard - $2629.95 (متوفر)\n- The Videographer Snowboard - $885.95 (متوفر)\n- The Minimal Snowboard - $885.95 (متوفر)\n- The Complete Snowboard - $699.95 (متوفر) - هذا اللوح ممتاز وفاخر!\n- The Hidden Snowboard - $749.95 (متوفر)\n- The Collection Snowboard: Oxygen - $1025.00 (متوفر)\n- The Multi-location Snowboard - $729.95 (متوفر)\n- The Multi-managed Snowboard - $629.95 (متوفر)\n- The 3p Fulfilled Snowboard - $2629.95 (متوفر)\n- The Collection Snowboard: Liquid - $749.95 (متوفر)\n- Selling Plans Ski Wax - $24.95 (متوفر)\n\nفيه كمان منتجات مش متوفرة حالياً مثل The Inventory Not Tracked Snowboard و Gift Card.\n\nإذا بدك معلومات أكتر عن أي منتج، خبرني!"
-  },
-  {
-    "timestamp": "2025-08-01T08:38:30.626Z",
-    "layer": "ai",
-    "senderId": "p16ec7jxmdskn73e",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 2422,
-    "tokens": {
-      "prompt_tokens": 1162,
-      "completion_tokens": 51,
-      "total_tokens": 1213,
-      "prompt_tokens_details": {
-        "cached_tokens": 1024,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "do you have delivery",
-    "ai_reply": "Yes, moaawen offers delivery services. If you need specific details about delivery areas, times, or costs, please let me know, and I’ll provide the information I have or guide you on how to proceed. How can I assist you further?"
-  },
-  {
-    "timestamp": "2025-08-01T08:48:51.554Z",
-    "layer": "model_general",
-    "senderId": "vccex768mdsl0jwm",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 4,
-    "message": "hiii",
-    "matchedWith": "hi",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
-  },
-  {
-    "timestamp": "2025-08-01T08:49:02.758Z",
-    "layer": "ai",
-    "senderId": "9oacil6amdsl0rn9",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 1382,
-    "tokens": {
-      "prompt_tokens": 4206,
-      "completion_tokens": 24,
-      "total_tokens": 4230,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
-    "message": "help",
-    "ai_reply": "Hello! How can I assist you with Moaawen today? Please let me know what you need help with."
-  },
-  {
-    "timestamp": "2025-08-01T08:49:22.259Z",
-    "layer": "ai",
-    "senderId": "ueb7gcp5mdsl15bm",
-    "businessId": "687400f73e2a7309edd0144e",
-    "intent": "general",
-    "duration": 3154,
-    "tokens": {
-      "prompt_tokens": 4210,
-      "completion_tokens": 170,
-      "total_tokens": 4380,
-      "prompt_tokens_details": {
-        "cached_tokens": 4096,
-        "audio_tokens": 0
-      },
-      "completion_tokens_details": {
-        "reasoning_tokens": 0,
-        "audio_tokens": 0,
-        "accepted_prediction_tokens": 0,
-        "rejected_prediction_tokens": 0
-      }
-    },
     "message": "sho 3ndkon",
-    "ai_reply": "Hello! Here’s what we offer at Moaawen:\n\n**Products:**\n- Various snowboards available in different styles and prices (from $600 to $2629.95), some are in stock, some out of stock.\n- Ski Wax for $24.95.\n- Gift Cards (currently out of stock).\n\n**Services:**\n- AI-powered customer support and messaging platform for businesses.\n- Plans starting from $13/month offering features like AI replies, text messaging, multi-channel support, image and voice analysis, Shopify/WooCommerce sync, order management, and advanced analytics.\n- Fully customizable plans to fit your business needs.\n- Support for multiple channels like Instagram, WhatsApp, Facebook Messenger.\n- Integration with e-commerce platforms.\n\nIf you want details about a specific product or service, or pricing plans, just let me know!"
+    "error": "The model `gpt-o4-mini` does not exist or you do not have access to it."
   },
   {
-    "timestamp": "2025-08-01T08:49:51.042Z",
-    "layer": "model_general",
-    "senderId": "3ouw4baomdsl1twv",
+    "timestamp": "2025-08-01T10:10:19.972Z",
+    "layer": "error",
+    "senderId": "s7d3meqvmdsnxbdf",
     "businessId": "687400f73e2a7309edd0144e",
-    "intent": "greeting",
-    "duration": 41,
-    "message": "helloo",
-    "matchedWith": "helloo",
-    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+    "duration": 801,
+    "message": "kif l as3ar",
+    "error": "The model `gpt-o4-mini` does not exist or you do not have access to it."
   },
   {
-    "timestamp": "2025-08-01T08:50:03.235Z",
+    "timestamp": "2025-08-01T10:10:42.843Z",
     "layer": "ai",
-    "senderId": "pv8dajhamdsl2129",
+    "senderId": "cunt19o4mdsnxsgo",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
-    "duration": 2991,
+    "duration": 1496,
     "tokens": {
-      "prompt_tokens": 3627,
-      "completion_tokens": 140,
-      "total_tokens": 3767,
+      "prompt_tokens": 3633,
+      "completion_tokens": 32,
+      "total_tokens": 3665,
       "prompt_tokens_details": {
         "cached_tokens": 0,
         "audio_tokens": 0
@@ -4572,19 +2878,19 @@
       }
     },
     "message": "sho 3ndkon",
-    "ai_reply": "مرحباً! معك Moaawen، منصة ذكية بتساعدك تدير رسائل عملك ومبيعاتك على إنستغرام، واتساب، وفيسبوك وغيرها بسهولة وبسرعة.\n\nعنا باقات مختلفة تناسب كل حجم عمل، من باقة Starter للناس اللي بلشوا للتو، لباقات أكبر بتعطيك ميزات متطورة مثل تحليل الصور، الردود الصوتية، تكامل مع Shopify/WooCommerce، وإدارة الطلبات.\n\nإذا بتحب، فيني خبرك أكتر عن الباقات والأسعار أو كيف فينا نساعد بزنسك تحديداً. شو نوع عملك أو شو بدك بالضبط؟"
+    "ai_reply": "أنا بقدر ساعدك بمعلومات عن خدمات ومنتجات Moaawen. فيك تخبرني شو اللي بدك تعرفه بالتحديد؟"
   },
   {
-    "timestamp": "2025-08-01T08:50:17.940Z",
+    "timestamp": "2025-08-01T10:11:01.371Z",
     "layer": "ai",
-    "senderId": "mb8zjmwamdsl2b3y",
+    "senderId": "p73rthtimdsny15q",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
-    "duration": 4534,
+    "duration": 8790,
     "tokens": {
-      "prompt_tokens": 3626,
-      "completion_tokens": 268,
-      "total_tokens": 3894,
+      "prompt_tokens": 3634,
+      "completion_tokens": 266,
+      "total_tokens": 3900,
       "prompt_tokens_details": {
         "cached_tokens": 3584,
         "audio_tokens": 0
@@ -4596,20 +2902,20 @@
         "rejected_prediction_tokens": 0
       }
     },
-    "message": "whats the plans",
-    "ai_reply": "Here are the Moaawen pricing plans (monthly, in USD):\n\n1. **Starter Plan - $13/month**\n   - 5,000 messages/month\n   - 1 channel\n   - 2 languages\n   - Features: AI replies, Text messaging, Business Knowledge & FAQ, Basic Analytics\n\n2. **Growth Plan - $25/month**\n   - 10,000 messages/month\n   - 2 channels\n   - 2 languages\n   - 150 voice minutes\n   - Includes all Starter features plus Image Analysis, Voice Input & Transcription\n\n3. **Scale Plan - $50/month**\n   - 20,000 messages/month\n   - 3 channels\n   - 2 languages\n   - 300 voice minutes\n   - Includes all Growth features plus Shopify/WooCommerce Sync\n\n4. **Enterprise Plan - $100/month**\n   - 40,000 messages/month\n   - 5 channels\n   - Multi-language support\n   - 600 voice minutes\n   - 100 advanced image analyses/month\n   - Includes all Scale features plus Advanced Analytics, Order Management, Advanced Image Processing\n\nYou can also add extra features or channels for additional monthly fees.\n\nIf you'd like, I can provide details on add-ons or help you choose the best plan for your needs!"
+    "message": "kif l as3ar",
+    "ai_reply": "باقات وأسعار Moaawen هي كالتالي:\n\n📦 **الباقات الأساسية** (كل الأسعار شهرياً، بالدولار)\n\n1. **Starter Plan** – \\$13/شهر\n   - 5,000 رسالة بالشهر، قناة واحدة، لغتين\n   - الميزات: AI Replies، Text Messaging، Business Knowledge & FAQ، Basic Analytics\n\n2. **Growth Plan** – \\$25/شهر\n   - 10,000 رسالة بالشهر، قناتين، لغتين، 150 Voice Minutes\n   - كل ميزات Starter وزيد عليها: Image Analysis، Voice Input & Transcription\n\n3. **Scale Plan** – \\$50/شهر\n   - 20,000 رسالة بالشهر، 3 قنوات، لغتين، 300 Voice Minutes\n   - كل ميزات Growth وزيد عليها: Shopify/WooCommerce Sync\n\n4. **Enterprise Plan** – \\$100/شهر\n   - 40,000 رسالة بالشهر، 5 قنوات، دعم Multi-language، 600 Voice Minutes، 100 Advanced Image Analyses بالشهر\n   - كل ميزات Scale وزيد عليها: Advanced Analytics، Order Management، Advanced Image Processing\n\nإذا بدك أي تفاصيل إضافية أو توضيحات، خبرني!"
   },
   {
-    "timestamp": "2025-08-01T08:50:35.918Z",
+    "timestamp": "2025-08-01T10:11:39.148Z",
     "layer": "ai",
-    "senderId": "8evlgkn8mdsl2p8r",
+    "senderId": "56vtflh3mdsnywrx",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "general",
-    "duration": 4341,
+    "duration": 5360,
     "tokens": {
-      "prompt_tokens": 3629,
-      "completion_tokens": 202,
-      "total_tokens": 3831,
+      "prompt_tokens": 3634,
+      "completion_tokens": 284,
+      "total_tokens": 3918,
       "prompt_tokens_details": {
         "cached_tokens": 3584,
         "audio_tokens": 0
@@ -4621,18 +2927,43 @@
         "rejected_prediction_tokens": 0
       }
     },
-    "message": "kef byesht8el",
-    "ai_reply": "مرحبا! شغلة Moaawen بسيطة وذكية. بشكل عام، Moaawen بيشتغل كمنصة ذكاء اصطناعي بتساعدك ترد على رسائل الزبائن بسرعة وبشكل تلقائي على قنوات مثل إنستغرام، واتساب، فيسبوك، وموقعك الإلكتروني.\n\nكيف بيشتغل بالضبط:\n- بتربط حساباتك على السوشيال ميديا أو متجرك الإلكتروني مع Moaawen.\n- بتدخل معلومات عن بزنسك، مثل الأسئلة الشائعة، المنتجات، وسياسة الخدمة.\n- لما يجيك رسالة من زبون، Moaawen بيقرأها وبيجاوب عليها أوتوماتيكياً بناءً على المعلومات اللي دخلتها.\n- كمان في ميزات مثل تحليل الصور، الرسائل الصوتية، وتتبع الطلبات حسب الباقة اللي بتختارها.\n\nإذا بدك شرح مفصل أكتر أو كيف تبدأ، خبرني!"
+    "message": "kif l as3ar",
+    "ai_reply": "مرحبا! بالنسبة للأسعار، هيدا ملخص سريع لباقات Moaawen الشهرية بالدولار:\n\n- **Starter Plan**: 13$  \n  - 5,000 رسالة، قناة وحدة، لغتين  \n  - ميزات أساسية مثل الردود الذكية، الرسائل النصية، الأسئلة الشائعة، تحليلات بسيطة  \n\n- **Growth Plan**: 25$  \n  - 10,000 رسالة، قناتين، لغتين، 150 دقيقة صوت  \n  - كل ميزات Starter + تحليل الصور، إدخال صوتي وتحويله لنص  \n\n- **Scale Plan**: 50$  \n  - 20,000 رسالة، 3 قنوات، لغتين، 300 دقيقة صوت  \n  - كل ميزات Growth + تكامل مع Shopify/WooCommerce  \n\n- **Enterprise Plan**: 100$  \n  - 40,000 رسالة، 5 قنوات، دعم لغات متعددة، 600 دقيقة صوت، 100 تحليل صور متقدم  \n  - كل ميزات Scale + تحليلات متقدمة، إدارة الطلبات، معالجة صور متقدمة  \n\nوفي كمان إضافات بتضيفها حسب الحاجة مثل قنوات إضافية، لغات إضافية، رسائل إضافية، وغيرها.\n\nإذا بدك تفاصيل أكتر أو باقة مخصصة، فيك تخبرني وأنا ساعدك!"
   },
   {
-    "timestamp": "2025-08-01T09:01:09.095Z",
+    "timestamp": "2025-08-01T12:30:43.772Z",
     "layer": "model_general",
-    "senderId": "g64flfelmdslgczl",
+    "senderId": "87dshwdhmdssxvoq",
     "businessId": "687400f73e2a7309edd0144e",
     "intent": "greeting",
     "duration": 37,
     "message": "hi",
     "matchedWith": "hi",
     "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-01T12:30:52.495Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2643,
+    "tokens": {
+      "prompt_tokens": 4211,
+      "completion_tokens": 26,
+      "total_tokens": 4237,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "kifak ya kbir",
+    "ai_reply": "مرحبا! أنا منيح، شكراً لسؤالك. كيف فيني ساعدك اليوم مع موّاعن؟"
   }
 ]
