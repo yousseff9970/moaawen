@@ -2965,5 +2965,299 @@
     },
     "message": "kifak ya kbir",
     "ai_reply": "مرحبا! أنا منيح، شكراً لسؤالك. كيف فيني ساعدك اليوم مع موّاعن؟"
+  },
+  {
+    "timestamp": "2025-08-02T16:42:05.190Z",
+    "layer": "model_general",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 38,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-03T11:17:56.017Z",
+    "layer": "model_general",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 35,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-03T11:18:14.223Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 14913,
+    "tokens": {
+      "prompt_tokens": 4207,
+      "completion_tokens": 201,
+      "total_tokens": 4408,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "fe snowboard",
+    "ai_reply": "We have several snowboards in stock available for purchase. Here are some options with their prices:\n\n- The Compare at Price Snowboard — $785.95\n- The Collection Snowboard: Hydrogen — $600.00\n- The Archived Snowboard — $629.95\n- The Draft Snowboard — $2629.95\n- The Videographer Snowboard — $885.95\n- The Minimal Snowboard — $885.95\n- The Complete Snowboard (Premium) — $699.95\n- The Hidden Snowboard — $749.95\n- The Collection Snowboard: Oxygen — $1025.00\n- The Multi-location Snowboard — $729.95\n- The Multi-managed Snowboard — $629.95\n- The 3p Fulfilled Snowboard — $2629.95\n- The Collection Snowboard: Liquid — $749.95\n\nIf you want details about a specific snowboard or help choosing one, please let me know!"
+  },
+  {
+    "timestamp": "2025-08-03T11:18:48.076Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 11234,
+    "tokens": {
+      "prompt_tokens": 4425,
+      "completion_tokens": 76,
+      "total_tokens": 4501,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "ha tjebo she mn l out of stock",
+    "ai_reply": "Unfortunately, the snowboards labeled \"Out of stock\" are currently not available for purchase. These include:\n\n- The Inventory Not Tracked Snowboard\n- Gift Card\n- The Out of Stock Snowboard\n\nIf you want, I can notify you when they become available again, or help you choose from the in-stock snowboards. Let me know how you'd like to proceed!"
+  },
+  {
+    "timestamp": "2025-08-03T11:35:31.661Z",
+    "layer": "model_general",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 50,
+    "message": "hello",
+    "matchedWith": "hello",
+    "ai_reply": "Hello and welcome! How can I help you?"
+  },
+  {
+    "timestamp": "2025-08-03T11:35:40.441Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2958,
+    "tokens": {
+      "prompt_tokens": 4220,
+      "completion_tokens": 278,
+      "total_tokens": 4498,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "fe snowboard?",
+    "ai_reply": "أهلا! إي، عنا عدة أنواع من الـ snowboard متوفرة. فيك تختار من هالقائمة يلي عنا:\n\n- The Compare at Price Snowboard - السعر: $785.95 (متوفر)\n- The Collection Snowboard: Hydrogen - السعر: $600.00 (متوفر)\n- The Archived Snowboard - السعر: $629.95 (متوفر)\n- The Draft Snowboard - السعر: $2629.95 (متوفر)\n- The Videographer Snowboard - السعر: $885.95 (متوفر)\n- The Minimal Snowboard - السعر: $885.95 (متوفر)\n- The Complete Snowboard - السعر: $699.95 (متوفر)\n- The Hidden Snowboard - السعر: $749.95 (متوفر)\n- The Collection Snowboard: Oxygen - السعر: $1025.00 (متوفر)\n- The Multi-location Snowboard - السعر: $729.95 (متوفر)\n- The Multi-managed Snowboard - السعر: $629.95 (متوفر)\n- The 3p Fulfilled Snowboard - السعر: $2629.95 (متوفر)\n- The Collection Snowboard: Liquid - السعر: $749.95 (متوفر)\n\nإذا حابب تعرف تفاصيل أكتر عن أي نوع أو بدك مساعدة بالاختيار، خبرني!"
+  },
+  {
+    "timestamp": "2025-08-03T11:36:08.632Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2508,
+    "tokens": {
+      "prompt_tokens": 4506,
+      "completion_tokens": 51,
+      "total_tokens": 4557,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "do you have info on lavana",
+    "ai_reply": "I’m sorry, I don’t have information about \"Lavana\" in my current data. If you need more details, please contact us at moaawenai@gmail.com for further assistance. How else can I help you with moaawen today?"
+  },
+  {
+    "timestamp": "2025-08-03T11:36:34.278Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1578,
+    "tokens": {
+      "prompt_tokens": 4578,
+      "completion_tokens": 34,
+      "total_tokens": 4612,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "minimal snowboard sho s3ra",
+    "ai_reply": "سعر الـ Minimal Snowboard هو $885.95 ومتوفّر حالياً. إذا بدك أي معلومات إضافية أو بدك تساعد بالطلب، خبرني!"
+  },
+  {
+    "timestamp": "2025-08-03T11:36:50.263Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 3741,
+    "tokens": {
+      "prompt_tokens": 4626,
+      "completion_tokens": 65,
+      "total_tokens": 4691,
+      "prompt_tokens_details": {
+        "cached_tokens": 4480,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "fe she out of stock?",
+    "ai_reply": "نعم، في عنا بعض المنتجات يلي حالياً نفدت من المخزون، مثل:\n\n- The Inventory Not Tracked Snowboard  \n- Gift Card  \n- The Out of Stock Snowboard  \n\nبس الـ Minimal Snowboard متوفر وما نفد. إذا بدك شي تاني أو مساعدة، أنا جاهز!"
+  },
+  {
+    "timestamp": "2025-08-03T11:58:03.122Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1295,
+    "tokens": {
+      "prompt_tokens": 4219,
+      "completion_tokens": 18,
+      "total_tokens": 4237,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "sabahoo",
+    "ai_reply": "صباحو! كيف فيني ساعدك اليوم بخصوص Moaawen؟"
+  },
+  {
+    "timestamp": "2025-08-03T11:58:17.141Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1680,
+    "tokens": {
+      "prompt_tokens": 4241,
+      "completion_tokens": 35,
+      "total_tokens": 4276,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "i want info",
+    "ai_reply": "Sure! Could you please specify what information you need about Moaawen? For example, are you interested in our products, pricing plans, features, or something else?"
+  },
+  {
+    "timestamp": "2025-08-03T11:58:27.868Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 2641,
+    "tokens": {
+      "prompt_tokens": 4297,
+      "completion_tokens": 163,
+      "total_tokens": 4460,
+      "prompt_tokens_details": {
+        "cached_tokens": 4224,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "kif l as3ar",
+    "ai_reply": "أكيد! هي أسعار باقات Moaawen الشهرية بالدولار الأمريكي:\n\n- **Starter Plan**: 13$ بالشهر  \n- **Growth Plan**: 25$ بالشهر  \n- **Scale Plan**: 50$ بالشهر  \n- **Enterprise Plan**: 100$ بالشهر  \n\nوفيك تضيف كمان إضافات حسب حاجتك، مثل:  \n- 1000 رسالة زيادة بـ3$  \n- قناة إضافية (مثلاً WhatsApp أو Messenger) بـ7$  \n- لغة إضافية بـ10$  \n- تكامل مع Shopify/WooCommerce بـ5$  \n- إدارة الطلبات بـ10$  \n- ترقيات الصوت والمزيد  \n\nإذا بدك تفاصيل أكتر أو باقة مخصصة، فيني ساعدك! شو رأيك؟"
+  },
+  {
+    "timestamp": "2025-08-03T11:58:33.674Z",
+    "layer": "model_general",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "greeting",
+    "duration": 4,
+    "message": "hi",
+    "matchedWith": "hi",
+    "ai_reply": "Ahla w sahla! Kif fini sa3dak?"
+  },
+  {
+    "timestamp": "2025-08-03T11:58:44.878Z",
+    "layer": "ai",
+    "senderId": "87dshwdhmdssxvoq",
+    "businessId": "687400f73e2a7309edd0144e",
+    "intent": "general",
+    "duration": 1706,
+    "tokens": {
+      "prompt_tokens": 4475,
+      "completion_tokens": 34,
+      "total_tokens": 4509,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "message": "metzkr so2ale?",
+    "ai_reply": "أكيد، سؤالك عن الأسعار هو نفسه اللي جاوبتك عليه هلأ. إذا بدك أي معلومات إضافية عن الباقات أو الميزات، خبرني!"
   }
 ]
