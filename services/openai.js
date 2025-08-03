@@ -320,7 +320,7 @@ const fallbackMessage = (language) => {
     return `عذرًا ما عندي هالمعلومة هلّق. فيك تتواصل معنا عالتليفون ${business.contact?.phone || ''} أو عالإيميل ${business.contact?.email || ''} لمزيد من التفاصيل.`;
   }
   if (language === 'arabizi') {
-    return `3ezeran ma 3ande hal ma3loumet hal2it. 7awel tetsa2alna 3al ${business.contact?.phone || ''} aw email ${business.contact?.email || ''}.`;
+    return `Sorry ma 3nde hal ma3lome 7aliyan fikon tetwasalo m3na 3al ${business.contact?.phone || ''} aw email ${business.contact?.email || ''}.`;
   }
   return `I’m sorry, I don’t have that information right now. Please contact us at ${business.contact?.phone || 'N/A'} or ${business.contact?.email || 'N/A'} for more details.`;
 };
