@@ -14,17 +14,17 @@ router.get('/connect', (req, res) => {
   const shop = req.query.shop;
   if (!shop) return res.status(400).send('Missing shop parameter');
 
-  const scopes = [
-    'read_products',
-    'read_product_listings',       // ✅ fixed typo
-    'read_inventory',
-    'read_custom_collections',     // ✅ required for /custom_collections.json
-    'read_smart_collections',      // ✅ required for /smart_collections.json
-    'read_shopify_payments_payouts',
-    'read_orders',
-    'write_orders',
-    'read_customers'
-  ];
+const scopes = [
+  'read_products',
+  'read_product_listings',
+  'read_inventory',
+  'read_collections',                 // ✅ new unified scope
+  'read_shopify_payments_payouts',
+  'read_orders',
+  'write_orders',
+  'read_customers'
+];
+
 
   const redirectURL = `https://${shop}/admin/oauth/authorize?client_id=${SHOPIFY_API_KEY}&scope=${scopes.join(',')}&redirect_uri=${REDIRECT_URI}`;
   res.redirect(redirectURL);

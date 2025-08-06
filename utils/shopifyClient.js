@@ -56,102 +56,115 @@ variant_id = "45209434554557";
 
 
 
-  getFullProducts: async () => {
-  // 1️⃣ Get all collections
- // 1️⃣ Get both custom & smart collections
-const customCollections = await getAllPages('/custom_collections.json?fields=id,title');
-const smartCollections = await getAllPages('/smart_collections.json?fields=id,title');
-let collections = [...customCollections, ...smartCollections];
-
-// 2️⃣ Get all products
-const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
-
-// 3️⃣ Get collects mapping
-const collects = await getAllPages('/collects.json?fields=collection_id,product_id');
-const productToCollections = {};
-collects.forEach(c => {
-  if (!productToCollections[c.product_id]) {
-    productToCollections[c.product_id] = [];
+getFullProducts: async () => {
+  // 1️⃣ Get both custom & smart collections (requires read_collections scope)
+  let collections = [];
+  try {
+    const customCollections = await getAllPages('/custom_collections.json?fields=id,title');
+    const smartCollections = await getAllPages('/smart_collections.json?fields=id,title');
+    collections = [...customCollections, ...smartCollections];
+  } catch (err) {
+    console.warn('⚠️ Could not fetch collections. Ensure read_collections scope is granted.', err.message);
   }
-  productToCollections[c.product_id].push(c.collection_id);
-});
 
-// 4️⃣ Fallback collection if none
-if (collections.length === 0) {
-  collections.push({ id: 'all', title: 'All Products' });
+  // 2️⃣ Get all products
+  const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
+
+  // 3️⃣ Get collects mapping
+  let collects = [];
+  try {
+    collects = await getAllPages('/collects.json?fields=collection_id,product_id');
+  } catch (err) {
+    console.warn('⚠️ Could not fetch collects mapping.', err.message);
+  }
+
+  const productToCollections = {};
+  collects.forEach(c => {
+    if (!productToCollections[c.product_id]) {
+      productToCollections[c.product_id] = [];
+    }
+    productToCollections[c.product_id].push(c.collection_id);
+  });
+
+  // 4️⃣ Fallback collection if none
+  if (collections.length === 0) {
+    collections.push({ id: 'all', title: 'All Products' });
+    products.forEach(p => {
+      if (!productToCollections[p.id]) {
+        productToCollections[p.id] = ['all'];
+      }
+    });
+  }
+
+  // 5️⃣ Stock map
+  const itemIds = products
+    .flatMap(p => p.variants.map(v => v.inventory_item_id))
+    .filter(Boolean);
+  
+  const inStockMap = {};
+  for (let i = 0; i < itemIds.length; i += 100) {
+    const ids = itemIds.slice(i, i + 100).join(',');
+    const res = await api.get(`/inventory_levels.json?inventory_item_ids=${ids}`);
+    res.data.inventory_levels.forEach(level => {
+      inStockMap[level.inventory_item_id] = level.available > 0;
+    });
+  }
+
+  // 6️⃣ Build collections
+  const collectionMap = collections.reduce((acc, col) => {
+    acc[col.id] = { id: col.id, title: col.title, products: [] };
+    return acc;
+  }, {});
+
   products.forEach(p => {
-    if (!productToCollections[p.id]) {
-      productToCollections[p.id] = ['all'];
+    const productData = {
+      id: p.id,
+      title: p.title,
+      description: p.body_html,
+      vendor: p.vendor,
+      type: p.product_type,
+      tags: p.tags,
+      images: p.images.map(img => ({
+        id: img.id,
+        src: img.src,
+        alt: img.alt,
+        position: img.position
+      })),
+      variants: p.variants.map(v => {
+        const variantImage = v.image_id ? p.images.find(img => img.id === v.image_id) : null;
+        return {
+          id: v.id,
+          sku: v.sku,
+          discountedPrice: v.price,
+          originalPrice: v.compare_at_price || v.price,
+          isDiscounted: v.compare_at_price && Number(v.compare_at_price) > Number(v.price),
+          weight: v.weight,
+          barcode: v.barcode,
+          inventoryItemId: v.inventory_item_id,
+          inStock: inStockMap[v.inventory_item_id] ?? false,
+          option1: v.option1 || null,
+          option2: v.option2 || null,
+          option3: v.option3 || null,
+          variantName: [v.option1, v.option2, v.option3].filter(Boolean).join(' / '),
+          image: variantImage?.src || p.images[0]?.src || null
+        };
+      })
+    };
+
+    const assignedCollections = productToCollections[p.id] || [];
+    if (assignedCollections.length === 0) {
+      assignedCollections.push('all'); // fallback if not in any collection
     }
+    assignedCollections.forEach(colId => {
+      if (collectionMap[colId]) {
+        collectionMap[colId].products.push(productData);
+      }
+    });
   });
+
+  return Object.values(collectionMap);
 }
 
-// 5️⃣ Stock map
-const itemIds = products.flatMap(p => p.variants.map(v => v.inventory_item_id).filter(Boolean));
-const inStockMap = {};
-for (let i = 0; i < itemIds.length; i += 100) {
-  const ids = itemIds.slice(i, i + 100).join(',');
-  const res = await api.get(`/inventory_levels.json?inventory_item_ids=${ids}`);
-  res.data.inventory_levels.forEach(level => {
-    inStockMap[level.inventory_item_id] = level.available > 0;
-  });
-}
-
-// 6️⃣ Build collections
-const collectionMap = collections.reduce((acc, col) => {
-  acc[col.id] = { id: col.id, title: col.title, products: [] };
-  return acc;
-}, {});
-
-products.forEach(p => {
-  const productData = {
-    id: p.id,
-    title: p.title,
-    description: p.body_html,
-    vendor: p.vendor,
-    type: p.product_type,
-    tags: p.tags,
-    images: p.images.map(img => ({
-      id: img.id,
-      src: img.src,
-      alt: img.alt,
-      position: img.position
-    })),
-    variants: p.variants.map(v => {
-      const variantImage = v.image_id ? p.images.find(img => img.id === v.image_id) : null;
-      return {
-        id: v.id,
-        sku: v.sku,
-        discountedPrice: v.price,
-        originalPrice: v.compare_at_price || v.price,
-        isDiscounted: v.compare_at_price && Number(v.compare_at_price) > Number(v.price),
-        weight: v.weight,
-        barcode: v.barcode,
-        inventoryItemId: v.inventory_item_id,
-        inStock: inStockMap[v.inventory_item_id] ?? false,
-        option1: v.option1 || null,
-        option2: v.option2 || null,
-        option3: v.option3 || null,
-        variantName: [v.option1, v.option2, v.option3].filter(Boolean).join(' / '),
-        image: variantImage?.src || p.images[0]?.src || null
-      };
-    })
-  };
-
-  const assignedCollections = productToCollections[p.id] || [];
-  if (assignedCollections.length === 0) {
-    assignedCollections.push('all'); // fallback if not in any collection
-  }
-  assignedCollections.forEach(colId => {
-    if (collectionMap[colId]) {
-      collectionMap[colId].products.push(productData);
-    }
-  });
-});
-
-return Object.values(collectionMap);
-
-}
 
 
   };
