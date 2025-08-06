@@ -1,3 +1,6 @@
+const { MongoClient } = require('mongodb');
+const client = new MongoClient(process.env.MONGO_URI);
+
 async function saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, collections) {
   await client.connect();
   const col = client.db().collection('businesses');
@@ -27,3 +30,6 @@ async function saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, col
 
   return col.findOne({ shop });
 }
+
+
+module.exports = saveOrUpdateStore;
