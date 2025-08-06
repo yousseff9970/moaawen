@@ -1,56 +1,96 @@
+// routes/auth.js
 const express = require('express');
-const axios = require('axios');
 const router = express.Router();
-const Business = require('../models/Business');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { MongoClient } = require('mongodb');
 
-// Step 1: Redirect to Facebook OAuth
-router.get('/facebook', (req, res) => {
-  const fbAuthUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${process.env.FACEBOOK_APP_ID}&redirect_uri=${process.env.OAUTH_REDIRECT_URI}&scope=pages_show_list,pages_read_engagement,pages_manage_metadata,pages_messaging,instagram_basic,instagram_manage_messages`;
-  res.redirect(fbAuthUrl);
-});
+const client = new MongoClient(process.env.MONGO_URI);
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key';
 
-// Step 2: Callback and Save Access Token
-router.get('/callback', async (req, res) => {
-  const { code } = req.query;
-  if (!code) return res.status(400).send('No code returned from Facebook.');
-
+// -------------------- REGISTER --------------------
+router.post('/register', async (req, res) => {
   try {
-    const tokenRes = await axios.get(`https://graph.facebook.com/v19.0/oauth/access_token`, {
-      params: {
-        client_id: process.env.FACEBOOK_APP_ID,
-        client_secret: process.env.FACEBOOK_APP_SECRET,
-        redirect_uri: process.env.OAUTH_REDIRECT_URI,
-        code,
-      }
-    });
+    const { businessName, email, phone, password } = req.body;
 
-    const userToken = tokenRes.data.access_token;
+    if (!businessName || !email || !phone || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
 
-    const pagesRes = await axios.get(`https://graph.facebook.com/v19.0/me/accounts?fields=name,id,access_token,connected_instagram_account`, {
-      headers: { Authorization: `Bearer ${userToken}` }
-    });
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
 
-    const page = pagesRes.data.data[0]; // Choose the first page for now
+    const existingUser = await usersCol.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists.' });
+    }
 
-    const businessData = {
-      name: page.name,
-      page_id: page.id,
-      access_token: page.access_token,
-      ig_id: page.connected_instagram_account?.id || null
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const userDoc = {
+      email,
+      phone,
+      password: hashedPassword,
+      businesses: [],
+      createdAt: new Date()
     };
 
-    const existing = await Business.findOne({ page_id: businessData.page_id });
-    if (existing) {
-      await Business.updateOne({ page_id: businessData.page_id }, businessData);
-    } else {
-      await Business.create(businessData);
-    }
-console.log('Callback Query:', req.query);
-    res.send('✅ Business connected successfully!');
+    const result = await usersCol.insertOne(userDoc);
+
+    return res.json({
+      message: 'Registration successful!',
+      userId: result.insertedId
+    });
   } catch (err) {
-    console.log('Callback Query:', req.query);
-    console.error('OAuth Error:', err.response?.data || err.message);
-    res.status(500).send('OAuth failed');
+    console.error('Register error:', err.message);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// -------------------- LOGIN --------------------
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    const user = await usersCol.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or password.' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Invalid email or password.' });
+    }
+
+    // Generate JWT token (expires in 7 days)
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    return res.json({
+      message: 'Login successful!',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        phone: user.phone,
+        businesses: user.businesses
+      }
+    });
+  } catch (err) {
+    console.error('Login error:', err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 

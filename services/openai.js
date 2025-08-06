@@ -294,13 +294,42 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
 
   updateSession(senderId, 'user', userMessage);
 
-  const productList = (business.products || []).map((p, i) => {
-    const variant = p.variants?.[0] || {};
-    const price = variant.price ? `$${variant.price}` : 'Price not available';
-    const stockStatus = variant.inStock === false ? '❌ Out of stock' : '✅ In stock';
+ const productList = (business.products || [])
+  .map((collection, cIndex) => {
+    const collectionHeader = `\n📦 **${collection.title}**\n`;
 
-    return `${i + 1}. **${p.title}**\n   - Price: ${price}\n   - ${stockStatus}\n   - Description: ${p.description || 'No description.'}`;
-  }).join('\n\n');
+    const productsText = (collection.products || [])
+      .map((p, pIndex) => {
+        const variantsText = (p.variants || [])
+          .map((v, vIndex) => {
+            let priceDisplay = 'Price not available';
+            if (v.discountedPrice) {
+              if (v.isDiscounted) {
+                priceDisplay = `~~$${v.originalPrice}~~ ➡️ **$${v.discountedPrice}**`;
+              } else {
+                priceDisplay = `$${v.discountedPrice}`;
+              }
+            }
+
+            const stockStatus = v.inStock === false ? '❌ Out of stock' : '✅ In stock';
+            const variantLabel = v.variantName ? `(${v.variantName})` : '';
+            const skuText = v.sku ? `SKU: ${v.sku}` : '';
+            const barcodeText = v.barcode ? `Barcode: ${v.barcode}` : '';
+            const imageText = v.image ? `🖼️ [Image](${v.image})` : '';
+
+            return `      • ${variantLabel} — ${priceDisplay} ${stockStatus} ${imageText}\n         ${skuText} ${barcodeText}`;
+          })
+          .join('\n');
+
+        return `\n${pIndex + 1}. **${p.title}**\n   🏷️ Vendor: ${p.vendor || 'N/A'}\n   🗂️ Type: ${p.type || 'N/A'}\n   📝 Description: ${p.description || 'No description.'}\n   🔢 Variants:\n${variantsText}`;
+      })
+      .join('\n');
+
+    return `${collectionHeader}${productsText}`;
+  })
+  .join('\n\n');
+
+
 
   // Detect language for the current user message
   // Get user history and detect language with bias
@@ -352,8 +381,12 @@ Use the conversation history and memory summary as context to respond accurately
 - WhatsApp: ${business.contact?.whatsapp || 'N/A'}  
 - Instagram: ${business.contact?.instagram || 'N/A'}  
 
-🛒 **Products:**  
-${productList || 'N/A'}  
+🛒 **Product Catalog (Grouped by Collection):**
+
+${productList || 'N/A'}
+
+_Note: Each product lists all its available variants, with pricing, discount info, stock status, SKU, barcode, and image links._
+
 
 ⚙️ **Description, Services, Benefits & Features:**  
 ${business.description || 'N/A'}  

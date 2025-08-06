@@ -9,37 +9,68 @@ const cors = require('cors');
 // Middlewares
 const rateLimiter = require('./middlewares/rateLimit');
 const apiKeyMiddleware = require('./middlewares/apiKey');
+const authMiddleware = require('./middlewares/authMiddleware');
+
+// Routes
+const authRoutes = require('./routes/auth');
+const dashboardRoutes = require('./routes/dashboard');
+const shopifyRoutes = require('./routes/shopify');
+const chatRoutes = require('./routes/chat');
+const webhookRoutes = require('./routes/webhook');
+const whatsappRoutes = require('./routes/whatsapp');
+const adminRoutes = require('./routes/admin');
+const logsRoutes = require('./routes/logs');
 
 const app = express();
-app.use(cors());
-app.use(rateLimiter); // 🌟 Apply globally
 
-// Static + view engine
+// -------------------- GLOBAL MIDDLEWARES --------------------
+app.use(cors());
+app.use(rateLimiter); // Apply rate limiting globally
+app.use(bodyParser.json()); // Parse JSON body
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.json()); // Parse additional JSON (alternative to bodyParser)
+app.use(cookieParser());
+
+// Static files & view engine
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
-// Routes
-app.use('/dashboard', require('./routes/dashboard'));
-app.use('/shopify', require('./routes/shopify'));
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// -------------------- ROUTES --------------------
 
-// Secure the widget API endpoint with API key
-app.use('/api', apiKeyMiddleware, require('./routes/chat')); // ✅
+// Authentication routes
+app.use('/auth', authRoutes);
 
-app.use('/webhook', require('./routes/webhook'));
-app.use('/whatsapp', require('./routes/whatsapp'));
+// Protected test route (check JWT auth flow)
+app.get('/dashboard/data', authMiddleware, (req, res) => {
+  res.json({ message: `Hello ${req.user.email}, you have access.` });
+});
+
+// Business & dashboard routes
+app.use('/dashboard', dashboardRoutes);
+app.use('/shopify', shopifyRoutes);
+
+// Chat API (secured with API key)
+app.use('/api', apiKeyMiddleware, chatRoutes);
+
+// Webhooks
+app.use('/webhook', webhookRoutes);
+app.use('/whatsapp', whatsappRoutes);
+
+// Admin panel
+app.use('/admin', adminRoutes);
+
+// Logs
+app.use(logsRoutes);
+
+// -------------------- SESSION --------------------
 app.use(session({
   secret: 'moaawen_super_secret',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } 
 }));
-app.use('/admin', require('./routes/admin'));
-app.use(require('./routes/logs'));
 
+// -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);

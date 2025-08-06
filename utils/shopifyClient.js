@@ -56,44 +56,49 @@ variant_id = "45209434554557";
 
 
 
-    getFullProducts: async () => {
-      const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
-      const itemIds = products.flatMap(p => p.variants.map(v => v.inventory_item_id));
+   getFullProducts: async () => {
+  const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
+  const itemIds = products.flatMap(p => p.variants.map(v => v.inventory_item_id));
 
-      const inStockMap = {};
-      for (let i = 0; i < itemIds.length; i += 100) {
-        const ids = itemIds.slice(i, i + 100).join(',');
-        const res = await api.get(`/inventory_levels.json?inventory_item_ids=${ids}`);
-        res.data.inventory_levels.forEach(level => {
-          inStockMap[level.inventory_item_id] = level.available > 0;
-        });
-      }
+  const inStockMap = {};
+  for (let i = 0; i < itemIds.length; i += 100) {
+    const ids = itemIds.slice(i, i + 100).join(',');
+    const res = await api.get(`/inventory_levels.json?inventory_item_ids=${ids}`);
+    res.data.inventory_levels.forEach(level => {
+      inStockMap[level.inventory_item_id] = level.available > 0;
+    });
+  }
 
-      return products.map(p => ({
-        id: p.id,
-        title: p.title,
-        description: p.body_html,
-        vendor: p.vendor,
-        type: p.product_type,
-        tags: p.tags,
-        images: p.images.map(img => ({
-          id: img.id,
-          src: img.src,
-          alt: img.alt,
-          position: img.position
-        })),
-        variants: p.variants.map(v => ({
-          id: v.id,
-          sku: v.sku,
-          price: v.price,
-          compareAt: v.compare_at_price,
-          weight: v.weight,
-          barcode: v.barcode,
-          inventoryItemId: v.inventory_item_id,
-          inStock: inStockMap[v.inventory_item_id] ?? false
-        }))
-      }));
-    }
+  return products.map(p => ({
+    id: p.id,
+    title: p.title,
+    description: p.body_html,
+    vendor: p.vendor,
+    type: p.product_type,
+    tags: p.tags,
+    images: p.images.map(img => ({
+      id: img.id,
+      src: img.src,
+      alt: img.alt,
+      position: img.position
+    })),
+    variants: p.variants.map(v => ({
+      id: v.id,
+      sku: v.sku,
+      // Current discounted price
+      discountedPrice: v.price,
+      // Original price if it exists, otherwise same as discounted
+      originalPrice: v.compare_at_price || v.price,
+      weight: v.weight,
+      barcode: v.barcode,
+      inventoryItemId: v.inventory_item_id,
+      inStock: inStockMap[v.inventory_item_id] ?? false,
+      // Optional: Add a flag if discounted
+      isDiscounted: v.compare_at_price && Number(v.compare_at_price) > Number(v.price)
+    }))
+  }));
+}
+
   };
 }
 
