@@ -56,10 +56,25 @@ variant_id = "45209434554557";
 
 
 
-   getFullProducts: async () => {
-  const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
-  const itemIds = products.flatMap(p => p.variants.map(v => v.inventory_item_id));
+  getFullProducts: async () => {
+  // 1️⃣ Get all collections
+  const collections = await getAllPages('/custom_collections.json?fields=id,title');
 
+  // 2️⃣ Get all products
+  const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
+
+  // 3️⃣ Map product IDs to their collections
+  const collects = await getAllPages('/collects.json?fields=collection_id,product_id');
+  const productToCollections = {};
+  collects.forEach(c => {
+    if (!productToCollections[c.product_id]) {
+      productToCollections[c.product_id] = [];
+    }
+    productToCollections[c.product_id].push(c.collection_id);
+  });
+
+  // 4️⃣ Prepare stock map
+  const itemIds = products.flatMap(p => p.variants.map(v => v.inventory_item_id));
   const inStockMap = {};
   for (let i = 0; i < itemIds.length; i += 100) {
     const ids = itemIds.slice(i, i + 100).join(',');
@@ -69,35 +84,62 @@ variant_id = "45209434554557";
     });
   }
 
-  return products.map(p => ({
-    id: p.id,
-    title: p.title,
-    description: p.body_html,
-    vendor: p.vendor,
-    type: p.product_type,
-    tags: p.tags,
-    images: p.images.map(img => ({
-      id: img.id,
-      src: img.src,
-      alt: img.alt,
-      position: img.position
-    })),
-    variants: p.variants.map(v => ({
-      id: v.id,
-      sku: v.sku,
-      // Current discounted price
-      discountedPrice: v.price,
-      // Original price if it exists, otherwise same as discounted
-      originalPrice: v.compare_at_price || v.price,
-      weight: v.weight,
-      barcode: v.barcode,
-      inventoryItemId: v.inventory_item_id,
-      inStock: inStockMap[v.inventory_item_id] ?? false,
-      // Optional: Add a flag if discounted
-      isDiscounted: v.compare_at_price && Number(v.compare_at_price) > Number(v.price)
-    }))
-  }));
+  // 5️⃣ Build structured result grouped by collections
+  const collectionMap = collections.reduce((acc, col) => {
+    acc[col.id] = {
+      id: col.id,
+      title: col.title,
+      products: []
+    };
+    return acc;
+  }, {});
+
+  products.forEach(p => {
+    const productData = {
+      id: p.id,
+      title: p.title,
+      description: p.body_html,
+      vendor: p.vendor,
+      type: p.product_type,
+      tags: p.tags,
+      images: p.images.map(img => ({
+        id: img.id,
+        src: img.src,
+        alt: img.alt,
+        position: img.position
+      })),
+      variants: p.variants.map(v => ({
+        id: v.id,
+        sku: v.sku,
+        discountedPrice: v.price,
+        originalPrice: v.compare_at_price || v.price,
+        isDiscounted: v.compare_at_price && Number(v.compare_at_price) > Number(v.price),
+        weight: v.weight,
+        barcode: v.barcode,
+        inventoryItemId: v.inventory_item_id,
+        inStock: inStockMap[v.inventory_item_id] ?? false,
+        option1: v.option1 || null,
+        option2: v.option2 || null,
+        option3: v.option3 || null,
+        variantName: [v.option1, v.option2, v.option3].filter(Boolean).join(' / '),
+        image: v.image_id
+          ? (p.images.find(img => img.id === v.image_id) || {}).src
+          : (p.images[0]?.src || null)
+      }))
+    };
+
+    const assignedCollections = productToCollections[p.id] || [];
+    assignedCollections.forEach(colId => {
+      if (collectionMap[colId]) {
+        collectionMap[colId].products.push(productData);
+      }
+    });
+  });
+
+  // 6️⃣ Return array of collections with their products
+  return Object.values(collectionMap);
 }
+
 
   };
 }
