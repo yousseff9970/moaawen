@@ -294,24 +294,33 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
 
   updateSession(senderId, 'user', userMessage);
 
-  const productList = (business.products || []).map((p, i) => {
-  const variant = p.variants?.[0] || {};
-  let priceDisplay = 'Price not available';
+const productList = (business.products || []).map((p, i) => {
+  // Header for the product
+  const productHeader = `${i + 1}. **${p.title}**\n   📝 ${p.description || 'No description.'}\n   🏷️ Vendor: ${p.vendor || 'N/A'}\n   🗂️ Type: ${p.type || 'N/A'}`;
 
-  if (variant.discountedPrice) {
-    if (variant.isDiscounted) {
-      
-      priceDisplay = `~~$${variant.originalPrice}~~ ➡️ **$${variant.discountedPrice}**`;
-    } else {
-      
-      priceDisplay = `$${variant.discountedPrice}`;
+  // List all variants for this product
+  const variantsList = (p.variants || []).map((v) => {
+    let priceDisplay = 'Price not available';
+    if (v.discountedPrice) {
+      if (v.isDiscounted) {
+        priceDisplay = `~~$${v.originalPrice}~~ ➡️ **$${v.discountedPrice}**`;
+      } else {
+        priceDisplay = `$${v.discountedPrice}`;
+      }
     }
-  }
 
-  const stockStatus = variant.inStock === false ? '❌ Out of stock' : '✅ In stock';
+    const stockStatus = v.inStock === false ? '❌ Out of stock' : '✅ In stock';
+    const variantLabel = v.variantName ? `(${v.variantName})` : '';
+    const skuText = v.sku ? `SKU: ${v.sku}` : '';
+    const barcodeText = v.barcode ? `Barcode: ${v.barcode}` : '';
+    const imageText = v.image ? `🖼️ [Image](${v.image})` : '';
 
-  return `${i + 1}. **${p.title}**\n   - Price: ${priceDisplay}\n   - ${stockStatus}\n   - Description: ${p.description || 'No description.'}`;
+    return `      • ${variantLabel} — ${priceDisplay} ${stockStatus} ${imageText}\n         ${skuText} ${barcodeText}`;
+  }).join('\n');
+
+  return `${productHeader}\n   🔢 Variants:\n${variantsList}`;
 }).join('\n\n');
+
 
 
   // Detect language for the current user message
@@ -364,8 +373,12 @@ Use the conversation history and memory summary as context to respond accurately
 - WhatsApp: ${business.contact?.whatsapp || 'N/A'}  
 - Instagram: ${business.contact?.instagram || 'N/A'}  
 
-🛒 **Products:**  
-${productList || 'N/A'}  
+🛒 **Product Catalog:**  
+
+${productList || 'N/A'}
+
+_Note: Each product lists **all its available variants**, with pricing (discounts shown if applicable), stock status, SKU, barcode, and image link._
+
 
 ⚙️ **Description, Services, Benefits & Features:**  
 ${business.description || 'N/A'}  
