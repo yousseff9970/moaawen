@@ -57,20 +57,20 @@ variant_id = "45209434554557";
 
 
 getFullProducts: async () => {
-  // 1️⃣ Get both custom & smart collections (requires read_collections scope)
+  // 1️⃣ Get both custom & smart collections (read_products is enough)
   let collections = [];
   try {
     const customCollections = await getAllPages('/custom_collections.json?fields=id,title');
     const smartCollections = await getAllPages('/smart_collections.json?fields=id,title');
     collections = [...customCollections, ...smartCollections];
   } catch (err) {
-    console.warn('⚠️ Could not fetch collections. Ensure read_collections scope is granted.', err.message);
+    console.warn('⚠️ Could not fetch collections. Ensure read_products scope is granted.', err.message);
   }
 
   // 2️⃣ Get all products
   const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
 
-  // 3️⃣ Get collects mapping
+  // 3️⃣ Get collects mapping (product → collection link)
   let collects = [];
   try {
     collects = await getAllPages('/collects.json?fields=collection_id,product_id');
@@ -100,7 +100,7 @@ getFullProducts: async () => {
   const itemIds = products
     .flatMap(p => p.variants.map(v => v.inventory_item_id))
     .filter(Boolean);
-  
+
   const inStockMap = {};
   for (let i = 0; i < itemIds.length; i += 100) {
     const ids = itemIds.slice(i, i + 100).join(',');
@@ -110,7 +110,7 @@ getFullProducts: async () => {
     });
   }
 
-  // 6️⃣ Build collections
+  // 6️⃣ Build collections → products → variants
   const collectionMap = collections.reduce((acc, col) => {
     acc[col.id] = { id: col.id, title: col.title, products: [] };
     return acc;
@@ -162,8 +162,10 @@ getFullProducts: async () => {
     });
   });
 
+  // 7️⃣ Return array of collections with their products
   return Object.values(collectionMap);
 }
+
 
 
 

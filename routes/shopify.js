@@ -16,9 +16,9 @@ router.get('/connect', (req, res) => {
 
 const scopes = [
   'read_products',
-  'read_product_listings',
+ 
   'read_inventory',
-  'read_collections',                 // ✅ new unified scope
+                // ✅ new unified scope
   'read_shopify_payments_payouts',
   'read_orders',
   'write_orders',
