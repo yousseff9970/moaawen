@@ -177,7 +177,9 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   }
 
   const business = await getBusinessInfo({ phone_number_id, page_id, domain });
-
+const history = sessionHistory.get(senderId) || [];
+const lastLang = history.slice(-1)[0]?.lang || 'arabic';
+let lang = detectLanguage(userMessage.trim(), lastLang, history);
 
 const { checkAccess } = require('../utils/businessPolicy');
 
@@ -315,9 +317,7 @@ const productList = (business.products || []).map((p, i) => {
 
   // Detect language for the current user message
   // Get user history and detect language with bias
-const history = sessionHistory.get(senderId) || [];
-const lastLang = history.slice(-1)[0]?.lang || 'arabic';
-let lang = detectLanguage(userMessage.trim(), lastLang, history);
+
 
 // Optional stability check: only switch if stable in last 2 messages
 if (lang !== lastLang) {
