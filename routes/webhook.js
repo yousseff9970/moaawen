@@ -8,8 +8,32 @@ const { downloadVoiceFile, transcribeWithWhisper } = require('../services/transc
 const { downloadMedia } = require('../services/downloadMedia');
 const { matchImageAndGenerateReply } = require('../services/imageMatcher');
 const { logConversation } = require('../utils/logger');
+const { getBusinessInfo } = require('../services/business');
+const { checkAccess } = require('../utils/businessPolicy');
+const { detectLanguage } = require('../services/openai');
+const { trackUsage } = require('../utils/trackUsage');
 
 const processedMessages = new Set();
+
+function getFallback(reason, lang) {
+  const L = (en, ar, az) => lang === 'arabic' ? ar : lang === 'arabizi' ? az : en;
+
+  if (reason.includes('expired')) return L('⚠️ Your subscription expired. Please renew.', '⚠️ اشتراكك انتهى. جدد الاشتراك.', '⚠️ el eshterak khallas. jadded el plan.');
+  if (reason.includes('inactive')) return L('⚠️ Your account is inactive.', '⚠️ الحساب غير مفعل.', '⚠️ l hesab mesh mef3al.');
+  if (reason.includes('message_limit')) return L('⚠️ Message limit reached. Upgrade your plan.', '⚠️ وصلت للحد الأقصى من الرسائل.', '⚠️ woselna lal 7ad el ma7doud.');
+  if (reason.find(r => r.startsWith('feature:voiceInput'))) return L('🎤 Voice not allowed in your plan.', '🎤 الميزة الصوتية غير متوفرة.', '🎤 voice mish bel plan.');
+  if (reason.find(r => r.startsWith('feature:imageAnalysis'))) return L('🖼️ Image analysis not allowed in your plan.', '🖼️ تحليل الصور غير متاح.', '🖼️ feature soura mish mashmoula.');
+
+  return L('🚫 Access denied.', '🚫 تم رفض الوصول.', '🚫 mamnou3 l access.');
+}
+
+async function respond(platform, id, msg, token) {
+  if (platform === 'instagram') {
+    await sendInstagramMessage(id, msg, token);
+  } else {
+    await sendMessengerMessage(id, msg, token);
+  }
+}
 
 // ✅ GET: Webhook verification
 router.get('/', (req, res) => {
@@ -37,9 +61,9 @@ router.post('/', async (req, res) => {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         const isInstagram = senderId.length >= 16;
-        const pageAccessToken = process.env.PAGE_ACCESS_TOKEN;
+        const token = process.env.PAGE_ACCESS_TOKEN;
+        const platform = isInstagram ? 'instagram' : 'messenger';
 
-        // 🛑 Skip invalid or duplicate
         if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
           continue;
         }
@@ -47,89 +71,91 @@ router.post('/', async (req, res) => {
         processedMessages.add(messageId);
         let messageText = event.message?.text;
 
-        // 🎙️ Voice
+        // Load business
+        let business;
+        try {
+          business = await getBusinessInfo({ page_id: pageId });
+        } catch (e) {
+          console.warn(`⚠️ No business found for page ${pageId}`);
+          continue;
+        }
+
+        const lang = detectLanguage(messageText, 'english');
+
+        // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');
         if (audio?.payload?.url) {
+          const access = checkAccess(business, { feature: 'voiceInput' });
+          if (!access.allowed) {
+            const reply = getFallback(access.reasons, lang);
+            await respond(platform, senderId, reply, token);
+            logConversation({ platform, userId: senderId, message: '[Voice]', aiReply: { reply }, source: 'policy' });
+            continue;
+          }
+
           const filePath = await downloadVoiceFile(audio.payload.url, `voice_${messageId}.ogg`);
           const transcript = await transcribeWithWhisper(filePath);
-
-          // Cleanup temp file
           fs.unlink(filePath, () => {});
 
           if (transcript === '__TOO_LONG__') {
-            const warningMsg = '⚠️ Voice message too long (max 30s). Please resend a shorter one.';
-            if (isInstagram) {
-              await sendInstagramMessage(senderId, warningMsg, pageAccessToken);
-            } else {
-              await sendMessengerMessage(senderId, warningMsg, pageAccessToken);
-            }
+            const warning = lang === 'arabic'
+              ? '⚠️ الرسالة الصوتية طويلة. أعد الإرسال أقل من 30 ثانية.'
+              : lang === 'arabizi'
+              ? '⚠️ voice taweel aktar men 30s. 3id l irsal.'
+              : '⚠️ Voice too long. Please resend (max 30s).';
+
+            await respond(platform, senderId, warning, token);
             continue;
           }
 
           if (!transcript?.trim()) continue;
 
-          messageText = transcript;
+          const estimatedMinutes = Math.ceil((transcript.length || 1) / 150); // ~150 words/min
+          await trackUsage(business.id, 'voice', estimatedMinutes);
 
-          // Log voice
-          await logConversation({
-            platform: isInstagram ? 'instagram' : 'messenger',
-            userId: senderId,
-            message: '[Voice]',
-            aiReply: { reply: transcript },
-            source: 'voice'
-          });
+          messageText = transcript;
+          logConversation({ platform, userId: senderId, message: '[Voice]', aiReply: { reply: transcript }, source: 'voice' });
         }
 
-        // 🖼️ Image (reply immediately)
+        // 🖼️ IMAGE
         const image = event.message.attachments?.find(att => att.type === 'image');
         if (image?.payload?.url) {
-          const filePath = await downloadMedia(image.payload.url, `img_${messageId}.jpg`);
-          const { reply } = await matchImageAndGenerateReply(senderId, filePath, { page_id: pageId });
-
-          // Cleanup temp file
-          fs.unlink(filePath, () => {});
-
-          if (isInstagram) {
-            await sendInstagramMessage(senderId, xss(reply), pageAccessToken);
-          } else {
-            await sendMessengerMessage(senderId, xss(reply), pageAccessToken);
+          const access = checkAccess(business, { feature: 'imageAnalysis' });
+          if (!access.allowed) {
+            const reply = getFallback(access.reasons, lang);
+            await respond(platform, senderId, reply, token);
+            logConversation({ platform, userId: senderId, message: '[Image]', aiReply: { reply }, source: 'policy' });
+            continue;
           }
 
-          await logConversation({
-            platform: isInstagram ? 'instagram' : 'messenger',
-            userId: senderId,
-            message: '[Image]',
-            reply,
-            source: 'image'
-          });
+          const filePath = await downloadMedia(image.payload.url, `img_${messageId}.jpg`);
+          const { reply } = await matchImageAndGenerateReply(senderId, filePath, { page_id: pageId });
+          fs.unlink(filePath, () => {});
 
+          await trackUsage(business.id, 'image');
+          await respond(platform, senderId, xss(reply), token);
+          logConversation({ platform, userId: senderId, message: '[Image]', reply, source: 'image' });
           continue;
         }
 
         if (!messageText) continue;
-
-        // 🛡️ Sanitize and limit message length
         messageText = xss(messageText.trim().substring(0, 1000));
+        console.log(`📲 ${platform} from ${senderId}: "${messageText}"`);
 
-        console.log(`📲 ${isInstagram ? 'Instagram' : 'Messenger'} from ${senderId}: "${messageText}"`);
+        const access = checkAccess(business, { messages: true, feature: 'aiReplies' });
+        if (!access.allowed) {
+          const reply = getFallback(access.reasons, lang);
+          await respond(platform, senderId, reply, token);
+          logConversation({ platform, userId: senderId, message: '[Text]', aiReply: { reply }, source: 'policy' });
+          continue;
+        }
 
-        // 💬 TEXT/VOICE: Use batching
+        // ✅ BATCHED REPLY
         scheduleBatchedReply(senderId, messageText, { page_id: pageId }, async (aiReply) => {
           const { reply } = aiReply;
-
-          if (isInstagram) {
-            await sendInstagramMessage(senderId, xss(reply), pageAccessToken);
-          } else {
-            await sendMessengerMessage(senderId, xss(reply), pageAccessToken);
-          }
-
-          await logConversation({
-            platform: isInstagram ? 'instagram' : 'messenger',
-            userId: senderId,
-            message: '[Batched]',
-            aiReply,
-            source: 'text'
-          });
+          await respond(platform, senderId, xss(reply), token);
+          await trackUsage(business.id, 'message');
+          logConversation({ platform, userId: senderId, message: '[Batched]', aiReply, source: 'text' });
         });
       }
     }

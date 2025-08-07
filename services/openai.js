@@ -6,6 +6,8 @@ const { normalize } = require('./normalize');
 const { matchModelResponse, matchFAQSmart } = require('./modelMatcher');
 const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
 const { logToJson } = require('./jsonLog');
+const { trackUsage } = require('../utils/trackUsage');
+
 
 const sessionHistory = new Map();
 const sessionTimeouts = new Map();
@@ -175,74 +177,64 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   }
 
   const business = await getBusinessInfo({ phone_number_id, page_id, domain });
+
+
+const { checkAccess } = require('../utils/businessPolicy');
+
+const access = checkAccess(business, {
+  messages: true,
+  feature: 'aiReplies'
+});
+
+if (!access.allowed) {
+  const reason = access.reasons.join(', ');
+  const fallbackMessage = (lang) => {
+    if (lang === 'arabic') {
+      if (access.reasons.includes('expired')) return '⚠️ اشتراكك انتهى. جدد الخطة للاستمرار.';
+      if (access.reasons.includes('inactive')) return '⚠️ الحساب غير مفعل حالياً.';
+      if (access.reasons.includes('message_limit')) return '⚠️ وصلت للحد الأقصى من الرسائل. تحتاج لترقية.';
+      if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 هذه الميزة غير متوفرة في خطتك الحالية.';
+      return '🚫 لا يمكنك استخدام هذه الميزة حالياً.';
+    }
+
+    if (lang === 'arabizi') {
+      if (access.reasons.includes('expired')) return '⚠️ el eshterak khallas. jadded l plan la tekammel.';
+      if (access.reasons.includes('inactive')) return '⚠️ el hesab mesh mef3al.';
+      if (access.reasons.includes('message_limit')) return '⚠️ woselna lal 7ad el ma7doud. 7awwel terka.';
+      if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 hal feature mesh available bel plan taba3ak.';
+      return '🚫 ma feek tista3mel hal feature.';
+    }
+
+    // English fallback
+    if (access.reasons.includes('expired')) return '⚠️ Your subscription has expired. Please renew to continue.';
+    if (access.reasons.includes('inactive')) return '⚠️ Your account is currently inactive.';
+    if (access.reasons.includes('message_limit')) return '⚠️ You’ve reached your message limit. Please upgrade your plan.';
+    if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 This feature is not available in your current plan.';
+    return '🚫 Your access is restricted: ' + reason;
+  };
+logToJson({
+  layer: 'policy',
+  senderId,
+  businessId: business.id,
+  message: userMessage,
+  reasons: access.reasons,
+  ai_reply: fallbackMessage(lang),
+  duration: 0
+});
+
+  return {
+    reply: fallbackMessage(lang),
+    source: 'policy',
+    layer_used: 'plan_check',
+    duration: 0
+  };
+}
+
+
+
+
   const normalizedMsg = normalize(userMessage);
   const businessModel = getBusinessModel(business.id);
-
-  const { startOrder, get: getOrder, advance, clear } = require('../utils/orderState');
-  const shopifyClient = require('../utils/shopifyClient');
-
-  const wantsToOrder = /order|buy|purchase|أطلب|بدي اشتري|بدي اطلب/i.test(userMessage);
-  const orderSession = getOrder(senderId);
-
-  if (!orderSession && wantsToOrder && business.products?.length) {
-    const match = business.products.find(p => p.variants?.[0]?.inStock);
-    if (match) {
-      startOrder(senderId, {
-        id: match.variants[0].id,
-        title: match.title,
-        price: match.variants[0].price
-      });
-      return { reply: `What is your name please?`, source: 'order_wizard', layer_used: 'order_flow' };
-    }
-  }
-
-  if (orderSession) {
-    if (orderSession.step === 'need_name') {
-      advance(senderId, 'name', userMessage.trim());
-      return { reply: 'Whats your phone number?', source: 'order_wizard', layer_used: 'order_flow' };
-    }
-    if (orderSession.step === 'need_phone') {
-      advance(senderId, 'phone', userMessage.trim());
-      return { reply: 'Okay, now please provide us with your full address in details.', source: 'order_wizard', layer_used: 'order_flow' };
-    }
-    if (orderSession.step === 'need_address') {
-      advance(senderId, 'address', userMessage.trim());
-    }
-
-    if (orderSession.step === 'ready') {
-      try {
-        const client = shopifyClient(business.shop, business.accessToken);
-        const order = await client.createOrder({
-          variant_id: orderSession.variant.id,
-          email: `${orderSession.data.phone}@autobot.local`,
-          name: orderSession.data.name,
-          phone: orderSession.data.phone,
-          address: orderSession.data.address
-        });
-
-        clear(senderId);
-
-        // Extract order details
-        const orderNumber = order.order_number;
-        const status = order.fulfillment_status || 'Processing...';
-        const trackUrl = order.order_status_url || '';
-
-        return {
-          reply: `✅ Your order for **${orderSession.variant.title}** has been created successfully!\n\n` +
-                 `🔢 Order Number: **${orderNumber}**\n` +
-                 `📦 Order Status: **${status}**\n` +
-                 (trackUrl ? `🌐 Track your order: ${trackUrl}` : ''),
-          source: 'shopify',
-          layer_used: 'order_created'
-        };
-
-      } catch (e) {
-        const errorData = e.response?.data?.errors;
-        console.error('Shopify order error:', errorData);
-        throw new Error(`Shopify order creation failed: ${JSON.stringify(errorData)}`);
-      }
-    }
-  }
 
   const modelMatch = matchModelResponse(normalizedMsg, businessModel);
   if (modelMatch) {
@@ -295,10 +287,8 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   updateSession(senderId, 'user', userMessage);
 
 const productList = (business.products || []).map((p, i) => {
-  // Header for the product
   const productHeader = `${i + 1}. **${p.title}**\n   📝 ${p.description || 'No description.'}\n   🏷️ Vendor: ${p.vendor || 'N/A'}\n   🗂️ Type: ${p.type || 'N/A'}`;
 
-  // List all variants for this product
   const variantsList = (p.variants || []).map((v) => {
     let priceDisplay = 'Price not available';
     if (v.discountedPrice) {
@@ -377,7 +367,7 @@ Use the conversation history and memory summary as context to respond accurately
 
 ${productList || 'N/A'}
 
-_Note: Each product lists **all its available variants**, with pricing (discounts shown if applicable), stock status, SKU, barcode, and image link._
+_Note: Each product lists **all its available variants, variants include anything such as sizes, colors, etc...**, with pricing (discounts shown if applicable), stock status, SKU, barcode, and image link._
 
 
 ⚙️ **Description, Services, Benefits & Features:**  
@@ -422,7 +412,7 @@ ${business.website || 'N/A'}
 
 const memorySummary = summaries.get(senderId) || '';
 
-// Build message array for OpenAI
+
 const messages = [
   { role: 'system', content: languageInstruction },
   systemPrompt,
@@ -437,7 +427,7 @@ const messages = [
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-4.1-mini',
       messages,
-      temperature: 0.5,
+      temperature: 0.6,
       max_tokens: 1200
     }, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
@@ -457,6 +447,10 @@ const messages = [
       message: userMessage,
       ai_reply: replyText
     });
+
+await trackUsage(business.id, 'message');
+
+
 
     updateSession(senderId, 'assistant', replyText);
     return { reply: replyText, source: 'ai', layer_used: 'ai', duration };

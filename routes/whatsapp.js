@@ -6,11 +6,26 @@ const { downloadVoiceFile, transcribeWithWhisper } = require('../services/transc
 const { logConversation } = require('../utils/logger');
 const { downloadMedia } = require('../services/downloadMedia');
 const { matchImageAndGenerateReply } = require('../services/imageMatcher');
-const xss = require('xss'); // ✅ Add XSS sanitizer
+const { getBusinessInfo } = require('../services/business');
+const { checkAccess } = require('../utils/businessPolicy');
+const { detectLanguage } = require('../services/openai');
+const { trackUsage } = require('../utils/trackUsage');
+const xss = require('xss');
 
 const processedMessages = new Set();
 
-// Webhook verification
+function getFallback(reason, lang) {
+  const L = (en, ar, az) => lang === 'arabic' ? ar : lang === 'arabizi' ? az : en;
+
+  if (reason.includes('expired')) return L('⚠️ Your subscription expired. Please renew.', '⚠️ اشتراكك انتهى. جدد الاشتراك.', '⚠️ el eshterak khallas. jadded el plan.');
+  if (reason.includes('inactive')) return L('⚠️ Your account is inactive.', '⚠️ الحساب غير مفعل.', '⚠️ l hesab mesh mef3al.');
+  if (reason.includes('message_limit')) return L('⚠️ Message limit reached. Upgrade your plan.', '⚠️ وصلت للحد الأقصى من الرسائل.', '⚠️ woselna lal 7ad el ma7doud.');
+  if (reason.find(r => r.startsWith('feature:voiceInput'))) return L('🎤 Voice not allowed in your plan.', '🎤 الميزة الصوتية غير متوفرة.', '🎤 voice mish bel plan.');
+  if (reason.find(r => r.startsWith('feature:imageAnalysis'))) return L('🖼️ Image analysis not allowed in your plan.', '🖼️ تحليل الصور غير متاح.', '🖼️ feature soura mish mashmoula.');
+
+  return L('🚫 Access denied.', '🚫 تم رفض الوصول.', '🚫 mamnou3 l access.');
+}
+
 router.get('/', (req, res) => {
   const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
   const mode = req.query['hub.mode'];
@@ -24,7 +39,6 @@ router.get('/', (req, res) => {
   res.sendStatus(403);
 });
 
-// Webhook handler
 router.post('/', async (req, res) => {
   try {
     const entry = req.body.entry?.[0];
@@ -47,8 +61,27 @@ router.post('/', async (req, res) => {
       if (!from || !msgId || processedMessages.has(msgId)) continue;
       processedMessages.add(msgId);
 
-      // 🖼️ Handle Image
+      // Load business
+      let business;
+      try {
+        business = await getBusinessInfo({ phone_number_id: phoneId });
+      } catch (e) {
+        console.warn(`⚠️ No business found for phone ${phoneId}`);
+        continue;
+      }
+
+      const lang = detectLanguage(messageText, 'english');
+
+      // 🖼️ Image
       if (isImage) {
+        const access = checkAccess(business, { feature: 'imageAnalysis' });
+        if (!access.allowed) {
+          const reply = getFallback(access.reasons, lang);
+          await sendWhatsApp(from, reply);
+          logConversation({ platform: 'whatsapp', userId: from, message: '[Image]', aiReply: { reply }, source: 'policy' });
+          continue;
+        }
+
         const mediaId = msg.image?.id;
         if (!mediaId) continue;
 
@@ -62,32 +95,25 @@ router.post('/', async (req, res) => {
         });
 
         const { reply } = await matchImageAndGenerateReply(from, filePath, { phone_number_id: phoneId });
+        await sendWhatsApp(from, xss(reply));
 
-        await axios.post(`https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_ID}/messages`, {
-          messaging_product: 'whatsapp',
-          to: from,
-          type: 'text',
-          text: { body: reply }
-        }, {
-          headers: {
-            Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        // ✅ Optional: count image usage
+        await trackUsage(business.id, 'image');
 
-        await logConversation({
-          platform: 'whatsapp',
-          userId: from,
-          message: '[Image]',
-          aiReply: { reply },
-          source: 'image'
-        });
-
+        logConversation({ platform: 'whatsapp', userId: from, message: '[Image]', aiReply: { reply }, source: 'image' });
         continue;
       }
 
-      // 🎙️ Handle Voice
+      // 🎙️ Voice
       if (isVoice) {
+        const access = checkAccess(business, { feature: 'voiceInput' });
+        if (!access.allowed) {
+          const reply = getFallback(access.reasons, lang);
+          await sendWhatsApp(from, reply);
+          logConversation({ platform: 'whatsapp', userId: from, message: '[Voice]', aiReply: { reply }, source: 'policy' });
+          continue;
+        }
+
         const mediaId = msg.audio?.id;
         if (!mediaId) continue;
 
@@ -102,50 +128,35 @@ router.post('/', async (req, res) => {
 
         const transcript = await transcribeWithWhisper(filePath);
         if (transcript === '__TOO_LONG__') {
-          await axios.post(`https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_ID}/messages`, {
-            messaging_product: 'whatsapp',
-            to: from,
-            type: 'text',
-            text: { body: '⚠️ Voice message too long (max 30s). Please resend a shorter one.' }
-          }, {
-            headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` }
-          });
+          await sendWhatsApp(from, '⚠️ Voice too long (max 30s). Please resend.');
           continue;
         }
 
+        const estimatedMinutes = Math.max(1, Math.round((transcript.length || 0) / 150)); // basic est.
+        await trackUsage(business.id, 'voice', estimatedMinutes);
+
         messageText = transcript;
+        logConversation({ platform: 'whatsapp', userId: from, message: '[Voice]', aiReply: { reply: transcript }, source: 'voice' });
       }
 
-      
-
       if (!messageText) continue;
-messageText = messageText.trim().substring(0, 1000);
-messageText = xss(messageText);
+      messageText = xss(messageText.trim().substring(0, 1000));
       console.log(`📲 WhatsApp ${isVoice ? 'Voice' : 'Text'} from ${from}: "${messageText}"`);
 
-      // ⏳ BATCHED REPLY AFTER DELAY
+      const access = checkAccess(business, { messages: true, feature: 'aiReplies' });
+      if (!access.allowed) {
+        const reply = getFallback(access.reasons, lang);
+        await sendWhatsApp(from, reply);
+        logConversation({ platform: 'whatsapp', userId: from, message: '[Text]', aiReply: { reply }, source: 'policy' });
+        continue;
+      }
+
+      // ⏳ BATCHED TEXT REPLY
       scheduleBatchedReply(from, messageText, { phone_number_id: phoneId }, async (aiReply) => {
         const { reply } = aiReply;
-
-        await axios.post(`https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_ID}/messages`, {
-          messaging_product: 'whatsapp',
-          to: from,
-          type: 'text',
-          text: { body: xss(reply) }
-        }, {
-          headers: {
-            Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        await logConversation({
-          platform: 'whatsapp',
-          userId: from,
-          message: '[Batched]',
-          aiReply,
-          source: isVoice ? 'voice' : 'text'
-        });
+        await sendWhatsApp(from, xss(reply));
+        await trackUsage(business.id, 'message');
+        logConversation({ platform: 'whatsapp', userId: from, message: '[Batched]', aiReply, source: isVoice ? 'voice' : 'text' });
       });
     }
 
@@ -155,5 +166,19 @@ messageText = xss(messageText);
     res.sendStatus(500);
   }
 });
+
+async function sendWhatsApp(to, text) {
+  await axios.post(`https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_ID}/messages`, {
+    messaging_product: 'whatsapp',
+    to,
+    type: 'text',
+    text: { body: text }
+  }, {
+    headers: {
+      Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+      'Content-Type': 'application/json'
+    }
+  });
+}
 
 module.exports = router;
