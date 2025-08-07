@@ -495,4 +495,4 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
   replyTimeouts.set(senderId, timeout);
 };
 
-module.exports = { generateReply, scheduleBatchedReply };
+module.exports = { generateReply, scheduleBatchedReply, detectLanguage };
