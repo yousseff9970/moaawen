@@ -504,7 +504,7 @@ ${business.website || 'N/A'}
       model: 'gpt-5-mini',
       messages,
       temperature: 0.6,
-      max_tokens: 1200
+      max_completion_tokens: 1400
     }, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
     });
