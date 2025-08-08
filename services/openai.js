@@ -425,7 +425,7 @@ const messages = [
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-      model: 'gpt-4.1-mini',
+      model: 'gpt-5-mini',
       messages,
       temperature: 0.6,
       max_tokens: 1200
