@@ -503,7 +503,7 @@ ${business.website || 'N/A'}
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-5-mini',
       messages,
-      temperature: 0.6,
+      temperature: 1,
       max_completion_tokens: 1400
     }, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
