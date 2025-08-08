@@ -8,107 +8,137 @@ const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
 const { logToJson } = require('./jsonLog');
 const { trackUsage } = require('../utils/trackUsage');
 
-
 const sessionHistory = new Map();
 const sessionTimeouts = new Map();
 const replyTimeouts = new Map();
 const pendingMessages = new Map();
 const summaries = new Map(); // Store long-term memory summaries
 
+// 🔒 Language locks (manual override like "reply in English") → 15 min
+const langLocks = new Map(); // senderId -> { lang: 'arabic'|'arabizi'|'english', expiresAt: ms }
+
 const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
 const generalModel = loadJsonArrayFile(generalModelPath);
 const unknownWordsPath = path.join(__dirname, 'unknownWords.json');
 if (!fs.existsSync(unknownWordsPath)) fs.writeFileSync(unknownWordsPath, JSON.stringify([]));
+
 // Load short words and arabizi keywords from a separate file
 const { shortWordMap, arabiziKeywords } = require('./languageData');
 
 // Compile arabizi keywords into regex for faster detection
 const arabiziRegex = new RegExp(`\\b(${arabiziKeywords.join('|')})\\b`, 'i');
 
+// Tiny helper stopwords (keep small)
+const EN_WORDS = new Set(['the','and','is','it','this','that','i','you','we','they','price','how','when','where','why','what','hi','hello','thanks','please']);
+const AR_WORDS = new Set(['مرحبا','السلام','كيفك','قديش','كم','سعر','شكراً','شكرا','لو','عندي','بدّي','بدي','هيدا','هيك','ليش','وين','امتى']);
+
 /**
- * Advanced language detection with fallback support
+ * Detect explicit language requests like:
+ *  - "reply in English", "English please"
+ *  - "حكيني عربي"
+ *  - "7ki bel 3arabizi" / "arabizi"
  */
-function detectLanguage(text, lastKnownLanguage = 'arabic', lastHistory = []) {
-  if (!text || typeof text !== 'string') return lastKnownLanguage;
+function detectExplicitLangRequest(text) {
+  const t = (text || '').toLowerCase();
 
-  const cleanText = text.toLowerCase().trim();
-  if (/^[\s\p{Emoji_Presentation}\p{P}\p{S}]+$/u.test(cleanText)) return lastKnownLanguage;
-
-  const words = cleanText.split(/\s+/);
-
-  // Special short words: fallback or map
-  if (words.length === 1) {
-    if (shortWordMap[words[0]]) return shortWordMap[words[0]];
-    // Ambiguous single words fallback to last language
-    return lastKnownLanguage;
+  // English
+  if (/\b(reply|answer|talk|speak)\s+(in|with)\s+english\b/.test(t) || /\benglish please\b/.test(t)) {
+    return 'english';
   }
 
-  let arabicScore = 0, arabiziScore = 0, englishScore = 0;
-
-  // Main scoring
-  for (const word of words) {
-    if (/[\u0600-\u06FF]/.test(word)) {
-      arabicScore += 3;
-    } else if (/\d/.test(word)) {
-      arabiziScore += 2;
-    } else if (arabiziRegex.test(word)) {
-      arabiziScore += 2;
-    } else if (/[a-z]+/.test(word)) {
-      // Check if it's Arabizi-like but not in dictionary
-      if (!shortWordMap[word] && !arabiziRegex.test(word)) {
-        logUnknownWord(word);
-      }
-      englishScore += 1;
-    }
-
-    // Emoji influence
-    if (/🇱🇧|🤲|❤️|🕌/.test(word)) arabicScore += 1;
-    if (/🇺🇸|👍|✌️|🤞/.test(word)) englishScore += 1;
+  // Arabic (Arabic script)
+  if (/(\b|^)(رد|حكي|احكي|حكيني)\s*(ب|بال)?الع(ر|)بي(ة)?(\b|$)/.test(t) || /\b(arabic)\b/.test(t)) {
+    return 'arabic';
   }
 
-  // History bias: consider last 5 messages
-  const recentLangs = lastHistory.slice(-5).map(m => m.lang);
-  const langBias = recentLangs.reduce((acc, l) => {
-    if (l === 'arabic') acc.arabic += 1;
-    if (l === 'arabizi') acc.arabizi += 1.5;
-    if (l === 'english') acc.english += 1;
-    return acc;
-  }, { arabic: 0, arabizi: 0, english: 0 });
-
-  // Extra bias for last known language to prevent flip-flop
-  langBias[lastKnownLanguage] += 2;
-
-  arabicScore += langBias.arabic;
-  arabiziScore += langBias.arabizi;
-  englishScore += langBias.english;
-
-  // Sort and get top language
-  const scores = { arabic: arabicScore, arabizi: arabiziScore, english: englishScore };
-  const entries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  const [lang, maxScore] = entries[0];
-  const totalScore = arabicScore + arabiziScore + englishScore;
-
-  // Adaptive confidence: higher threshold for short messages
-  const adaptiveThreshold = words.length < 3 ? 0.7 : 0.55;
-  const confidence = maxScore / (totalScore || 1);
-
-  if (confidence < adaptiveThreshold) return lastKnownLanguage;
-
-  // Mixed language handling: prevent switching if scores too close
-  const margin = words.length < 4 ? 2 : 1;
-  if (entries.length > 1 && Math.abs(entries[0][1] - entries[1][1]) <= margin) {
-    return lastKnownLanguage;
+  // Arabizi
+  if (/(7ki|ehki|7akini|hki)\s*(ma3e|m3e)?\s*(bel|bi|b)\s*3arabizi/.test(t) || /\b3arabizi|arabizi|3rbezi\b/.test(t)) {
+    return 'arabizi';
   }
 
-  // Stability check: require 2 consistent detections before switching
-  if (lang !== lastKnownLanguage) {
-    const stable = lastHistory.slice(-2).every(m => m.lang === lang);
-    if (!stable) return lastKnownLanguage;
-  }
+  // Simple switches
+  if (/\b(en|english)\b/.test(t) && !/arabic|عرب/.test(t)) return 'english';
+  if (/عربي|عرب/.test(t)) return 'arabic';
+  if (/3arabizi|arabizi|3rbezi/.test(t)) return 'arabizi';
 
-  return lang;
+  return null;
 }
 
+/**
+ * Advanced language detection with fallback & stickiness.
+ * Returns { lang: 'arabic'|'arabizi'|'english', confidence: 0..1 }
+ */
+function detectLanguage(text, lastKnownLanguage = 'arabic', lastHistory = []) {
+  if (!text || typeof text !== 'string') return { lang: lastKnownLanguage, confidence: 1 };
+
+  const clean = text.trim();
+
+  // Only punctuation/emoji → keep last
+  if (/^[\s\p{P}\p{S}\p{Emoji_Presentation}]+$/u.test(clean)) {
+    return { lang: lastKnownLanguage, confidence: 0.6 };
+  }
+
+  const hasArabicChars = /[\u0600-\u06FF]/.test(clean);
+  const hasLatin = /[A-Za-z]/.test(clean);
+  const hasDigits = /\d/.test(clean);
+
+  // Arabizi cues: Latin + digits or common combos
+  const hasArabiziCues = hasLatin && (hasDigits || /\b(3|7|2|5|9|sh|kh|gh|aa|ee|ou)\b/i.test(clean));
+
+  const words = clean.toLowerCase().split(/\s+/).slice(0, 40);
+
+  let ar = 0, en = 0, az = 0;
+
+  if (hasArabicChars) ar += 5;
+  if (hasArabiziCues) az += 4;
+  if (hasLatin && !hasArabiziCues) en += 3;
+
+  for (const w of words) {
+    if (AR_WORDS.has(w)) ar += 1.5;
+    if (EN_WORDS.has(w)) en += 1;
+    // digits inside a Latin token → Arabizi boost
+    if (/[A-Za-z]+\d+|\d+[A-Za-z]+/.test(w)) az += 1;
+    // dictionary-like arabizi keyword match
+    if (arabiziRegex.test(w)) az += 0.6;
+    // short single-word messages: use your map
+    if (words.length === 1 && shortWordMap[w]) {
+      if (shortWordMap[w] === 'arabic') ar += 2;
+      if (shortWordMap[w] === 'arabizi') az += 2;
+      if (shortWordMap[w] === 'english') en += 2;
+    }
+  }
+
+  // light emoji bias
+  if (/🇱🇧|🤲|❤️|🕌/.test(clean)) ar += 0.3;
+  if (/🇺🇸|👍|✌️|🤞/.test(clean)) en += 0.3;
+
+  // History bias (last 5)
+  const recent = lastHistory.slice(-5).map(m => m.lang);
+  for (const l of recent) {
+    if (l === 'arabic') ar += 0.6;
+    if (l === 'arabizi') az += 0.8;
+    if (l === 'english') en += 0.6;
+  }
+  // Stickiness to last
+  if (lastKnownLanguage === 'arabic') ar += 1.2;
+  if (lastKnownLanguage === 'arabizi') az += 1.2;
+  if (lastKnownLanguage === 'english') en += 1.2;
+
+  const scores = { arabic: ar, arabizi: az, english: en };
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const [topLang, topScore] = sorted[0];
+  const [secLang, secScore] = sorted[1] || [null, 0];
+
+  const total = ar + az + en || 1;
+  const confidence = topScore / total;
+
+  // Avoid flips on short msgs or close scores: prefer lastKnownLanguage
+  const close = Math.abs(topScore - secScore) < 1.25;
+  const short = words.length < 3;
+  const lang = (short || close) ? lastKnownLanguage : topLang;
+
+  return { lang, confidence };
+}
 
 function logUnknownWord(word) {
   const data = JSON.parse(fs.readFileSync(unknownWordsPath, 'utf8'));
@@ -117,7 +147,6 @@ function logUnknownWord(word) {
     fs.writeFileSync(unknownWordsPath, JSON.stringify(data, null, 2));
   }
 }
-
 
 /**
  * Memory handling with language tracking
@@ -128,7 +157,7 @@ function updateSession(senderId, role, content) {
 
   // Detect language for each message and store it (fallback to last known)
   const lastLang = history.length ? history[history.length - 1].lang : 'arabic';
-  const lang = detectLanguage(content.trim(), lastLang);
+  const { lang } = detectLanguage(String(content || '').trim(), lastLang, history);
 
   history.push({ role, content, lang });
 
@@ -177,64 +206,93 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   }
 
   const business = await getBusinessInfo({ phone_number_id, page_id, domain });
-const history = sessionHistory.get(senderId) || [];
-const lastLang = history.slice(-1)[0]?.lang || 'arabic';
-let lang = detectLanguage(userMessage.trim(), lastLang, history);
 
-const { checkAccess } = require('../utils/businessPolicy');
+  // 🛡️ Plan/access check
+  const { checkAccess } = require('../utils/businessPolicy');
+  const access = checkAccess(business, {
+    messages: true,
+    feature: 'aiReplies'
+  });
 
-const access = checkAccess(business, {
-  messages: true,
-  feature: 'aiReplies'
-});
+  // Language target calculation (before any early returns)
+  const preHistory = sessionHistory.get(senderId) || [];
+  const lastLang = preHistory.slice(-1)[0]?.lang || 'arabic';
 
-if (!access.allowed) {
-  const reason = access.reasons.join(', ');
-  const fallbackMessage = (lang) => {
-    if (lang === 'arabic') {
-      if (access.reasons.includes('expired')) return '⚠️ اشتراكك انتهى. جدد الخطة للاستمرار.';
-      if (access.reasons.includes('inactive')) return '⚠️ الحساب غير مفعل حالياً.';
-      if (access.reasons.includes('message_limit')) return '⚠️ وصلت للحد الأقصى من الرسائل. تحتاج لترقية.';
-      if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 هذه الميزة غير متوفرة في خطتك الحالية.';
-      return '🚫 لا يمكنك استخدام هذه الميزة حالياً.';
+  // Manual override lock?
+  const requestedLang = detectExplicitLangRequest(userMessage);
+  const now = Date.now();
+  let lock = langLocks.get(senderId);
+  if (requestedLang) {
+    langLocks.set(senderId, { lang: requestedLang, expiresAt: now + 15 * 60 * 1000 });
+    lock = langLocks.get(senderId);
+  }
+
+  let targetLang;
+  if (lock && lock.expiresAt > now) {
+    targetLang = lock.lang;
+  } else {
+    const { lang: detected, confidence } = detectLanguage(String(userMessage || '').trim(), lastLang, preHistory);
+
+    // Require previous user msg to match new language (soft hysteresis)
+    const lastUserMsg = [...preHistory].reverse().find(m => m.role === 'user');
+    const prevUserLang = lastUserMsg?.lang;
+
+    if (detected !== lastLang && !(prevUserLang === detected && confidence >= 0.55)) {
+      targetLang = lastLang;
+    } else {
+      targetLang = detected;
     }
 
-    if (lang === 'arabizi') {
-      if (access.reasons.includes('expired')) return '⚠️ el eshterak khallas. jadded l plan la tekammel.';
-      if (access.reasons.includes('inactive')) return '⚠️ el hesab mesh mef3al.';
-      if (access.reasons.includes('message_limit')) return '⚠️ woselna lal 7ad el ma7doud. 7awwel terka.';
-      if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 hal feature mesh available bel plan taba3ak.';
-      return '🚫 ma feek tista3mel hal feature.';
-    }
+    if (lock && lock.expiresAt <= now) langLocks.delete(senderId);
+  }
 
-    // English fallback
-    if (access.reasons.includes('expired')) return '⚠️ Your subscription has expired. Please renew to continue.';
-    if (access.reasons.includes('inactive')) return '⚠️ Your account is currently inactive.';
-    if (access.reasons.includes('message_limit')) return '⚠️ You’ve reached your message limit. Please upgrade your plan.';
-    if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 This feature is not available in your current plan.';
-    return '🚫 Your access is restricted: ' + reason;
-  };
-logToJson({
-  layer: 'policy',
-  senderId,
-  businessId: business.id,
-  message: userMessage,
-  reasons: access.reasons,
-  ai_reply: fallbackMessage(lang),
-  duration: 0
-});
+  // If access blocked, reply in the right language and exit
+  if (!access.allowed) {
+    const reason = access.reasons.join(', ');
+    const fallbackMessage = (language) => {
+      if (language === 'arabic') {
+        if (access.reasons.includes('expired')) return '⚠️ اشتراكك انتهى. جدد الخطة للاستمرار.';
+        if (access.reasons.includes('inactive')) return '⚠️ الحساب غير مفعل حالياً.';
+        if (access.reasons.includes('message_limit')) return '⚠️ وصلت للحد الأقصى من الرسائل. تحتاج لترقية.';
+        if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 هذه الميزة غير متوفرة في خطتك الحالية.';
+        return '🚫 لا يمكنك استخدام هذه الميزة حالياً.';
+      }
 
-  return {
-    reply: fallbackMessage(lang),
-    source: 'policy',
-    layer_used: 'plan_check',
-    duration: 0
-  };
-}
+      if (language === 'arabizi') {
+        if (access.reasons.includes('expired')) return '⚠️ el eshterak khallas. jadded l plan la tekammel.';
+        if (access.reasons.includes('inactive')) return '⚠️ el hesab mesh mef3al.';
+        if (access.reasons.includes('message_limit')) return '⚠️ woselna lal 7ad el ma7doud. 7awwel terka.';
+        if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 hal feature mesh available bel plan taba3ak.';
+        return '🚫 ma feek tista3mel hal feature.';
+      }
 
+      // English
+      if (access.reasons.includes('expired')) return '⚠️ Your subscription has expired. Please renew to continue.';
+      if (access.reasons.includes('inactive')) return '⚠️ Your account is currently inactive.';
+      if (access.reasons.includes('message_limit')) return '⚠️ You’ve reached your message limit. Please upgrade your plan.';
+      if (access.reasons.find(r => r.startsWith('feature'))) return '🚫 This feature is not available in your current plan.';
+      return '🚫 Your access is restricted: ' + reason;
+    };
 
+    logToJson({
+      layer: 'policy',
+      senderId,
+      businessId: business.id,
+      message: userMessage,
+      reasons: access.reasons,
+      ai_reply: fallbackMessage(targetLang),
+      duration: 0
+    });
 
+    return {
+      reply: fallbackMessage(targetLang),
+      source: 'policy',
+      layer_used: 'plan_check',
+      duration: 0
+    };
+  }
 
+  // Intent/model/FAQ
   const normalizedMsg = normalize(userMessage);
   const businessModel = getBusinessModel(business.id);
 
@@ -286,142 +344,160 @@ logToJson({
     return { reply: faqAnswer, source: 'faq', layer_used: 'faq', duration };
   }
 
+  // Store the user message (this also tags it with detected lang internally)
   updateSession(senderId, 'user', userMessage);
 
-const productList = (business.products || []).map((p, i) => {
-  const productHeader = `${i + 1}. **${p.title}**\n   📝 ${p.description || 'No description.'}\n   🏷️ Vendor: ${p.vendor || 'N/A'}\n   🗂️ Type: ${p.type || 'N/A'}`;
+  // ---------- Product catalog grouped by first tag ----------
+  const groupedByTag = (business.products || []).reduce((acc, product) => {
+    const tag = (product.tags && product.tags[0]) || 'Other';
+    if (!acc[tag]) acc[tag] = [];
+    acc[tag].push(product);
+    return acc;
+  }, {});
 
-  const variantsList = (p.variants || []).map((v) => {
-    let priceDisplay = 'Price not available';
-    if (v.discountedPrice) {
-      if (v.isDiscounted) {
-        priceDisplay = `~~$${v.originalPrice}~~ ➡️ **$${v.discountedPrice}**`;
-      } else {
-        priceDisplay = `$${v.discountedPrice}`;
-      }
+  const productList = Object.entries(groupedByTag)
+    .map(([tag, products]) => {
+      const tagHeader = `## 🗂️ ${tag}`;
+      const productsText = products.map((p, i) => {
+        const productHeader = `${i + 1}. **${p.title}**\n   📝 ${p.description || 'No description.'}\n   🏷️ Vendor: ${p.vendor || 'N/A'}\n   🗂️ Type: ${p.type || 'N/A'}`;
+
+        const variantsList = (p.variants || []).map((v) => {
+          let priceDisplay = 'Price not available';
+          if (v.discountedPrice) {
+            if (v.isDiscounted) {
+              priceDisplay = `~~$${v.originalPrice}~~ ➡️ **$${v.discountedPrice}**`;
+            } else {
+              priceDisplay = `$${v.discountedPrice}`;
+            }
+          }
+
+          const stockStatus = v.inStock === false ? '❌ Out of stock' : '✅ In stock';
+          const variantLabel = v.variantName ? `(${v.variantName})` : '';
+          const skuText = v.sku ? `SKU: ${v.sku}` : '';
+          const barcodeText = v.barcode ? `Barcode: ${v.barcode}` : '';
+          const imageText = v.image ? `🖼️ [Image](${v.image})` : '';
+
+          return `      • ${variantLabel} — ${priceDisplay} ${stockStatus} ${imageText}\n         ${skuText} ${barcodeText}`;
+        }).join('\n');
+
+        return `${productHeader}\n   🔢 Variants:\n${variantsList}`;
+      }).join('\n\n');
+
+      return `${tagHeader}\n${productsText}`;
+    })
+    .join('\n\n');
+
+  // ---------- Language-constrained prompts ----------
+  function fallbackMessage(language) {
+    if (language === 'arabic') {
+      return `عذرًا ما عندي هالمعلومة هلّق. فيك تتواصل معنا عالتليفون ${business.contact?.phone || ''} أو عالإيميل ${business.contact?.email || ''} لمزيد من التفاصيل.`;
     }
-
-    const stockStatus = v.inStock === false ? '❌ Out of stock' : '✅ In stock';
-    const variantLabel = v.variantName ? `(${v.variantName})` : '';
-    const skuText = v.sku ? `SKU: ${v.sku}` : '';
-    const barcodeText = v.barcode ? `Barcode: ${v.barcode}` : '';
-    const imageText = v.image ? `🖼️ [Image](${v.image})` : '';
-
-    return `      • ${variantLabel} — ${priceDisplay} ${stockStatus} ${imageText}\n         ${skuText} ${barcodeText}`;
-  }).join('\n');
-
-  return `${productHeader}\n   🔢 Variants:\n${variantsList}`;
-}).join('\n\n');
-
-
-
-  // Detect language for the current user message
-  // Get user history and detect language with bias
-
-
-// Optional stability check: only switch if stable in last 2 messages
-if (lang !== lastLang) {
-  const stable = history.slice(-2).every(m => m.lang === lang);
-  if (!stable) lang = lastLang;
-}
-
-// Dynamic fallback message based on detected language
-const fallbackMessage = (language) => {
-  if (language === 'arabic') {
-    return `عذرًا ما عندي هالمعلومة هلّق. فيك تتواصل معنا عالتليفون ${business.contact?.phone || ''} أو عالإيميل ${business.contact?.email || ''} لمزيد من التفاصيل.`;
+    if (language === 'arabizi') {
+      // Keep your older style
+      return `Sorry ma 3nde hal ma3lome 7aliyan fikon tetwasalo m3na 3al ${business.contact?.phone || ''} aw email ${business.contact?.email || ''}.`;
+    }
+    return `I’m sorry, I don’t have that information right now. Please contact us at ${business.contact?.phone || 'N/A'} or ${business.contact?.email || 'N/A'} for more details.`;
   }
-  if (language === 'arabizi') {
-    return `Sorry ma 3nde hal ma3lome 7aliyan fikon tetwasalo m3na 3al ${business.contact?.phone || ''} aw email ${business.contact?.email || ''}.`;
+
+  function languageInstructionFor(lang) {
+    if (lang === 'english') return [
+      "User language: EN.",
+      "Reply ONLY in natural English.",
+      "Do NOT switch languages unless the user explicitly asks or writes two consecutive messages in another language."
+    ].join(' ');
+
+    if (lang === 'arabizi') return [
+      "User language: Arabizi (Lebanese Arabic using Latin letters + numerals).",
+      "Reply ONLY in Lebanese Arabizi (use forms like 3=ع, 7=ح, kh, gh, etc.).",
+      "Avoid Arabic script. Do NOT switch languages unless explicitly asked."
+    ].join(' ');
+
+    return [
+      "User language: Arabic (Lebanese).",
+      "Reply ONLY in Lebanese Arabic using Arabic script.",
+      "Do NOT switch languages unless the user explicitly asks or writes two consecutive messages in another language."
+    ].join(' ');
   }
-  return `I’m sorry, I don’t have that information right now. Please contact us at ${business.contact?.phone || 'N/A'} or ${business.contact?.email || 'N/A'} for more details.`;
-};
 
-// Language instruction (enforces output language)
-const languageInstruction =
-  lang === 'english'
-    ? "The user is speaking in English. Reply in English."
-    : "The user is speaking Arabic or Arabizi. Reply in Lebanese Arabic, using Arabic script.";
+  const languageInstruction = languageInstructionFor(targetLang);
 
-// Main system prompt
-const systemPrompt = {
-  role: 'system',
-  content: `
-You are Moaawen, the helpful assistant for ${business.name} in Lebanon.  
-Use the conversation history and memory summary as context to respond accurately.  
+  // Main system prompt (language rules adjusted to mirror chosen targetLang)
+  const systemPrompt = {
+    role: 'system',
+    content: `
+You are Moaawen, the helpful assistant for ${business.name} in Lebanon.
+Use the conversation history and memory summary as context to respond accurately.
 
-**Memory Handling:**  
-- Refer back to previous user messages whenever relevant.  
-- If a question was already answered, use that information instead of asking again.  
-- If you are unsure or the info is missing, politely ask for clarification.  
-- Do not repeat the same questions unnecessarily.  
+**Memory Handling**
+- Refer back to previous user messages whenever relevant.
+- If a question was already answered, use that information instead of asking again.
+- If you are unsure or the info is missing, politely ask for clarification.
+- Do not repeat the same questions unnecessarily.
 
 ---
 
-📞 **Contact Details:**  
-- Phone: ${business.contact?.phone || 'N/A'}  
-- Email: ${business.contact?.email || 'N/A'}  
-- WhatsApp: ${business.contact?.whatsapp || 'N/A'}  
-- Instagram: ${business.contact?.instagram || 'N/A'}  
+📞 **Contact Details**
+- Phone: ${business.contact?.phone || 'N/A'}
+- Email: ${business.contact?.email || 'N/A'}
+- WhatsApp: ${business.contact?.whatsapp || 'N/A'}
+- Instagram: ${business.contact?.instagram || 'N/A'}
 
-🛒 **Product Catalog:**  
+🛒 **Product Catalog**
 
 ${productList || 'N/A'}
 
-_Note: Each product lists **all its available variants, variants include anything such as sizes, colors, etc...**, with pricing (discounts shown if applicable), stock status, SKU, barcode, and image link._
+_Note: Each product lists **all its available variants** (sizes, colors, etc.), with pricing (discounts shown if applicable), stock status, SKU, barcode, and image link._
 
+⚙️ **Description, Services, Benefits & Features**
+${business.description || 'N/A'}
 
-⚙️ **Description, Services, Benefits & Features:**  
-${business.description || 'N/A'}  
-
-🌐 **Website:**  
-${business.website || 'N/A'}  
+🌐 **Website**
+${business.website || 'N/A'}
 
 ---
 
 ### **IMPORTANT RULES**
 
-1. **Scope:**  
-   - Only answer questions about the business, its products, services, or general operations.  
-   - If the user asks for information not in your context, politely state it’s unavailable and provide phone/email for follow-up:  
-     > ${fallbackMessage(lang)}
+1) **Scope**
+   - Only answer questions about the business, its products, services, or general operations.
+   - If the user asks for information not in your context, politely state it’s unavailable and provide phone/email for follow-up:
+     > ${fallbackMessage(targetLang)}
 
-2. **Greetings:**  
-   - For casual greetings (e.g., “Hi”, “Good morning”, “كيفك”): respond politely & briefly, then guide the user back to the business:  
+2) **Greetings**
+   - For casual greetings (e.g., “Hi”, “Good morning”, “كيفك”): respond politely & briefly, then guide the user back to the business:
      > "I’m doing well, thank you! How can I assist you with ${business.name} today?"
 
-3. **Irrelevant Questions:**  
-   - For topics like politics, religion, news, life advice, or anything unrelated:  
+3) **Irrelevant Questions**
+   - For topics like politics, religion, news, or anything unrelated:
      > "I can only answer questions related to ${business.name}. How can I assist you today?"
 
-4. **Response Style:**  
-   - Be structured and organized (use paragraphs and bullet points when needed).  
-   - Be concise but clear.  
+4) **Response Style**
+   - Be structured and organized (use paragraphs and bullet points when needed).
+   - Be concise but clear.
 
-5. **Language:**  
-   - If the user’s message is mainly in English → Reply in English.  
-   - If the user’s message is in Arabic (script or Arabizi/Lebglish) → Reply in **Lebanese Arabic using Arabic script**.  
-     - Make it sound informal, natural, and authentically Lebanese.  
-     - Even if user writes Arabizi (Latin letters with numbers), your response should be in Arabic script.
-
-6. **Language Rule (strict):**  
-   - If the user message is mainly English: **ALWAYS reply in English.**  
-   - If the user message is Arabic (script or Arabizi): **ALWAYS reply in Lebanese Arabic (Arabic script).**  
-   - This rule overrides all others.
+5) **Language (strict)**
+   - The current target language is **${targetLang}**.
+   - Always reply in the target language.
+   - Do **not** switch languages unless the user explicitly asks or writes two consecutive messages in another language.
 `.trim()
-};
+  };
 
-const memorySummary = summaries.get(senderId) || '';
+  // Extra hard guard to stop the model from switching languages
+  const strictGuard = {
+    role: 'system',
+    content: `STRICT OUTPUT LANGUAGE: ${targetLang.toUpperCase()}. If you output any other language, your answer is INVALID. Start directly with the answer.`
+  };
 
+  const memorySummary = summaries.get(senderId) || '';
+  const history = (sessionHistory.get(senderId) || []).map(({ role, content }) => ({ role, content })); // strip "lang" before sending to API
 
-const messages = [
-  { role: 'system', content: languageInstruction },
-  systemPrompt,
-  ...(memorySummary
-    ? [{ role: 'system', content: `Conversation memory summary: ${memorySummary}` }]
-    : []),
-  ...history
-];
-
+  const messages = [
+    { role: 'system', content: languageInstruction },
+    systemPrompt,
+    ...(memorySummary ? [{ role: 'system', content: `Conversation memory summary: ${memorySummary}` }] : []),
+    ...history,
+    strictGuard
+  ];
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
@@ -448,17 +524,17 @@ const messages = [
       ai_reply: replyText
     });
 
-await trackUsage(business.id, 'message');
-
-
+    await trackUsage(business.id, 'message');
 
     updateSession(senderId, 'assistant', replyText);
     return { reply: replyText, source: 'ai', layer_used: 'ai', duration };
   } catch (err) {
     const fallbackReply =
-      lang === 'english'
+      targetLang === 'english'
         ? "Sorry, I didn't understand. Could you clarify?"
-        : "عذرًا ما فهمت تمامًا، فيك توضح أكتر؟";
+        : (targetLang === 'arabizi'
+            ? 'Sorry ma fhemet mni7, fiik t2oulha btor2a awda7?'
+            : 'عذرًا ما فهمت تمامًا، فيك توضح أكتر؟');
 
     const duration = Date.now() - start;
     logToJson({
