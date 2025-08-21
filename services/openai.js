@@ -12,10 +12,6 @@ const { updateSession, getSessionHistory, getSessionSummary } = require('./sessi
 const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
 const generalModel = loadJsonArrayFile(generalModelPath);
 
-// Batched reply handling - keep in this file
-const replyTimeouts = new Map();
-const pendingMessages = new Map();
-
 const generateReply = async (senderId, userMessage, metadata = {}) => {
   const start = Date.now();
   const { phone_number_id, page_id, domain } = metadata;
@@ -205,16 +201,25 @@ ${productList || 'N/A'}
   ];
 
   try {
-    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-      model: 'gpt-4o-mini',
-      messages,
-      temperature: 0.3,
-      max_tokens: 1400
-    }, {
+     const response = await axios.post('https://api.openai.com/v1/responses', {
+  model: 'gpt-5-mini',
+  input: messages,   
+  reasoning: { effort: "medium" }, 
+  max_output_tokens: 1400,   
+    text: {
+    verbosity: "low"   
+  }
+
+}, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
     });
 
-    const replyText = response.data.choices[0].message.content;
+    const replyText = response.data.output
+  ?.flatMap(o => o.content || [])
+  .filter(c => c.type === "output_text")
+  .map(c => c.text)
+  .join(" ")
+  .trim();
     const duration = Date.now() - start;
 
     logToJson({
@@ -251,24 +256,6 @@ ${productList || 'N/A'}
   }
 };
 
-const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
-  if (!pendingMessages.has(senderId)) pendingMessages.set(senderId, []);
-  pendingMessages.get(senderId).push(userMessage);
-
-  if (replyTimeouts.has(senderId)) clearTimeout(replyTimeouts.get(senderId));
-
-  const timeout = setTimeout(async () => {
-    const allMessages = pendingMessages.get(senderId).join('\n');
-    pendingMessages.delete(senderId);
-    replyTimeouts.delete(senderId);
-
-    const result = await generateReply(senderId, allMessages, metadata);
-    onReply(result);
-  }, 1000);
-
-  replyTimeouts.set(senderId, timeout);
-};
-
-module.exports = { generateReply, scheduleBatchedReply };
+module.exports = { generateReply };
 
 
