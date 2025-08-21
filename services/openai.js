@@ -12,6 +12,8 @@ const { updateSession, getSessionHistory, getSessionSummary } = require('./sessi
 const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
 const generalModel = loadJsonArrayFile(generalModelPath);
 
+const replyTimeouts = new Map();
+const pendingMessages = new Map();
 const generateReply = async (senderId, userMessage, metadata = {}) => {
   const start = Date.now();
   const { phone_number_id, page_id, domain } = metadata;
@@ -256,6 +258,24 @@ ${productList || 'N/A'}
   }
 };
 
-module.exports = { generateReply };
+const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
+  if (!pendingMessages.has(senderId)) pendingMessages.set(senderId, []);
+  pendingMessages.get(senderId).push(userMessage);
+
+  if (replyTimeouts.has(senderId)) clearTimeout(replyTimeouts.get(senderId));
+
+  const timeout = setTimeout(async () => {
+    const allMessages = pendingMessages.get(senderId).join('\n');
+    pendingMessages.delete(senderId);
+    replyTimeouts.delete(senderId);
+
+    const result = await generateReply(senderId, allMessages, metadata);
+    onReply(result);
+  }, 1000);
+
+  replyTimeouts.set(senderId, timeout);
+};
+
+module.exports = { generateReply, scheduleBatchedReply };
 
 
