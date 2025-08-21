@@ -190,7 +190,8 @@ ${productList || 'N/A'}
 5) **Response Style**
    - Be conversational and helpful
    - When NOT showing the catalog, be concise and clear
-   - Use simple formatting for non-product responses
+   - Be structured and organized (use paragraphs and bullet points when needed).  
+   - Be concise but clear. 
 
 **FINAL REMINDER: When displaying products, use the catalog sections EXACTLY as provided. Do not modify the formatting in any way.**
 `.trim()
