@@ -10,23 +10,22 @@ const { matchImageAndGenerateReply } = require('../services/imageMatcher');
 const { logConversation } = require('../utils/logger');
 const { getBusinessInfo } = require('../services/business');
 const { checkAccess } = require('../utils/businessPolicy');
-const { detectLanguage } = require('../services/openai');
+
 const { trackUsage } = require('../utils/trackUsage');
 
 const processedMessages = new Set();
 
-function getFallback(reason, lang) {
-  const L = (en, ar, az) => lang === 'arabic' ? ar : lang === 'arabizi' ? az : en;
+function getFallback(reason) {
+  
 
-  if (reason.includes('expired')) return L('⚠️ Your subscription expired. Please renew.', '⚠️ اشتراكك انتهى. جدد الاشتراك.', '⚠️ el eshterak khallas. jadded el plan.');
-  if (reason.includes('inactive')) return L('⚠️ Your account is inactive.', '⚠️ الحساب غير مفعل.', '⚠️ l hesab mesh mef3al.');
-  if (reason.includes('message_limit')) return L('⚠️ Message limit reached. Upgrade your plan.', '⚠️ وصلت للحد الأقصى من الرسائل.', '⚠️ woselna lal 7ad el ma7doud.');
-  if (reason.find(r => r.startsWith('feature:voiceInput'))) return L('🎤 Voice not allowed in your plan.', '🎤 الميزة الصوتية غير متوفرة.', '🎤 voice mish bel plan.');
-  if (reason.find(r => r.startsWith('feature:imageAnalysis'))) return L('🖼️ Image analysis not allowed in your plan.', '🖼️ تحليل الصور غير متاح.', '🖼️ feature soura mish mashmoula.');
+  if (reason.includes('expired')) return '⚠️ Your subscription expired. Please renew.';
+  if (reason.includes('inactive')) return '⚠️ Your account is inactive.';
+  if (reason.includes('message_limit')) return '⚠️ Message limit reached. Upgrade your plan.';
+  if (reason.find(r => r.startsWith('feature:voiceInput'))) return '🎤 Voice not allowed in your plan.';
+  if (reason.find(r => r.startsWith('feature:imageAnalysis'))) return '🖼️ Image analysis not allowed in your plan.';
 
-  return L('🚫 Access denied.', '🚫 تم رفض الوصول.', '🚫 mamnou3 l access.');
+  return '🚫 Access denied.';
 }
-
 async function respond(platform, id, msg, token) {
   if (platform === 'instagram') {
     await sendInstagramMessage(id, msg, token);
@@ -80,14 +79,14 @@ router.post('/', async (req, res) => {
           continue;
         }
 
-        const lang = detectLanguage(messageText, 'english');
+        
 
         // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');
         if (audio?.payload?.url) {
           const access = checkAccess(business, { feature: 'voiceInput' });
           if (!access.allowed) {
-            const reply = getFallback(access.reasons, lang);
+            const reply = getFallback(access.reasons);
             await respond(platform, senderId, reply, token);
             logConversation({ platform, userId: senderId, message: '[Voice]', aiReply: { reply }, source: 'policy' });
             continue;
@@ -98,11 +97,7 @@ router.post('/', async (req, res) => {
           fs.unlink(filePath, () => {});
 
           if (transcript === '__TOO_LONG__') {
-            const warning = lang === 'arabic'
-              ? '⚠️ الرسالة الصوتية طويلة. أعد الإرسال أقل من 30 ثانية.'
-              : lang === 'arabizi'
-              ? '⚠️ voice taweel aktar men 30s. 3id l irsal.'
-              : '⚠️ Voice too long. Please resend (max 30s).';
+            const warning = '⚠️ Voice too long. Please resend (max 30s).';
 
             await respond(platform, senderId, warning, token);
             continue;
@@ -122,7 +117,7 @@ router.post('/', async (req, res) => {
         if (image?.payload?.url) {
           const access = checkAccess(business, { feature: 'imageAnalysis' });
           if (!access.allowed) {
-            const reply = getFallback(access.reasons, lang);
+            const reply = getFallback(access.reasons);
             await respond(platform, senderId, reply, token);
             logConversation({ platform, userId: senderId, message: '[Image]', aiReply: { reply }, source: 'policy' });
             continue;
@@ -144,7 +139,7 @@ router.post('/', async (req, res) => {
 
         const access = checkAccess(business, { messages: true, feature: 'aiReplies' });
         if (!access.allowed) {
-          const reply = getFallback(access.reasons, lang);
+          const reply = getFallback(access.reasons);
           await respond(platform, senderId, reply, token);
           logConversation({ platform, userId: senderId, message: '[Text]', aiReply: { reply }, source: 'policy' });
           continue;

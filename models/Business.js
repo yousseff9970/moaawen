@@ -1,12 +1,20 @@
+const mongoose = require('mongoose');
+
 const VariantSchema = new mongoose.Schema({
   id: Number,
   sku: String,
-  price: String,
-  compareAt: String,
+  discountedPrice: String,        // Changed from 'price' to match shopifyClient
+  originalPrice: String,          // Changed from 'compareAt' to match shopifyClient
+  isDiscounted: Boolean,          // Added field from shopifyClient
   weight: Number,
   barcode: String,
-  inventoryItemId: Number,
-  inStock: Boolean
+  inventoryItemId: Number,        // Changed from 'inventoryItemId' to match shopifyClient
+  inStock: Boolean,               // This should be per-variant
+  option1: String,                // Added Shopify variant options
+  option2: String,
+  option3: String,
+  variantName: String,            // Added computed variant name
+  image: String                   // Added variant image URL
 }, { _id: false });
 
 const ImageSchema = new mongoose.Schema({
@@ -45,12 +53,20 @@ const BusinessSchema = new mongoose.Schema({
     messenger: { page_id: String }
   },
   products: [ProductSchema],
+  collections: [{                 // Added collections array
+    id: mongoose.Schema.Types.Mixed,
+    title: String,
+    products: [ProductSchema]
+  }],
   faqs: [{
     question: String,
     answer: String
   }],
   files: [String],
-  image_urls: [String]
+  image_urls: [String],
+  settings: mongoose.Schema.Types.Mixed,  // Added settings
+  status: String,                         // Added status
+  expiresAt: Date                        // Added expiration
 }, { timestamps: true });
 
 module.exports = mongoose.model('Business', BusinessSchema);

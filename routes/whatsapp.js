@@ -8,22 +8,21 @@ const { downloadMedia } = require('../services/downloadMedia');
 const { matchImageAndGenerateReply } = require('../services/imageMatcher');
 const { getBusinessInfo } = require('../services/business');
 const { checkAccess } = require('../utils/businessPolicy');
-const { detectLanguage } = require('../services/openai');
 const { trackUsage } = require('../utils/trackUsage');
 const xss = require('xss');
 
 const processedMessages = new Set();
 
-function getFallback(reason, lang) {
-  const L = (en, ar, az) => lang === 'arabic' ? ar : lang === 'arabizi' ? az : en;
+function getFallback(reason) {
+  
 
-  if (reason.includes('expired')) return L('⚠️ Your subscription expired. Please renew.', '⚠️ اشتراكك انتهى. جدد الاشتراك.', '⚠️ el eshterak khallas. jadded el plan.');
-  if (reason.includes('inactive')) return L('⚠️ Your account is inactive.', '⚠️ الحساب غير مفعل.', '⚠️ l hesab mesh mef3al.');
-  if (reason.includes('message_limit')) return L('⚠️ Message limit reached. Upgrade your plan.', '⚠️ وصلت للحد الأقصى من الرسائل.', '⚠️ woselna lal 7ad el ma7doud.');
-  if (reason.find(r => r.startsWith('feature:voiceInput'))) return L('🎤 Voice not allowed in your plan.', '🎤 الميزة الصوتية غير متوفرة.', '🎤 voice mish bel plan.');
-  if (reason.find(r => r.startsWith('feature:imageAnalysis'))) return L('🖼️ Image analysis not allowed in your plan.', '🖼️ تحليل الصور غير متاح.', '🖼️ feature soura mish mashmoula.');
+  if (reason.includes('expired')) return '⚠️ Your subscription expired. Please renew.';
+  if (reason.includes('inactive')) return '⚠️ Your account is inactive.';
+  if (reason.includes('message_limit')) return '⚠️ Message limit reached. Upgrade your plan.';
+  if (reason.find(r => r.startsWith('feature:voiceInput'))) return '🎤 Voice not allowed in your plan.';
+  if (reason.find(r => r.startsWith('feature:imageAnalysis'))) return '🖼️ Image analysis not allowed in your plan.';
 
-  return L('🚫 Access denied.', '🚫 تم رفض الوصول.', '🚫 mamnou3 l access.');
+  return '🚫 Access denied.';
 }
 
 router.get('/', (req, res) => {
@@ -70,13 +69,13 @@ router.post('/', async (req, res) => {
         continue;
       }
 
-      const lang = detectLanguage(messageText, 'english');
+      
 
       // 🖼️ Image
       if (isImage) {
         const access = checkAccess(business, { feature: 'imageAnalysis' });
         if (!access.allowed) {
-          const reply = getFallback(access.reasons, lang);
+          const reply = getFallback(access.reasons);
           await sendWhatsApp(from, reply);
           logConversation({ platform: 'whatsapp', userId: from, message: '[Image]', aiReply: { reply }, source: 'policy' });
           continue;
@@ -108,7 +107,7 @@ router.post('/', async (req, res) => {
       if (isVoice) {
         const access = checkAccess(business, { feature: 'voiceInput' });
         if (!access.allowed) {
-          const reply = getFallback(access.reasons, lang);
+          const reply = getFallback(access.reasons);
           await sendWhatsApp(from, reply);
           logConversation({ platform: 'whatsapp', userId: from, message: '[Voice]', aiReply: { reply }, source: 'policy' });
           continue;
@@ -145,7 +144,7 @@ router.post('/', async (req, res) => {
 
       const access = checkAccess(business, { messages: true, feature: 'aiReplies' });
       if (!access.allowed) {
-        const reply = getFallback(access.reasons, lang);
+        const reply = getFallback(access.reasons);
         await sendWhatsApp(from, reply);
         logConversation({ platform: 'whatsapp', userId: from, message: '[Text]', aiReply: { reply }, source: 'policy' });
         continue;

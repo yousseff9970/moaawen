@@ -22,6 +22,18 @@ const adminRoutes = require('./routes/admin');
 const logsRoutes = require('./routes/logs');
 
 const app = express();
+// Temporary CORS fix
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); 
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-api-key");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // stop here for preflight
+  }
+
+  next();
+});
 
 // -------------------- GLOBAL MIDDLEWARES --------------------
 app.use(cors());
@@ -49,7 +61,7 @@ app.get('/dashboard/data', authMiddleware, (req, res) => {
 app.use('/dashboard', dashboardRoutes);
 app.use('/shopify', shopifyRoutes);
 
-// Chat API (secured with API key)
+
 app.use('/api', apiKeyMiddleware, chatRoutes);
 
 // Webhooks

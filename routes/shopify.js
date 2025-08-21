@@ -42,6 +42,8 @@ router.get('/callback', async (req, res) => {
   if (hash !== hmac) return res.status(403).send('HMAC validation failed');
 
   try {
+    console.log(`🔗 Processing Shopify callback for ${shop}...`);
+    
     // Exchange code for access token
     const tokenRes = await axios.post(`https://${shop}/admin/oauth/access_token`, {
       client_id: SHOPIFY_API_KEY,
@@ -50,29 +52,52 @@ router.get('/callback', async (req, res) => {
     });
 
     const accessToken = tokenRes.data.access_token;
+    console.log(`🔑 Access token obtained for ${shop}`);
+    
     const client = shopifyClient(shop, accessToken);
 
     // Fetch store info
+    console.log(`🏪 Fetching store info for ${shop}...`);
     const storeInfo = await client.getStoreInfo();
 
     // Fetch collections + products
+    console.log(`📦 Fetching products and collections for ${shop}...`);
     const fullCollections = await client.getFullProducts();
 
     if (!fullCollections.length) {
-      console.warn(`⚠️ No products fetched for ${shop} — check Shopify API scopes or product availability.`);
+      console.warn(`⚠️ No collections fetched for ${shop} — check Shopify API scopes or product availability.`);
     }
 
     // Create a flat product array for backwards compatibility
     const flatProducts = fullCollections.flatMap(c => c.products || []);
+    
+    // Validate we have products with proper variant data
+    const variantCount = flatProducts.reduce((count, p) => count + (p.variants?.length || 0), 0);
+    const variantsWithStock = flatProducts.reduce((count, p) => 
+      count + (p.variants?.filter(v => v.hasOwnProperty('inStock')).length || 0), 0
+    );
+
+    console.log(`📊 Pre-save validation:
+      • Collections: ${fullCollections.length}
+      • Products: ${flatProducts.length}
+      • Variants: ${variantCount}
+      • Variants with stock info: ${variantsWithStock}`);
+
+    if (flatProducts.length === 0) {
+      console.warn(`⚠️ No products found for ${shop}. This might indicate a scoping issue.`);
+    }
 
     // Save store data
+    console.log(`💾 Saving data for ${shop}...`);
     const businessDoc = await saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, fullCollections);
 
-    console.log(`🟢 ${businessDoc.name} (${shop}) saved/updated with ${flatProducts.length} products in ${fullCollections.length} collections.`);
-    res.send(`✅ ${businessDoc.name} connected and synced with ${flatProducts.length} products.`);
+    console.log(`🟢 ${businessDoc.name} (${shop}) saved/updated successfully`);
+    res.send(`✅ ${businessDoc.name} connected and synced with ${flatProducts.length} products and ${variantCount} variants.`);
+    
   } catch (err) {
-    console.error('OAuth error:', err.response?.data || err.message);
-    res.status(500).send('OAuth failed');
+    console.error(`❌ OAuth error for ${shop}:`, err.response?.data || err.message);
+    console.error('Full error stack:', err.stack);
+    res.status(500).send(`OAuth failed: ${err.message}`);
   }
 });
 
