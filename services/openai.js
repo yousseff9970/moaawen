@@ -11,7 +11,10 @@ const {
   buildComprehensiveVariantDatabase, 
   formatVariantDatabaseForAI,
   intelligentVariantSearch,
-  createVariantInstructions
+  createVariantInstructions,
+  buildProductDatabase,
+  formatProductDatabaseForAI,
+  groupProductsByCategory
 } = require('./catalogBuilder');
 const { updateSession, getSessionHistory, getSessionSummary } = require('./sessionManager');
 
@@ -129,26 +132,10 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   // Product catalog - now using smart catalog
   const productList = buildSmartCatalog(userMessage, business.products || []);
   
-  // Build comprehensive variant database
-  const variantDatabase = buildComprehensiveVariantDatabase(business.products || []);
-  const formattedVariantDB = formatVariantDatabaseForAI(variantDatabase);
-  
-  // Intelligent variant search for current query
-  const searchResults = intelligentVariantSearch(variantDatabase, userMessage);
-  const hasRelevantVariants = searchResults.length > 0;
-  
-  let variantSearchResults = '';
-  if (hasRelevantVariants) {
-    variantSearchResults = `\n=== RELEVANT VARIANTS FOR YOUR QUERY ===\n\n`;
-    searchResults.slice(0, 5).forEach((variant, index) => {
-      variantSearchResults += `${index + 1}. ${variant.productTitle} - ${variant.variantName}\n`;
-      variantSearchResults += `   Options: ${[variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ')}\n`;
-      variantSearchResults += `   Price: ${variant.price.display}\n`;
-      variantSearchResults += `   Stock: ${variant.inStock ? '✅ Available' : '❌ Out of Stock'}\n`;
-      if (variant.sku) variantSearchResults += `   SKU: ${variant.sku}\n`;
-      variantSearchResults += `\n`;
-    });
-  }
+  // Build comprehensive product database
+  const productDatabase = buildProductDatabase(business.products || []);
+  const formattedProductData = formatProductDatabaseForAI(productDatabase);
+  const categoryOverview = groupProductsByCategory(productDatabase);
 
   const systemPrompt = {
     role: 'system',
@@ -185,38 +172,84 @@ ${business.website || 'N/A'}
 
 ---
 
-### **PRODUCT CATALOG**
-${productList || 'N/A'}
+### **COMPLETE PRODUCT DATABASE**
+${formattedProductData}
 
-### **COMPLETE VARIANT DATABASE**
-${formattedVariantDB}
+### **CATEGORY OVERVIEW**
+${categoryOverview}
 
-${variantSearchResults}
+**AI PRODUCT INTELLIGENCE INSTRUCTIONS:**
 
-### **VARIANT SEARCH INSTRUCTIONS**
-${createVariantInstructions()}
+You have COMPLETE access to all product and variant data above. Use your intelligence to:
 
-**CRITICAL VARIANT HANDLING RULES:**
-1. **Multi-Language Support**: You understand colors, sizes, and options in Arabic, English, and Lebanese dialect
-2. **Exact Matching**: When users ask about specific variants, search through the database above
-3. **Stock Accuracy**: Always check and mention the exact stock status from the database
-4. **Language Consistency**: Respond in the same language the user used
-5. **Alternative Suggestions**: If requested variant is unavailable, suggest similar in-stock options
+1. **Understand ANY query about products/variants**:
+   - Colors, sizes, materials, prices, availability
+   - Product comparisons, recommendations
+   - Category browsing, specific searches
+   - Stock availability, pricing questions
 
-**EXAMPLES OF VARIANT QUERIES:**
-- English: "Do you have this shirt in red medium?"
-- Arabic: "عندك هذا القميص بالأحمر مقاس متوسط؟"  
-- Lebanese: "fi 3andak hal qamis bl a7mar medium?"
-- Arabizi: "3andak hayda bl aswad size large?"
+2. **Handle ALL languages naturally**:
+   - Arabic: "عندك قميص أحمر مقاس متوسط؟"
+   - English: "Do you have a red shirt in medium?"
+   - Lebanese: "fi 3andak qamis a7mar medium?"
+   - Mixed: "عندك هاي ال shirt بالblue؟"
 
-**RESPONSE STRATEGY:**
-1. Understand the query in any language/dialect
-2. Search the variant database for matches
-3. Report exact availability and pricing
-4. Suggest alternatives if needed
-5. Maintain language consistency
+3. **Provide intelligent responses**:
+   - Exact matches when available
+   - Smart alternatives when requested item unavailable
+   - Category recommendations
+   - Price comparisons
+   - Stock status updates
 
-**FINAL REMINDER: You have complete multilingual variant knowledge. Use the database above to answer precisely about any color, size, or option in any language.**
+4. **Format responses beautifully**:
+   - Use emojis and clear structure
+   - Show prices, discounts, stock status
+   - Group related items logically
+   - Make it scannable and attractive
+
+5. **Be contextually smart**:
+   - For general queries → show overview/categories
+   - For specific queries → show exact matches
+   - For browsing → show relevant selections
+   - For comparisons → highlight differences
+
+**RESPONSE EXAMPLES:**
+
+For "What products do you have?":
+🛍️ **Our Product Collection**
+
+**Electronics** (15 products, 12 in stock)
+- Latest smartphones and accessories
+- Audio equipment and headphones
+
+**Clothing** (8 products, 6 in stock) 
+- Casual and formal wear
+- Various sizes and colors available
+
+*Ask me about specific categories or items!*
+
+For "عندك قميص أحمر؟":
+🔍 **Red Shirts Available:**
+
+✅ **Cotton Polo Shirt** - $25
+   • Red, Size M/L/XL available
+   • 100% cotton, casual fit
+
+✅ **Formal Dress Shirt** - $35 
+   • Red, Size S/M/L in stock
+   • Slim fit, premium quality
+
+*All items are currently in stock!*
+
+**IMPORTANT RULES:**
+1. **Always check stock status** before confirming availability
+2. **Show prices clearly** including any discounts
+3. **Suggest alternatives** if exact request unavailable  
+4. **Match user's language** perfectly
+5. **Be conversational and helpful** - don't just list data
+6. **Format beautifully** with emojis and structure
+
+Use your AI intelligence to understand what users want and provide the most helpful response using the complete product data above.
 `.trim()
   };
 
@@ -301,5 +334,5 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
 };
 
 module.exports = { generateReply, scheduleBatchedReply };
-    
+
 
