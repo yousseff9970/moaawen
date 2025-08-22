@@ -6,7 +6,13 @@ const { matchModelResponse, matchFAQSmart } = require('./modelMatcher');
 const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
 const { logToJson } = require('./jsonLog');
 const { trackUsage } = require('../utils/trackUsage');
-const { buildSmartCatalog } = require('./catalogBuilder');
+const { 
+  buildSmartCatalog, 
+  buildComprehensiveVariantDatabase, 
+  formatVariantDatabaseForAI,
+  intelligentVariantSearch,
+  createVariantInstructions
+} = require('./catalogBuilder');
 const { updateSession, getSessionHistory, getSessionSummary } = require('./sessionManager');
 
 const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
@@ -122,6 +128,27 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
 
   // Product catalog - now using smart catalog
   const productList = buildSmartCatalog(userMessage, business.products || []);
+  
+  // Build comprehensive variant database
+  const variantDatabase = buildComprehensiveVariantDatabase(business.products || []);
+  const formattedVariantDB = formatVariantDatabaseForAI(variantDatabase);
+  
+  // Intelligent variant search for current query
+  const searchResults = intelligentVariantSearch(variantDatabase, userMessage);
+  const hasRelevantVariants = searchResults.length > 0;
+  
+  let variantSearchResults = '';
+  if (hasRelevantVariants) {
+    variantSearchResults = `\n=== RELEVANT VARIANTS FOR YOUR QUERY ===\n\n`;
+    searchResults.slice(0, 5).forEach((variant, index) => {
+      variantSearchResults += `${index + 1}. ${variant.productTitle} - ${variant.variantName}\n`;
+      variantSearchResults += `   Options: ${[variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ')}\n`;
+      variantSearchResults += `   Price: ${variant.price.display}\n`;
+      variantSearchResults += `   Stock: ${variant.inStock ? '✅ Available' : '❌ Out of Stock'}\n`;
+      if (variant.sku) variantSearchResults += `   SKU: ${variant.sku}\n`;
+      variantSearchResults += `\n`;
+    });
+  }
 
   const systemPrompt = {
     role: 'system',
@@ -131,8 +158,9 @@ You are Moaawen, the helpful assistant for ${business.name} in Lebanon.
 **CRITICAL LANGUAGE INSTRUCTION**
 Analyze the user's most recent message and respond in the EXACT SAME LANGUAGE and dialect they used:
 - If they wrote in English → respond in English
-- If they wrote in Arabic (formal, Lebanese dialect, or Arabizi) → respond in Lebanese Arabic using Arabic script
+- If they wrote in Arabic → respond in Arabic using Arabic script
 - If they wrote in Lebanese dialect → respond in Lebanese dialect using Arabic script
+- If they wrote in Arabizi → respond in Lebanese Arabic using Arabic script
 - Match their tone, formality, and style naturally
 
 IGNORE all previous conversation languages - only focus on their current message language.
@@ -157,43 +185,38 @@ ${business.website || 'N/A'}
 
 ---
 
-### **CRITICAL CATALOG FORMATTING RULES**
-🛒 **Product Catalog** (PERFECTLY FORMATTED - USE EXACTLY AS PROVIDED):
-
+### **PRODUCT CATALOG**
 ${productList || 'N/A'}
 
-**MANDATORY FORMATTING INSTRUCTIONS:**
-- When showing products, you MUST use the catalog EXACTLY as provided above
-- Do NOT modify, reformat, or change ANY of the catalog formatting
-- Do NOT remove borders, emojis, or styling elements
-- Do NOT create your own product lists or summaries
-- If user asks about products, copy and paste the relevant sections from the catalog above
-- The catalog is already perfectly formatted - preserve ALL visual elements including ╔══╗, ┌─┐, emojis, spacing, and structure
+### **COMPLETE VARIANT DATABASE**
+${formattedVariantDB}
 
-### **IMPORTANT RULES**
-1) **Scope**
-   - Only answer questions about the business, its products, services, or general operations
-   - If information is unavailable, provide contact details for follow-up
+${variantSearchResults}
 
-2) **Greetings**
-   - For casual greetings: respond politely & briefly, then guide to business topics
+### **VARIANT SEARCH INSTRUCTIONS**
+${createVariantInstructions()}
 
-3) **Irrelevant Questions**
-   - For unrelated topics: politely redirect to business-related questions
+**CRITICAL VARIANT HANDLING RULES:**
+1. **Multi-Language Support**: You understand colors, sizes, and options in Arabic, English, and Lebanese dialect
+2. **Exact Matching**: When users ask about specific variants, search through the database above
+3. **Stock Accuracy**: Always check and mention the exact stock status from the database
+4. **Language Consistency**: Respond in the same language the user used
+5. **Alternative Suggestions**: If requested variant is unavailable, suggest similar in-stock options
 
-4) **Product Display Rules**
-   - ALWAYS use the pre-formatted catalog sections when showing products
-   - NEVER create simplified lists or modify the catalog format
-   - If showing specific categories, extract the relevant sections with ALL formatting intact
-   - Preserve the beautiful borders, emojis, and visual structure
+**EXAMPLES OF VARIANT QUERIES:**
+- English: "Do you have this shirt in red medium?"
+- Arabic: "عندك هذا القميص بالأحمر مقاس متوسط؟"  
+- Lebanese: "fi 3andak hal qamis bl a7mar medium?"
+- Arabizi: "3andak hayda bl aswad size large?"
 
-5) **Response Style**
-   - Be conversational and helpful
-   - When NOT showing the catalog, be concise and clear
-   - Be structured and organized (use paragraphs and bullet points when needed).  
-   - Be concise but clear. 
+**RESPONSE STRATEGY:**
+1. Understand the query in any language/dialect
+2. Search the variant database for matches
+3. Report exact availability and pricing
+4. Suggest alternatives if needed
+5. Maintain language consistency
 
-**FINAL REMINDER: When displaying products, use the catalog sections EXACTLY as provided. Do not modify the formatting in any way.**
+**FINAL REMINDER: You have complete multilingual variant knowledge. Use the database above to answer precisely about any color, size, or option in any language.**
 `.trim()
   };
 
@@ -278,5 +301,5 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
 };
 
 module.exports = { generateReply, scheduleBatchedReply };
-
+    
 

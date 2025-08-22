@@ -14,7 +14,10 @@ const VariantSchema = new mongoose.Schema({
   option2: String,
   option3: String,
   variantName: String,            // Added computed variant name
-  image: String                   // Added variant image URL
+  image: String,                  // Added variant image URL
+  inventoryManagement: String,    // Added for inventory tracking
+  inventoryPolicy: String,        // Added for inventory policy
+  inventoryQuantity: Number       // Added for exact quantity tracking
 }, { _id: false });
 
 const ImageSchema = new mongoose.Schema({
