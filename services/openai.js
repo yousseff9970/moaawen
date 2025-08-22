@@ -7,11 +7,6 @@ const { loadJsonArrayFile, getBusinessModel } = require('../utils/jsonLoader');
 const { logToJson } = require('./jsonLog');
 const { trackUsage } = require('../utils/trackUsage');
 const { 
-  buildSmartCatalog, 
-  buildComprehensiveVariantDatabase, 
-  formatVariantDatabaseForAI,
-  intelligentVariantSearch,
-  createVariantInstructions,
   buildProductDatabase,
   formatProductDatabaseForAI,
   groupProductsByCategory
@@ -129,9 +124,6 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     content: role === 'user' ? `[Time: ${timestamp || 'unknown'}] ${content}` : content
   }));
 
-  // Product catalog - now using smart catalog
-  const productList = buildSmartCatalog(userMessage, business.products || []);
-  
   // Build comprehensive product database
   const productDatabase = buildProductDatabase(business.products || []);
   const formattedProductData = formatProductDatabaseForAI(productDatabase);
