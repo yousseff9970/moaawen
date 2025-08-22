@@ -244,6 +244,7 @@ This business does not currently have products in their catalog. Focus on:
     role: 'system',
     content: (basePrompt + productPrompt + generalRules).trim()
   };
+  
 
   const messages = [
     systemPrompt,
