@@ -77,8 +77,6 @@ function formatProductDatabaseForAI(productDatabase) {
   productDatabase.forEach((product, index) => {
     output += `PRODUCT ${index + 1}: ${product.title}\n`;
     output += `ID: ${product.id}\n`;
-    output += `BRAND: ${product.vendor || 'N/A'}\n`;
-    output += `CATEGORY: ${product.type || 'N/A'}\n`;
     output += `TAGS: ${product.tags || 'N/A'}\n`;
     output += `DESCRIPTION: ${product.description || 'No description'}\n`;
     output += `PRICE RANGE: ${product.minPrice && product.maxPrice 
