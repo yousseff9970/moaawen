@@ -124,14 +124,20 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     content: role === 'user' ? `[Time: ${timestamp || 'unknown'}] ${content}` : content
   }));
 
-  // Build comprehensive product database
-  const productDatabase = buildProductDatabase(business.products || []);
-  const formattedProductData = formatProductDatabaseForAI(productDatabase);
-  const categoryOverview = groupProductsByCategory(productDatabase);
+  // Build comprehensive product database only if products exist
+  const hasProducts = business.products && business.products.length > 0;
+  let productDatabase = [];
+  let formattedProductData = '';
+  let categoryOverview = '';
+  
+  if (hasProducts) {
+    productDatabase = buildProductDatabase(business.products);
+    formattedProductData = formatProductDatabaseForAI(productDatabase);
+    categoryOverview = groupProductsByCategory(productDatabase);
+  }
 
-  const systemPrompt = {
-    role: 'system',
-    content: `
+  // Build dynamic system prompt based on whether business has products
+  const basePrompt = `
 You are Moaawen, the helpful assistant for ${business.name} in Lebanon.
 
 **CRITICAL LANGUAGE INSTRUCTION**
@@ -160,7 +166,10 @@ IGNORE all previous conversation languages - only focus on their current message
 ${business.description || 'N/A'}
 
 🌐 **Website**
-${business.website || 'N/A'}
+${business.website || 'N/A'}`;
+
+  // Add product-specific content only if products exist
+  const productPrompt = hasProducts ? `
 
 ---
 
@@ -205,16 +214,35 @@ You have COMPLETE access to all product and variant data above. Use your intelli
    - For browsing → show relevant selections
    - For comparisons → highlight differences
 
-**IMPORTANT RULES:**
+**PRODUCT-SPECIFIC RULES:**
 1. **Always check stock status** before confirming availability
 2. **Show prices clearly** including any discounts
 3. **Suggest alternatives** if exact request unavailable  
-4. **Match user's language** perfectly
-5. **Be conversational and helpful** - don't just list data
-6. **Format beautifully** with emojis and structure
+4. **Be conversational and helpful** - don't just list data
+5. **Format beautifully** with emojis and structure
 
-Use your AI intelligence to understand what users want and provide the most helpful response using the complete product data above.
-`.trim()
+Use your AI intelligence to understand what users want and provide the most helpful response using the complete product data above.` : `
+
+**NO PRODUCTS AVAILABLE**
+This business does not currently have products in their catalog. Focus on:
+- Answering questions about services
+- Providing contact information
+- Explaining business description and offerings
+- Directing customers to contact directly for product inquiries`;
+
+  // Add general rules that apply to all businesses
+  const generalRules = `
+
+**GENERAL RULES:**
+1. **Scope**: Only answer questions about the business, its ${hasProducts ? 'products, ' : ''}services, or general operations
+2. **Greetings**: For casual greetings, respond politely & briefly, then guide to business topics
+3. **Irrelevant Questions**: For unrelated topics, politely redirect to business-related questions
+4. **Response Style**: Be conversational, helpful, and use emojis appropriately
+5. **Language Consistency**: Always match the user's language and dialect exactly${hasProducts ? '' : '\n6. **Product Queries**: If asked about products, explain that the business doesn\'t have an online catalog and provide contact information'}`;
+
+  const systemPrompt = {
+    role: 'system',
+    content: (basePrompt + productPrompt + generalRules).trim()
   };
 
   const messages = [
@@ -228,7 +256,7 @@ Use your AI intelligence to understand what users want and provide the most help
   model: 'gpt-5-mini',
   input: messages,   
   reasoning: { effort: "medium" }, 
-  max_output_tokens: 1400,   
+  max_output_tokens: 1600,   
     text: {
     verbosity: "low"   
   }
