@@ -15,7 +15,7 @@ const FB_REDIRECT_URI = process.env.FB_REDIRECT_URI;
 
 // Generate Facebook login URL - only basic user permissions
 router.get('/facebook/login-url', (req, res) => {
-  const scopes = ['public_profile', 'email', 'pages_show_list, instagram_basic'].join(',');
+  const scopes = ['public_profile', 'email', 'pages_show_list', 'instagram_basic'].join(',');
 
   const fbAuthUrl =
     `https://www.facebook.com/v19.0/dialog/oauth` +
