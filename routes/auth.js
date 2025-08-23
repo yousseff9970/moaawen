@@ -28,6 +28,18 @@ router.get('/facebook/login-url', (req, res) => {
   res.json({ url: fbAuthUrl });
 });
 
+// Add this route to handle the base /facebook path
+router.get('/facebook', (req, res) => {
+  res.status(404).json({ 
+    error: 'Endpoint not found',
+    availableEndpoints: [
+      'GET /auth/facebook/login-url - Get Facebook login URL',
+      'GET /auth/facebook/callback - Facebook callback handler',
+      'POST /auth/facebook/callback - Facebook login for SPA/mobile'
+    ]
+  });
+});
+
 // Handle Facebook callback - exchange code for access token and get user info
 router.get('/facebook/callback', async (req, res) => {
   try {
