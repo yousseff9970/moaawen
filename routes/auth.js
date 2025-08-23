@@ -4,24 +4,18 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { MongoClient } = require('mongodb');
+const axios = require('axios');
 
 const client = new MongoClient(process.env.MONGO_URI);
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key';
 
-
-
 const FB_APP_ID = process.env.FB_APP_ID;
+const FB_APP_SECRET = process.env.FB_APP_SECRET;
 const FB_REDIRECT_URI = process.env.FB_REDIRECT_URI;
 
+// Generate Facebook login URL - only basic user permissions
 router.get('/facebook/login-url', (req, res) => {
-  const scopes = [
-    'pages_show_list',
-    'pages_read_engagement',
-    'pages_manage_metadata',
-    'instagram_basic',
-    'public_profile',
-    'email'
-  ].join(',');
+  const scopes = ['public_profile', 'email'].join(',');
 
   const fbAuthUrl =
     `https://www.facebook.com/v19.0/dialog/oauth` +
@@ -34,70 +28,209 @@ router.get('/facebook/login-url', (req, res) => {
   res.json({ url: fbAuthUrl });
 });
 
+// Handle Facebook callback - exchange code for access token and get user info
+router.get('/facebook/callback', async (req, res) => {
+  try {
+    const { code } = req.query;
+    
+    if (!code) {
+      return res.status(400).json({ error: 'Authorization code not provided' });
+    }
 
-// /auth/facebook/callback or /auth/facebook/link
-router.post('/facebook/callback', async (req, res) => {
-  const { email, name, fbId, pages } = req.body; // pages = [{ pageId, name, accessToken, igBusinessId }]
-  if (!email || !pages?.length) return res.status(400).json({ error: 'Missing info' });
+    // Exchange code for access token
+    const tokenResponse = await axios.get('https://graph.facebook.com/v19.0/oauth/access_token', {
+      params: {
+        client_id: FB_APP_ID,
+        client_secret: FB_APP_SECRET,
+        redirect_uri: FB_REDIRECT_URI,
+        code: code
+      }
+    });
 
-  await client.connect();
-  const db = client.db(process.env.DB_NAME || 'moaawen');
-  const usersCol = db.collection('users');
-  const businessesCol = db.collection('businesses');
+    const { access_token } = tokenResponse.data;
 
-  // 1. Find or create user
-  let user = await usersCol.findOne({ email });
-  if (!user) {
-    const userDoc = {
-      email,
-      name,
-      password: null, // since using FB OAuth
-      businesses: [],
-      createdAt: new Date(),
-      facebookId: fbId
-    };
-    const result = await usersCol.insertOne(userDoc);
-    user = { ...userDoc, _id: result.insertedId };
-  }
+    // Get user info
+    const userResponse = await axios.get('https://graph.facebook.com/v19.0/me', {
+      params: {
+        fields: 'id,name,email,picture',
+        access_token: access_token
+      }
+    });
 
-  // 2. For each selected page/account, create business entry if not exists
-  const businessIds = [];
-  for (const page of pages) {
-    let business = await businessesCol.findOne({ 'channels.messenger.page_id': page.pageId });
-    if (!business) {
-      const businessDoc = {
-        name: page.name,
-        owner: user._id,
-        channels: {
-          messenger: { page_id: page.pageId, accessToken: page.accessToken },
-          instagram: page.igBusinessId
-            ? { page_id: page.igBusinessId, fb_page_id: page.pageId }
-            : undefined
-        },
-        createdAt: new Date(),
-        users: [user._id]
-      };
-      const { insertedId } = await businessesCol.insertOne(businessDoc);
-      businessIds.push(insertedId);
-    } else {
-      // Add user to business if not already
-      if (!business.users?.includes(user._id)) {
-        await businessesCol.updateOne(
-          { _id: business._id },
-          { $addToSet: { users: user._id } }
+    const { id: facebookId, name, email, picture } = userResponse.data;
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    // Check if user exists by email or Facebook ID
+    let user = await usersCol.findOne({
+      $or: [
+        { email: email },
+        { facebookId: facebookId }
+      ]
+    });
+
+    if (user) {
+      // Update existing user with Facebook info if not already linked
+      if (!user.facebookId) {
+        await usersCol.updateOne(
+          { _id: user._id },
+          {
+            $set: {
+              facebookId: facebookId,
+              facebookAccessToken: access_token,
+              profilePicture: picture?.data?.url,
+              updatedAt: new Date()
+            }
+          }
         );
       }
-      businessIds.push(business._id);
+    } else {
+      // Create new user
+      const userDoc = {
+        email: email,
+        name: name,
+        facebookId: facebookId,
+        facebookAccessToken: access_token,
+        profilePicture: picture?.data?.url,
+        password: null, // Facebook users don't have passwords
+        businesses: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = await usersCol.insertOne(userDoc);
+      user = { ...userDoc, _id: result.insertedId };
     }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Redirect to frontend with token (adjust URL as needed)
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+    res.redirect(`${frontendUrl}/auth/success?token=${token}`);
+
+  } catch (error) {
+    console.error('Facebook callback error:', error.message);
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+    res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('Facebook login failed')}`);
   }
+});
 
-  // 3. Update user's businesses list
-  await usersCol.updateOne(
-    { _id: user._id },
-    { $addToSet: { businesses: { $each: businessIds } } }
-  );
+// Alternative POST endpoint for mobile/SPA applications
+router.post('/facebook/callback', async (req, res) => {
+  try {
+    const { code, accessToken } = req.body;
+    
+    let userAccessToken = accessToken;
+    
+    // If code provided, exchange for access token
+    if (code && !accessToken) {
+      const tokenResponse = await axios.get('https://graph.facebook.com/v19.0/oauth/access_token', {
+        params: {
+          client_id: FB_APP_ID,
+          client_secret: FB_APP_SECRET,
+          redirect_uri: FB_REDIRECT_URI,
+          code: code
+        }
+      });
+      userAccessToken = tokenResponse.data.access_token;
+    }
 
-  return res.json({ success: true, businesses: businessIds });
+    if (!userAccessToken) {
+      return res.status(400).json({ error: 'Access token or authorization code required' });
+    }
+
+    // Get user info
+    const userResponse = await axios.get('https://graph.facebook.com/v19.0/me', {
+      params: {
+        fields: 'id,name,email,picture',
+        access_token: userAccessToken
+      }
+    });
+
+    const { id: facebookId, name, email, picture } = userResponse.data;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email permission required' });
+    }
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    // Check if user exists by email or Facebook ID
+    let user = await usersCol.findOne({
+      $or: [
+        { email: email },
+        { facebookId: facebookId }
+      ]
+    });
+
+    if (user) {
+      // Update existing user with Facebook info if not already linked
+      if (!user.facebookId) {
+        await usersCol.updateOne(
+          { _id: user._id },
+          {
+            $set: {
+              facebookId: facebookId,
+              facebookAccessToken: userAccessToken,
+              profilePicture: picture?.data?.url,
+              updatedAt: new Date()
+            }
+          }
+        );
+        user.facebookId = facebookId;
+      }
+    } else {
+      // Create new user
+      const userDoc = {
+        email: email,
+        name: name,
+        facebookId: facebookId,
+        facebookAccessToken: userAccessToken,
+        profilePicture: picture?.data?.url,
+        password: null, // Facebook users don't have passwords
+        businesses: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = await usersCol.insertOne(userDoc);
+      user = { ...userDoc, _id: result.insertedId };
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    return res.json({
+      success: true,
+      message: 'Facebook login successful',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        facebookId: user.facebookId,
+        profilePicture: user.profilePicture,
+        businesses: user.businesses
+      }
+    });
+
+  } catch (error) {
+    console.error('Facebook login error:', error.message);
+    return res.status(500).json({ error: 'Facebook login failed' });
+  }
 });
 
 // -------------------- REGISTER --------------------

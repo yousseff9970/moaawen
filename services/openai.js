@@ -244,7 +244,7 @@ This business does not currently have products in their catalog. Focus on:
     role: 'system',
     content: (basePrompt + productPrompt + generalRules).trim()
   };
-  
+
 
   const messages = [
     systemPrompt,
@@ -321,7 +321,7 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
 
     const result = await generateReply(senderId, allMessages, metadata);
     onReply(result);
-  }, 1000);
+  }, 10000);
 
   replyTimeouts.set(senderId, timeout);
 };
