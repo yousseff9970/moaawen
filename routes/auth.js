@@ -178,6 +178,7 @@ router.post('/facebook/callback', async (req, res) => {
         await usersCol.updateOne(
           { _id: user._id },
           {
+            
             $set: {
               facebookId: facebookId,
               facebookAccessToken: userAccessToken,
