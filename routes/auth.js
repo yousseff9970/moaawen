@@ -350,6 +350,65 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// -------------------- GET PROFILE --------------------
+router.get('/profile', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decoded;
+    try {
+      decoded = require('jsonwebtoken').verify(token, JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+    }
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    const user = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    // Return user info (without password)
+    const userInfo = {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      facebookId: user.facebookId,
+      profilePicture: user.profilePicture,
+      facebookAccessToken: user.facebookAccessToken,
+      hasPassword: !!user.password, // Indicate if user has a password set
+      notifications: user.notifications || {
+        email: true,
+        push: true,
+        marketing: false,
+      },
+      privacy: user.privacy || {
+        showEmail: false,
+        showPhone: false,
+        profileVisible: true,
+      }
+    };
+
+    return res.json({
+      success: true,
+      user: userInfo
+    });
+
+  } catch (err) {
+    console.error('Get profile error:', err.message);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
 // -------------------- UPDATE PROFILE --------------------
 router.put('/profile', async (req, res) => {
   try {
@@ -367,9 +426,9 @@ router.put('/profile', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
     }
 
-    const { name, phone, currentPassword, newPassword } = req.body;
+    const { name, phone, currentPassword, newPassword, notifications, privacy } = req.body;
 
-    if (!name && !phone && !newPassword) {
+    if (!name && !phone && !newPassword && !notifications && !privacy) {
       return res.status(400).json({ success: false, message: 'At least one field must be provided for update.' });
     }
 
@@ -394,14 +453,24 @@ router.put('/profile', async (req, res) => {
       updateFields.phone = phone;
     }
 
+    // Update notifications if provided
+    if (notifications) {
+      updateFields.notifications = notifications;
+    }
+
+    // Update privacy settings if provided
+    if (privacy) {
+      updateFields.privacy = privacy;
+    }
+
     // Handle password change
     if (newPassword) {
-      if (!currentPassword) {
+      if (!currentPassword && user.password) {
         return res.status(400).json({ success: false, message: 'Current password is required to change password.' });
       }
 
       // Verify current password (only for users with passwords - not Facebook users)
-      if (user.password) {
+      if (user.password && currentPassword) {
         const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
         if (!isCurrentPasswordValid) {
           return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
@@ -430,7 +499,9 @@ router.put('/profile', async (req, res) => {
       phone: updateFields.phone || user.phone,
       facebookId: user.facebookId,
       profilePicture: user.profilePicture,
-      businesses: user.businesses
+      hasPassword: !!updateFields.password || !!user.password,
+      notifications: updateFields.notifications || user.notifications,
+      privacy: updateFields.privacy || user.privacy
     };
 
     return res.json({
