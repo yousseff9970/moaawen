@@ -21,6 +21,21 @@ const getFrontendUrl = () => {
 // Generate Facebook login URL - only basic user permissions
 router.get('/facebook/login-url', (req, res) => {
   const scopes = ['public_profile', 'email', 'pages_show_list', 'instagram_basic'].join(',');
+  
+  // Check if user is authenticated (for connecting existing account)
+  const authHeader = req.headers.authorization;
+  let stateParam = '';
+  
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    try {
+      // Verify the token is valid
+      jwt.verify(token, JWT_SECRET);
+      stateParam = `&state=${encodeURIComponent(token)}`;
+    } catch (e) {
+      // Invalid token, continue without state
+    }
+  }
 
   const fbAuthUrl =
     `https://www.facebook.com/v19.0/dialog/oauth` +
@@ -28,7 +43,8 @@ router.get('/facebook/login-url', (req, res) => {
     `&redirect_uri=${encodeURIComponent(FB_REDIRECT_URI)}` +
     `&scope=${scopes}` +
     `&response_type=code` +
-    `&auth_type=rerequest`;
+    `&auth_type=rerequest` +
+    stateParam;
 
   res.json({ url: fbAuthUrl });
 });
@@ -48,7 +64,7 @@ router.get('/facebook', (req, res) => {
 // Handle Facebook callback - exchange code for access token and get user info
 router.get('/facebook/callback', async (req, res) => {
   try {
-    const { code } = req.query;
+    const { code, state } = req.query;
     
     if (!code) {
       return res.status(400).json({ error: 'Authorization code not provided' });
@@ -66,7 +82,7 @@ router.get('/facebook/callback', async (req, res) => {
 
     const { access_token } = tokenResponse.data;
 
-    // Get user info
+    // Get user info from Facebook
     const userResponse = await axios.get('https://graph.facebook.com/v19.0/me', {
       params: {
         fields: 'id,name,email,picture',
@@ -79,6 +95,36 @@ router.get('/facebook/callback', async (req, res) => {
     await client.connect();
     const db = client.db(process.env.DB_NAME || 'moaawen');
     const usersCol = db.collection('users');
+
+    // Check if this is a connection request from existing user (state parameter can contain user token)
+    let existingUser = null;
+    if (state) {
+      try {
+        const decoded = jwt.verify(state, JWT_SECRET);
+        existingUser = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+      } catch (e) {
+        // Invalid token in state, continue with normal flow
+      }
+    }
+
+    if (existingUser) {
+      // Existing logged-in user wants to connect Facebook
+      await usersCol.updateOne(
+        { _id: existingUser._id },
+        {
+          $set: {
+            facebookId: facebookId,
+            facebookAccessToken: access_token,
+            profilePicture: existingUser.profilePicture || picture?.data?.url,
+            updatedAt: new Date()
+          }
+        }
+      );
+
+      const frontendUrl = getFrontendUrl();
+      res.redirect(`${frontendUrl}/dashboard/settings?fbConnected=true`);
+      return;
+    }
 
     // Check if user exists by email or Facebook ID
     let user = await usersCol.findOne({
@@ -139,7 +185,59 @@ router.get('/facebook/callback', async (req, res) => {
   }
 });
 
-// Alternative POST endpoint for mobile/SPA applications
+// Disconnect Facebook account
+router.post('/facebook/disconnect', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Authorization token required' });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    const user = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if user has password - they need at least one login method
+    if (!user.password) {
+      return res.status(400).json({ 
+        error: 'Cannot disconnect Facebook. Please set a password first to maintain account access.' 
+      });
+    }
+
+    // Remove Facebook data
+    await usersCol.updateOne(
+      { _id: user._id },
+      {
+        $unset: {
+          facebookId: '',
+          facebookAccessToken: ''
+        },
+        $set: {
+          updatedAt: new Date()
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      message: 'Facebook account disconnected successfully'
+    });
+
+  } catch (error) {
+    console.error('Facebook disconnect error:', error);
+    res.status(500).json({ error: 'Failed to disconnect Facebook account' });
+  }
+});
+
+// Alternative POST endpoint for mobile/SPA applications  
 router.post('/facebook/callback', async (req, res) => {
   try {
     const { code, accessToken } = req.body;
