@@ -281,9 +281,22 @@ router.post('/register', async (req, res) => {
 
     const result = await usersCol.insertOne(userDoc);
 
+    // Generate JWT token for auto-login
+    const token = jwt.sign(
+      { userId: result.insertedId, email: email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
     return res.json({
       message: 'Registration successful!',
-      userId: result.insertedId
+      token,
+      user: {
+        id: result.insertedId,
+        email: email,
+        phone: phone,
+        businesses: []
+      }
     });
   } catch (err) {
     console.error('Register error:', err.message);
