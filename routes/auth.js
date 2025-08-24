@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const axios = require('axios');
 
 const client = new MongoClient(process.env.MONGO_URI);
@@ -347,6 +347,101 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err.message);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// -------------------- UPDATE PROFILE --------------------
+router.put('/profile', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decoded;
+    try {
+      decoded = require('jsonwebtoken').verify(token, JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+    }
+
+    const { name, phone, currentPassword, newPassword } = req.body;
+
+    if (!name && !phone && !newPassword) {
+      return res.status(400).json({ success: false, message: 'At least one field must be provided for update.' });
+    }
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    const user = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    const updateFields = {};
+
+    // Update name if provided
+    if (name) {
+      updateFields.name = name;
+    }
+
+    // Update phone if provided
+    if (phone) {
+      updateFields.phone = phone;
+    }
+
+    // Handle password change
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({ success: false, message: 'Current password is required to change password.' });
+      }
+
+      // Verify current password (only for users with passwords - not Facebook users)
+      if (user.password) {
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isCurrentPasswordValid) {
+          return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
+        }
+      }
+
+      // Hash new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      updateFields.password = hashedNewPassword;
+    }
+
+    // Add updated timestamp
+    updateFields.updatedAt = new Date();
+
+    // Update user in database
+    await usersCol.updateOne(
+      { _id: user._id },
+      { $set: updateFields }
+    );
+
+    // Return updated user info (without password)
+    const updatedUser = {
+      id: user._id,
+      email: user.email,
+      name: updateFields.name || user.name,
+      phone: updateFields.phone || user.phone,
+      facebookId: user.facebookId,
+      profilePicture: user.profilePicture,
+      businesses: user.businesses
+    };
+
+    return res.json({
+      success: true,
+      message: 'Profile updated successfully!',
+      user: updatedUser
+    });
+
+  } catch (err) {
+    console.error('Update profile error:', err.message);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 

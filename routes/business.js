@@ -54,31 +54,41 @@ router.get('/', authMiddleware, async (req, res) => {
 
     // Transform business data to match frontend interface
     const transformedBusinesses = businesses.map(business => {
-      // Determine business type based on channels
+      // Determine business type based on available data
       let type = 'widget'; // default
-      if (business.channels?.whatsapp?.phone_number_id) {
+      if (business.shop && business.accessToken) {
+        type = 'shopify'; // Has Shopify integration
+      } else if (business.channels?.whatsapp?.phone_number_id) {
         type = 'whatsapp';
       } else if (business.channels?.instagram?.page_id) {
         type = 'instagram';
       } else if (business.channels?.messenger?.page_id) {
         type = 'page';
-      } else if (business.shop) {
-        type = 'shopify';
+      } else if (business.website) {
+        type = 'widget'; // Website widget
       }
 
-      // Calculate message usage (this would need to be tracked in your system)
-      const messagesUsed = business.usage?.messagesUsed || Math.floor(Math.random() * 800); // Mock data for now
-      const messagesLimit = business.plan === 'premium' ? 5000 : business.plan === 'pro' ? 2000 : 500;
-
-      // Calculate subscription end date
-      const subscriptionEndDate = business.subscription?.endDate || 
-        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now as default
+      // Extract real usage data from settings
+      const settings = business.settings || {};
+      const messagesUsed = settings.usedMessages || 0;
+      const messagesLimit = settings.maxMessages || 50000;
+      
+      // Extract real plan from settings
+      const plan = settings.currentPlan || 'starter';
+      
+      // Extract real subscription expiry date
+      let subscriptionEndDate = null;
+      if (business.expiresAt) {
+        subscriptionEndDate = business.expiresAt;
+      } else if (settings.subscriptionEndDate) {
+        subscriptionEndDate = settings.subscriptionEndDate;
+      }
 
       return {
         id: business._id.toString(),
         name: business.name || 'Unnamed Business',
         type: type,
-        plan: business.plan || 'basic',
+        plan: plan,
         messagesUsed: messagesUsed,
         messagesLimit: messagesLimit,
         subscriptionEndDate: subscriptionEndDate,
@@ -86,8 +96,10 @@ router.get('/', authMiddleware, async (req, res) => {
         createdAt: business.createdAt || new Date(),
         description: business.description,
         website: business.website,
+        shop: business.shop,
         contact: business.contact || {},
-        channels: business.channels || {}
+        channels: business.channels || {},
+        settings: settings
       };
     });
 
