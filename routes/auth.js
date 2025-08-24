@@ -624,6 +624,7 @@ router.get('/profile', async (req, res) => {
       profilePicture: user.profilePicture,
       facebookAccessToken: user.facebookAccessToken,
       hasPassword: !!user.password, // Indicate if user has a password set
+      businesses: user.businesses || [], // Include user's businesses
       notifications: user.notifications || {
         email: true,
         push: true,
