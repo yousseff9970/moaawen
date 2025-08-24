@@ -20,6 +20,7 @@ const webhookRoutes = require('./routes/webhook');
 const whatsappRoutes = require('./routes/whatsapp');
 const adminRoutes = require('./routes/admin');
 const logsRoutes = require('./routes/logs');
+const businessRoutes = require('./routes/business');
 
 const app = express();
 // Temporary CORS fix
@@ -60,6 +61,7 @@ app.get('/dashboard/data', authMiddleware, (req, res) => {
 // Business & dashboard routes
 app.use('/dashboard', dashboardRoutes);
 app.use('/shopify', shopifyRoutes);
+app.use('/businesses', businessRoutes);
 
 
 app.use('/api', apiKeyMiddleware, chatRoutes);
