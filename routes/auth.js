@@ -13,6 +13,11 @@ const FB_APP_ID = process.env.FB_APP_ID;
 const FB_APP_SECRET = process.env.FB_APP_SECRET;
 const FB_REDIRECT_URI = process.env.FB_REDIRECT_URI;
 
+// Helper function to get clean frontend URL
+const getFrontendUrl = () => {
+  return (process.env.FRONTEND_URL || 'http://localhost:3001').replace(/\/dashboard$/, '');
+};
+
 // Generate Facebook login URL - only basic user permissions
 router.get('/facebook/login-url', (req, res) => {
   const scopes = ['public_profile', 'email', 'pages_show_list', 'instagram_basic'].join(',');
@@ -124,12 +129,12 @@ router.get('/facebook/callback', async (req, res) => {
     );
 
     // Redirect to frontend with token (adjust URL as needed)
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+    const frontendUrl = getFrontendUrl();
     res.redirect(`${frontendUrl}/auth/success?token=${token}`);
 
   } catch (error) {
     console.error('Facebook callback error:', error.message);
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+    const frontendUrl = getFrontendUrl();
     res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('Facebook login failed')}`);
   }
 });
