@@ -110,14 +110,7 @@ router.get('/facebook/callback', async (req, res) => {
     if (existingUser) {
       // Existing logged-in user wants to connect Facebook
       
-      // Check if Facebook email matches the current user's email
-      if (email && email !== existingUser.email) {
-        const frontendUrl = getFrontendUrl();
-        res.redirect(`${frontendUrl}/dashboard/settings?fbError=${encodeURIComponent('Facebook email does not match your account email')}`);
-        return;
-      }
-      
-      // First check if this Facebook ID is already connected to another user
+      // Only check if this Facebook ID is already connected to another user
       const fbUser = await usersCol.findOne({ 
         facebookId: facebookId,
         _id: { $ne: existingUser._id } // Exclude current user
@@ -135,6 +128,7 @@ router.get('/facebook/callback', async (req, res) => {
           $set: {
             facebookId: facebookId,
             facebookAccessToken: access_token,
+            facebookEmail: email, // Store Facebook email separately
             profilePicture: existingUser.profilePicture || picture?.data?.url,
             updatedAt: new Date()
           }
@@ -154,32 +148,20 @@ router.get('/facebook/callback', async (req, res) => {
       ]
     });
 
-    // Enhanced validation for email and Facebook ID conflicts
+    // Enhanced validation - only check Facebook ID uniqueness
     if (!user) {
-      // Check if this Facebook ID is connected to a user with different email
+      // Check if this Facebook ID is already connected to another user
       const existingFbUser = await usersCol.findOne({ facebookId: facebookId });
-      if (existingFbUser && existingFbUser.email !== email) {
-        const frontendUrl = getFrontendUrl();
-        res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This Facebook account is connected to a different email address')}`);
-        return;
-      }
-      
-      // Check if this email is already used by a user with different Facebook ID
-      const existingEmailUser = await usersCol.findOne({ 
-        email: email,
-        facebookId: { $exists: true, $ne: null, $ne: facebookId }
-      });
-      if (existingEmailUser) {
-        const frontendUrl = getFrontendUrl();
-        res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This email is already connected to a different Facebook account')}`);
-        return;
+      if (existingFbUser) {
+        // Facebook ID already exists, log them in with the existing account
+        user = existingFbUser;
       }
     }
 
     if (user) {
       // Update existing user with Facebook info if not already linked
       if (!user.facebookId) {
-        // Double-check Facebook ID uniqueness before linking
+        // Only check Facebook ID uniqueness, not email matching
         const fbConflict = await usersCol.findOne({ 
           facebookId: facebookId,
           _id: { $ne: user._id }
@@ -191,12 +173,14 @@ router.get('/facebook/callback', async (req, res) => {
           return;
         }
 
+        // Link Facebook to existing user account
         await usersCol.updateOne(
           { _id: user._id },
           {
             $set: {
               facebookId: facebookId,
               facebookAccessToken: access_token,
+              facebookEmail: email, // Store Facebook email separately
               profilePicture: picture?.data?.url,
               updatedAt: new Date()
             }
@@ -204,19 +188,13 @@ router.get('/facebook/callback', async (req, res) => {
         );
       }
     } else {
-      // Create new user - but first check email uniqueness one more time
-      const emailConflict = await usersCol.findOne({ email: email });
-      if (emailConflict) {
-        const frontendUrl = getFrontendUrl();
-        res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This email is already registered. Please login with your existing account.')}`);
-        return;
-      }
-
+      // Create new user with Facebook info
       const userDoc = {
         email: email,
         name: name,
         facebookId: facebookId,
         facebookAccessToken: access_token,
+        facebookEmail: email,
         profilePicture: picture?.data?.url,
         password: null, // Facebook users don't have passwords
         businesses: [],
@@ -642,6 +620,7 @@ router.get('/profile', async (req, res) => {
       name: user.name,
       phone: user.phone,
       facebookId: user.facebookId,
+      facebookEmail: user.facebookEmail,
       profilePicture: user.profilePicture,
       facebookAccessToken: user.facebookAccessToken,
       hasPassword: !!user.password, // Indicate if user has a password set
