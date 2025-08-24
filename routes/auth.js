@@ -109,6 +109,26 @@ router.get('/facebook/callback', async (req, res) => {
 
     if (existingUser) {
       // Existing logged-in user wants to connect Facebook
+      
+      // Check if Facebook email matches the current user's email
+      if (email && email !== existingUser.email) {
+        const frontendUrl = getFrontendUrl();
+        res.redirect(`${frontendUrl}/dashboard/settings?fbError=${encodeURIComponent('Facebook email does not match your account email')}`);
+        return;
+      }
+      
+      // First check if this Facebook ID is already connected to another user
+      const fbUser = await usersCol.findOne({ 
+        facebookId: facebookId,
+        _id: { $ne: existingUser._id } // Exclude current user
+      });
+      
+      if (fbUser) {
+        const frontendUrl = getFrontendUrl();
+        res.redirect(`${frontendUrl}/dashboard/settings?fbError=${encodeURIComponent('This Facebook account is already connected to another user account')}`);
+        return;
+      }
+
       await usersCol.updateOne(
         { _id: existingUser._id },
         {
@@ -134,9 +154,43 @@ router.get('/facebook/callback', async (req, res) => {
       ]
     });
 
+    // Enhanced validation for email and Facebook ID conflicts
+    if (!user) {
+      // Check if this Facebook ID is connected to a user with different email
+      const existingFbUser = await usersCol.findOne({ facebookId: facebookId });
+      if (existingFbUser && existingFbUser.email !== email) {
+        const frontendUrl = getFrontendUrl();
+        res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This Facebook account is connected to a different email address')}`);
+        return;
+      }
+      
+      // Check if this email is already used by a user with different Facebook ID
+      const existingEmailUser = await usersCol.findOne({ 
+        email: email,
+        facebookId: { $exists: true, $ne: null, $ne: facebookId }
+      });
+      if (existingEmailUser) {
+        const frontendUrl = getFrontendUrl();
+        res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This email is already connected to a different Facebook account')}`);
+        return;
+      }
+    }
+
     if (user) {
       // Update existing user with Facebook info if not already linked
       if (!user.facebookId) {
+        // Double-check Facebook ID uniqueness before linking
+        const fbConflict = await usersCol.findOne({ 
+          facebookId: facebookId,
+          _id: { $ne: user._id }
+        });
+        
+        if (fbConflict) {
+          const frontendUrl = getFrontendUrl();
+          res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This Facebook account is already connected to another user')}`);
+          return;
+        }
+
         await usersCol.updateOne(
           { _id: user._id },
           {
@@ -150,7 +204,14 @@ router.get('/facebook/callback', async (req, res) => {
         );
       }
     } else {
-      // Create new user
+      // Create new user - but first check email uniqueness one more time
+      const emailConflict = await usersCol.findOne({ email: email });
+      if (emailConflict) {
+        const frontendUrl = getFrontendUrl();
+        res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('This email is already registered. Please login with your existing account.')}`);
+        return;
+      }
+
       const userDoc = {
         email: email,
         name: name,
@@ -182,6 +243,85 @@ router.get('/facebook/callback', async (req, res) => {
     console.error('Facebook callback error:', error.message);
     const frontendUrl = getFrontendUrl();
     res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('Facebook login failed')}`);
+  }
+});
+
+// Check for and fix duplicate Facebook connections (admin utility)
+router.post('/facebook/fix-duplicates', async (req, res) => {
+  try {
+    // This should be protected - only allow for admin or specific conditions
+    const { adminKey } = req.body;
+    if (adminKey !== process.env.ADMIN_KEY) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const usersCol = db.collection('users');
+
+    // Find all users with Facebook IDs
+    const fbUsers = await usersCol.find({ facebookId: { $exists: true, $ne: null } }).toArray();
+    
+    // Group by Facebook ID to find duplicates
+    const fbGroups = {};
+    fbUsers.forEach(user => {
+      if (!fbGroups[user.facebookId]) {
+        fbGroups[user.facebookId] = [];
+      }
+      fbGroups[user.facebookId].push(user);
+    });
+
+    const duplicates = [];
+    const fixes = [];
+
+    // Process duplicates
+    for (const [fbId, users] of Object.entries(fbGroups)) {
+      if (users.length > 1) {
+        duplicates.push({ facebookId: fbId, users: users.length });
+        
+        // Keep the first user (or the one with password), remove Facebook from others
+        const sortedUsers = users.sort((a, b) => {
+          if (a.password && !b.password) return -1;
+          if (!a.password && b.password) return 1;
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        });
+
+        const keepUser = sortedUsers[0];
+        const removeUsers = sortedUsers.slice(1);
+
+        for (const user of removeUsers) {
+          await usersCol.updateOne(
+            { _id: user._id },
+            {
+              $unset: {
+                facebookId: '',
+                facebookAccessToken: ''
+              },
+              $set: {
+                updatedAt: new Date()
+              }
+            }
+          );
+          fixes.push({
+            userId: user._id,
+            email: user.email,
+            action: 'removed_facebook_connection'
+          });
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      duplicatesFound: duplicates.length,
+      duplicates,
+      fixesApplied: fixes.length,
+      fixes
+    });
+
+  } catch (error) {
+    console.error('Fix duplicates error:', error);
+    res.status(500).json({ error: 'Failed to fix duplicates' });
   }
 });
 
@@ -287,13 +427,34 @@ router.post('/facebook/callback', async (req, res) => {
       ]
     });
 
+    // Check if this Facebook ID is connected to a different email account
+    if (!user) {
+      const existingFbUser = await usersCol.findOne({ facebookId: facebookId });
+      if (existingFbUser && existingFbUser.email !== email) {
+        return res.status(400).json({ 
+          error: 'This Facebook account is connected to a different email address' 
+        });
+      }
+    }
+
     if (user) {
       // Update existing user with Facebook info if not already linked
       if (!user.facebookId) {
+        // Check if this Facebook ID is already used by another user
+        const fbConflict = await usersCol.findOne({ 
+          facebookId: facebookId,
+          _id: { $ne: user._id }
+        });
+        
+        if (fbConflict) {
+          return res.status(400).json({ 
+            error: 'This Facebook account is already connected to another user' 
+          });
+        }
+
         await usersCol.updateOne(
           { _id: user._id },
           {
-            
             $set: {
               facebookId: facebookId,
               facebookAccessToken: userAccessToken,
