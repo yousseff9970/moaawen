@@ -51,53 +51,138 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const body = req.body;
+    
+    // 🔍 FULL META API RESPONSE LOGGING
+    console.log('\n' + '='.repeat(80));
+    console.log('🚀 FULL META WEBHOOK RESPONSE:');
+    console.log('='.repeat(80));
+    console.log(JSON.stringify(body, null, 2));
+    console.log('='.repeat(80) + '\n');
+    
     if (!body.entry) return res.sendStatus(400);
 
     for (const entry of body.entry) {
       const pageId = entry.id;
       console.log(`📋 Webhook entry ID: ${pageId}`);
+      console.log(`📄 Full entry object:`, JSON.stringify(entry, null, 2));
       
       for (const event of entry.messaging || []) {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         
+        console.log(`📨 Full messaging event:`, JSON.stringify(event, null, 2));
+        
         if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
+          console.log(`⏭️ Skipping event - senderId: ${senderId}, hasMessage: ${!!event.message}, messageId: ${messageId}, isEcho: ${event.message?.is_echo}, alreadyProcessed: ${processedMessages.has(messageId)}`);
           continue;
         }
 
         processedMessages.add(messageId);
         let messageText = event.message?.text;
 
+        // 🔍 DETAILED MESSAGE ANALYSIS
+        console.log('\n' + '-'.repeat(60));
+        console.log('🔍 DETAILED MESSAGE ANALYSIS:');
+        console.log('-'.repeat(60));
+        console.log(`📋 Entry ID: ${pageId} (length: ${pageId?.length})`);
+        console.log(`� Sender ID: ${senderId} (length: ${senderId?.length})`);
+        console.log(`📝 Message ID: ${messageId}`);
+        console.log(`💬 Text: "${messageText}"`);
+        console.log(`📱 Has instagram_actor_id: ${!!event.message?.instagram_actor_id}`);
+        if (event.message?.instagram_actor_id) {
+          console.log(`📱 Instagram Actor ID: ${event.message.instagram_actor_id}`);
+        }
+        console.log(`📮 Has postback instagram_id: ${!!event.postback?.instagram_actor_id}`);
+        if (event.postback?.instagram_actor_id) {
+          console.log(`📮 Postback Instagram ID: ${event.postback.instagram_actor_id}`);
+        }
+        console.log(`📊 Message attachments:`, event.message?.attachments?.map(att => ({
+          type: att.type,
+          hasUrl: !!att.payload?.url
+        })) || 'None');
+        console.log(`🏷️ Message source info:`, {
+          isEcho: event.message?.is_echo,
+          appId: event.message?.app_id,
+          metadata: event.message?.metadata
+        });
+        console.log('-'.repeat(60) + '\n');
+
         // Load business - try standard page_id lookup first
         let business;
         try {
           business = await getBusinessInfo({ page_id: pageId });
+          console.log(`✅ Business found:`, {
+            name: business.name,
+            id: business.id,
+            hasInstagram: !!business.channels?.instagram,
+            instagramConnected: business.channels?.instagram?.connected,
+            instagramConnectionType: business.channels?.instagram?.connection_type,
+            instagramPageId: business.channels?.instagram?.page_id,
+            instagramBusinessAccountId: business.channels?.instagram?.business_account_id,
+            hasMessenger: !!business.channels?.messenger,
+            messengerPageId: business.channels?.messenger?.page_id
+          });
         } catch (e) {
           console.warn(`⚠️ No business found for page ${pageId}`);
           console.warn(`Error details:`, e.message);
           continue;
         }
 
-        // Determine platform and token based on what's configured in the business
+        // 🎯 PLATFORM DETECTION LOGIC
+        console.log('\n' + '-'.repeat(60));
+        console.log('🎯 PLATFORM DETECTION LOGIC:');
+        console.log('-'.repeat(60));
+        
+        // Determine platform and token based on message context and business configuration
         let platform = 'messenger'; // Default to messenger
         let token;
 
-        // Check if this business has Instagram connection and if the pageId matches ANY Instagram ID field
-        if (business.channels?.instagram?.connected && 
-            (business.channels.instagram.page_id === pageId || 
-             business.channels.instagram.business_account_id === pageId ||
-             business.channels.instagram.account_id === pageId ||
-             business.channels.instagram.user_id === pageId)) {
+        // Check for Instagram message context - Instagram messages have different structure
+        const isInstagramMessage = event.message?.instagram_actor_id || 
+                                  event.postback?.instagram_actor_id ||
+                                  (event.sender?.id && event.sender.id.length >= 16);
+
+        console.log(`🔍 Instagram message indicators:`, {
+          hasInstagramActorId: !!event.message?.instagram_actor_id,
+          hasPostbackInstagramId: !!event.postback?.instagram_actor_id,
+          senderIdLengthCheck: event.sender?.id && event.sender.id.length >= 16,
+          overallIsInstagramMessage: isInstagramMessage
+        });
+
+        // Priority 1: Check if this is an Instagram message AND business has Instagram configured
+        if (isInstagramMessage && business.channels?.instagram?.connected) {
+          // For Instagram via Facebook Page (Business Suite), the pageId would be the Facebook Page ID
+          // but the message context indicates it's from Instagram
           platform = 'instagram';
           token = business.channels.instagram.access_token;
-          console.log(`📱 Platform: instagram (${business.channels.instagram.connection_type || 'direct'}), Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
+          console.log(`📱 Platform: instagram (via context detection), Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
         }
-        // Default to Messenger
+        // Priority 2: Check if pageId directly matches Instagram connection IDs
+        else if (business.channels?.instagram?.connected && 
+                (business.channels.instagram.page_id === pageId || 
+                 business.channels.instagram.business_account_id === pageId ||
+                 business.channels.instagram.account_id === pageId ||
+                 business.channels.instagram.user_id === pageId)) {
+          platform = 'instagram';
+          token = business.channels.instagram.access_token;
+          console.log(`📱 Platform: instagram (direct connection), Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
+        }
+        // Priority 3: Check if pageId matches Messenger page
+        else if (business.channels?.messenger?.page_id === pageId) {
+          platform = 'messenger';
+          token = business.channels.messenger.access_token;
+          console.log(`📱 Platform: messenger (configured), Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
+        }
+        // Default: Messenger with fallback token
         else {
           platform = 'messenger';
           token = business.channels?.messenger?.access_token || process.env.PAGE_ACCESS_TOKEN;
-          console.log(`📱 Platform: messenger, Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
+          console.log(`📱 Platform: messenger (default), Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
         }
+
+        console.log(`🎯 FINAL PLATFORM DECISION: ${platform.toUpperCase()}`);
+        console.log(`🔑 Token source: ${token === process.env.PAGE_ACCESS_TOKEN ? 'Environment Variable' : 'Business Channel'}`);
+        console.log('-'.repeat(60) + '\n');
 
         if (!token) {
           console.warn(`⚠️ No access token found for ${platform} on page ${pageId}`);
@@ -105,7 +190,8 @@ router.post('/', async (req, res) => {
           continue;
         }
 
-        console.log(`✅ Found business "${business.name}" with ${platform} token for page ${pageId}`);
+        console.log(`✅ PROCESSING MESSAGE: Business "${business.name}" via ${platform.toUpperCase()} (Page: ${pageId})`);
+        console.log(`🔐 Using token: ${token ? token.substring(0, 20) + '...' : 'None'}\n`);
 
         // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');
