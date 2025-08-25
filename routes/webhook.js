@@ -60,7 +60,6 @@ router.post('/', async (req, res) => {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         const isInstagram = senderId.length >= 16;
-        const token = process.env.PAGE_ACCESS_TOKEN;
         const platform = isInstagram ? 'instagram' : 'messenger';
 
         if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
@@ -79,7 +78,15 @@ router.post('/', async (req, res) => {
           continue;
         }
 
-        
+        // Get dynamic token based on platform
+        const token = isInstagram 
+          ? business.channels?.instagram?.access_token 
+          : business.channels?.messenger?.access_token;
+
+        if (!token) {
+          console.warn(`⚠️ No access token found for ${platform} on page ${pageId}`);
+          continue;
+        }
 
         // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');

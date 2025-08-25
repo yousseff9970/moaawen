@@ -51,9 +51,24 @@ const BusinessSchema = new mongoose.Schema({
     instagram: String
   },
   channels: {
-    whatsapp: { phone_number_id: String },
-    instagram: { page_id: String },
-    messenger: { page_id: String }
+    whatsapp: { 
+      phone_number_id: String,
+      access_token: String 
+    },
+    instagram: { 
+      page_id: String,
+      access_token: String,
+      username: String 
+    },
+    messenger: { 
+      page_id: String,
+      access_token: String 
+    },
+    facebook: {
+      page_id: String,
+      access_token: String,
+      page_name: String
+    }
   },
   products: [ProductSchema],
   collections: [{                 // Added collections array
