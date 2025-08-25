@@ -29,7 +29,7 @@ async function getBusinessInfo({ phone_number_id, page_id, domain, shop }) {
 
   // Match website domain
   if (!business && domain) {
-    business = await collection.findOne({ website: domain });
+    business = await collection.findOne({ 'channels.website.domain': domain });
   }
 
   // Match Shopify

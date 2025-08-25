@@ -24,6 +24,7 @@ router.get('/facebook/login-url', (req, res) => {
   
   // Check if user is authenticated (for connecting existing account)
   const authHeader = req.headers.authorization;
+  const { businessId } = req.query; // Support business connection parameter
   let stateParam = '';
   
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -31,10 +32,15 @@ router.get('/facebook/login-url', (req, res) => {
     try {
       // Verify the token is valid
       jwt.verify(token, JWT_SECRET);
-      stateParam = `&state=${encodeURIComponent(token)}`;
+      // Encode both token and businessId in state if businessId provided
+      const stateData = businessId ? JSON.stringify({ token, businessId }) : token;
+      stateParam = `&state=${encodeURIComponent(stateData)}`;
     } catch (e) {
       // Invalid token, continue without state
     }
+  } else if (businessId) {
+    // If no auth but businessId provided, just pass businessId
+    stateParam = `&state=${encodeURIComponent(JSON.stringify({ businessId }))}`;
   }
 
   const fbAuthUrl =
@@ -95,16 +101,92 @@ router.get('/facebook/callback', async (req, res) => {
     await client.connect();
     const db = client.db(process.env.DB_NAME || 'moaawen');
     const usersCol = db.collection('users');
+    const businessCol = db.collection('businesses');
 
-    // Check if this is a connection request from existing user (state parameter can contain user token)
+    // Parse state parameter to check for business connection request
     let existingUser = null;
+    let businessId = null;
+    
     if (state) {
       try {
-        const decoded = jwt.verify(state, JWT_SECRET);
-        existingUser = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+        // Try to parse as JSON (new format with businessId)
+        const stateData = JSON.parse(state);
+        if (stateData.token) {
+          const decoded = jwt.verify(stateData.token, JWT_SECRET);
+          existingUser = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+        }
+        businessId = stateData.businessId;
       } catch (e) {
-        // Invalid token in state, continue with normal flow
+        // Fallback to old format (just token)
+        try {
+          const decoded = jwt.verify(state, JWT_SECRET);
+          existingUser = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
+        } catch (e2) {
+          // Invalid token in state, continue with normal flow
+        }
       }
+    }
+
+    // Handle business channel connection
+    if (businessId && existingUser) {
+      // This is a business channel connection request
+      
+      // Update business with Facebook channel info
+      await businessCol.updateOne(
+        { _id: new ObjectId(businessId) },
+        {
+          $set: {
+            'channels.facebook': {
+              account_id: facebookId,
+              access_token: access_token,
+              user_id: facebookId,
+              name: name,
+              email: email,
+              connected_at: new Date()
+            },
+            updatedAt: new Date()
+          }
+        }
+      );
+
+      // Also update user's Facebook info if not already connected
+      if (!existingUser.facebookId) {
+        await usersCol.updateOne(
+          { _id: existingUser._id },
+          {
+            $set: {
+              facebookId: facebookId,
+              facebookAccessToken: access_token,
+              facebookEmail: email,
+              profilePicture: existingUser.profilePicture || picture?.data?.url,
+              updatedAt: new Date()
+            }
+          }
+        );
+      }
+
+      // Return success response for business connection
+      const frontendUrl = getFrontendUrl();
+      res.send(`
+        <html>
+          <script>
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'FACEBOOK_AUTH_SUCCESS',
+                data: {
+                  account_id: '${facebookId}',
+                  name: '${name}',
+                  email: '${email}'
+                }
+              }, '*');
+              window.close();
+            } else {
+              window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true';
+            }
+          </script>
+        </html>
+      `);
+      return;
     }
 
     if (existingUser) {
@@ -220,7 +302,27 @@ router.get('/facebook/callback', async (req, res) => {
   } catch (error) {
     console.error('Facebook callback error:', error.message);
     const frontendUrl = getFrontendUrl();
-    res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('Facebook login failed')}`);
+    if (req.query.state && req.query.state.includes('businessId')) {
+      // This was a business connection request, send popup response
+      res.send(`
+        <html>
+          <script>
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'FACEBOOK_AUTH_ERROR',
+                error: 'Failed to connect Facebook account'
+              }, '*');
+              window.close();
+            } else {
+              alert('Failed to connect Facebook account');
+              window.history.back();
+            }
+          </script>
+        </html>
+      `);
+    } else {
+      res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('Facebook login failed')}`);
+    }
   }
 });
 
@@ -752,6 +854,47 @@ router.put('/profile', async (req, res) => {
   } catch (err) {
     console.error('Update profile error:', err.message);
     return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+// Get Facebook pages for business channel connections
+router.get('/facebook/pages/:businessId', async (req, res) => {
+  try {
+    const { businessId } = req.params;
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const businessCol = db.collection('businesses');
+
+    const business = await businessCol.findOne({ _id: new ObjectId(businessId) });
+    if (!business || !business.channels?.facebook?.access_token) {
+      return res.status(400).json({ error: 'Facebook account not connected' });
+    }
+
+    const access_token = business.channels.facebook.access_token;
+
+    // Get user's Facebook pages
+    const pagesResponse = await axios.get('https://graph.facebook.com/v19.0/me/accounts', {
+      params: {
+        access_token: access_token,
+        fields: 'id,name,access_token,instagram_business_account'
+      }
+    });
+
+    const pages = pagesResponse.data.data || [];
+
+    res.json({
+      success: true,
+      pages: pages
+    });
+
+  } catch (error) {
+    console.error('Error fetching Facebook pages:', error);
+    res.status(500).json({ error: 'Failed to fetch Facebook pages' });
   }
 });
 
