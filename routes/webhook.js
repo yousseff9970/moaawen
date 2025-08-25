@@ -61,7 +61,10 @@ router.post('/', async (req, res) => {
       for (const event of entry.messaging || []) {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
-        const isInstagram = senderId.length >= 16;
+        
+        // Better Instagram detection: check if the entry ID is an Instagram Business Account ID
+        // Instagram Business Account IDs are typically 17+ digits, Messenger Page IDs are shorter
+        const isInstagram = pageId.length >= 17 || senderId.length >= 16;
         const platform = isInstagram ? 'instagram' : 'messenger';
 
         console.log(`📱 Platform: ${platform}, Sender ID: ${senderId}, Page ID: ${pageId}`);
@@ -73,32 +76,44 @@ router.post('/', async (req, res) => {
         processedMessages.add(messageId);
         let messageText = event.message?.text;
 
-        // Load business
+        // Load business - improved lookup for Instagram direct connections
         let business;
         try {
-          // For Instagram, try both the pageId and senderId as they might represent different IDs
           if (isInstagram) {
+            // For Instagram, try multiple lookup strategies
             business = await getBusinessInfo({ 
-              page_id: pageId, 
+              page_id: pageId,
               instagram_account_id: pageId 
             });
           } else {
+            // For Messenger, use standard page_id lookup
             business = await getBusinessInfo({ page_id: pageId });
           }
         } catch (e) {
           console.warn(`⚠️ No business found for ${platform} page/account ${pageId}`);
+          console.warn(`Error details:`, e.message);
           continue;
         }
 
-        // Get dynamic token based on platform
-        const token = isInstagram 
-          ? business.channels?.instagram?.access_token 
-          : business.channels?.messenger?.access_token;
+        // Get dynamic token based on platform and connection type
+        let token;
+        if (isInstagram) {
+          // For Instagram, get the access_token from the instagram channel
+          token = business.channels?.instagram?.access_token;
+          console.log(`🔑 Instagram token found: ${token ? 'Yes' : 'No'}`);
+        } else {
+          // For Messenger, get the access_token from messenger channel
+          token = business.channels?.messenger?.access_token;
+          console.log(`🔑 Messenger token found: ${token ? 'Yes' : 'No'}`);
+        }
 
         if (!token) {
           console.warn(`⚠️ No access token found for ${platform} on page ${pageId}`);
+          console.warn(`Business channels:`, JSON.stringify(business.channels, null, 2));
           continue;
         }
+
+        console.log(`✅ Found business "${business.name}" with ${platform} token for page ${pageId}`);
 
         // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');
