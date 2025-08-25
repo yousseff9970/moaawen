@@ -898,13 +898,13 @@ router.get('/facebook/pages/:businessId', async (req, res) => {
   }
 });
 
-// Instagram OAuth endpoints for direct Instagram login (via Facebook Graph API)
-// Note: Instagram Business API access requires the same Facebook app credentials
-const INSTAGRAM_APP_ID = process.env.FB_APP_ID || '698492099473419';
-const INSTAGRAM_APP_SECRET = process.env.FB_APP_SECRET || '1868912bb8d53cf59499a605367f3eee';
-const INSTAGRAM_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI || 'https://moaawen.onrender.com/';
+// Instagram OAuth endpoints for direct Instagram Business login (like ManyChat)
+const INSTAGRAM_APP_ID = '698492099473419';
+const INSTAGRAM_APP_SECRET = '1868912bb8d53cf59499a605367f3eee';
+// Use production domain for Instagram OAuth redirect (as configured in Meta)
+const INSTAGRAM_REDIRECT_URI = 'https://moaawen.ai/';
 
-// Generate Instagram login URL
+// Generate Instagram login URL (direct Instagram OAuth like ManyChat)
 router.get('/instagram/login-url', (req, res) => {
   const { businessId } = req.query;
   
@@ -929,35 +929,40 @@ router.get('/instagram/login-url', (req, res) => {
     stateParam = `&state=${encodeURIComponent(JSON.stringify({ businessId }))}`;
   }
 
+  // Direct Instagram Business OAuth URL (exactly like ManyChat)
   const scopes = [
     'instagram_business_basic',
     'instagram_business_manage_messages', 
     'instagram_business_manage_comments',
     'instagram_business_content_publish',
-    'instagram_business_manage_insights',
-    'pages_show_list',
-    'pages_read_engagement'
+    'instagram_business_manage_insights'
   ].join('%2C');
 
-  // Use Facebook OAuth with Instagram Business scopes for direct Instagram business login
   const instagramAuthUrl = 
-    `https://www.facebook.com/v19.0/dialog/oauth` +
-    `?client_id=${INSTAGRAM_APP_ID}` +
+    `https://www.instagram.com/oauth/authorize` +
+    `?force_reauth=true` +
+    `&client_id=${INSTAGRAM_APP_ID}` +
     `&redirect_uri=${encodeURIComponent(INSTAGRAM_REDIRECT_URI)}` +
-    `&scope=${scopes}` +
     `&response_type=code` +
-    `&auth_type=rerequest` +
+    `&scope=${scopes}` +
     stateParam;
 
   res.json({ url: instagramAuthUrl });
 });
 
-// Instagram OAuth callback
+// Instagram OAuth callback (direct Instagram Business API)
 router.get('/instagram/callback', async (req, res) => {
   try {
     const { code, state } = req.query;
     
+    console.log('Instagram callback received:', {
+      code: code ? 'present' : 'missing',
+      state: state ? 'present' : 'missing',
+      fullQuery: req.query
+    });
+    
     if (!code) {
+      console.error('Instagram callback: Authorization code not provided');
       return res.status(400).send('Authorization code not provided');
     }
 
@@ -976,11 +981,18 @@ router.get('/instagram/callback', async (req, res) => {
     }
 
     if (!businessId) {
+      console.error('Instagram callback: Business ID not found in state');
       return res.status(400).send('Business ID not found in state');
     }
 
-    // Exchange code for access token using Facebook Graph API
-    const tokenResponse = await axios.post('https://graph.facebook.com/v19.0/oauth/access_token', 
+    console.log('Instagram OAuth: Exchanging code for token...', {
+      businessId,
+      appId: INSTAGRAM_APP_ID,
+      redirectUri: INSTAGRAM_REDIRECT_URI
+    });
+
+    // Exchange code for access token using Instagram's direct token endpoint
+    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', 
       new URLSearchParams({
         client_id: INSTAGRAM_APP_ID,
         client_secret: INSTAGRAM_APP_SECRET,
@@ -995,34 +1007,33 @@ router.get('/instagram/callback', async (req, res) => {
     );
 
     const { access_token, user_id } = tokenResponse.data;
+    
+    console.log('Instagram OAuth: Token exchange successful', {
+      hasAccessToken: !!access_token,
+      userId: user_id
+    });
 
-    // Get user's Facebook pages to find Instagram business accounts
-    const pagesResponse = await axios.get('https://graph.facebook.com/v19.0/me/accounts', {
+    // Get Instagram account info using the Instagram Business API
+    const accountResponse = await axios.get(`https://graph.instagram.com/v19.0/${user_id}`, {
       params: {
-        access_token: access_token,
-        fields: 'id,name,access_token,instagram_business_account{id,username,profile_picture_url,followers_count,media_count,biography}'
+        fields: 'id,username,account_type,media_count,followers_count,follows_count,profile_picture_url,biography',
+        access_token: access_token
       }
     });
 
-    const pages = pagesResponse.data.data || [];
+    const accountData = accountResponse.data;
     
-    // Find the first page with an Instagram business account
-    let instagramAccount = null;
-    let pageData = null;
-    
-    for (const page of pages) {
-      if (page.instagram_business_account) {
-        instagramAccount = page.instagram_business_account;
-        pageData = page;
-        break;
-      }
-    }
+    console.log('Instagram account data retrieved:', {
+      id: accountData.id,
+      username: accountData.username,
+      accountType: accountData.account_type,
+      followersCount: accountData.followers_count
+    });
 
-    if (!instagramAccount) {
-      throw new Error('No Instagram Business account found connected to your Facebook pages');
+    // Verify this is a business account
+    if (accountData.account_type !== 'BUSINESS') {
+      throw new Error('Instagram account must be a Business account to connect');
     }
-
-    const { id, username, profile_picture_url, followers_count, media_count, biography } = instagramAccount;
 
     // Store Instagram connection in business
     await client.connect();
@@ -1034,15 +1045,15 @@ router.get('/instagram/callback', async (req, res) => {
       {
         $set: {
           'channels.instagram': {
-            account_id: id,
-            username: username,
-            account_type: 'business',
-            media_count: media_count,
-            followers_count: followers_count,
-            biography: biography,
-            profile_picture_url: profile_picture_url,
-            access_token: pageData.access_token, // Use page access token for Instagram Business API
-            page_id: pageData.id, // Store connected Facebook page ID
+            account_id: accountData.id,
+            username: accountData.username,
+            account_type: accountData.account_type,
+            media_count: accountData.media_count || 0,
+            followers_count: accountData.followers_count || 0,
+            follows_count: accountData.follows_count || 0,
+            biography: accountData.biography || '',
+            profile_picture_url: accountData.profile_picture_url || '',
+            access_token: access_token,
             connected_at: new Date(),
             connection_type: 'direct' // Mark as direct Instagram login
           },
@@ -1051,25 +1062,34 @@ router.get('/instagram/callback', async (req, res) => {
       }
     );
 
-    // Return success response
+    // Return success response - handle both localhost and production frontend
     const frontendUrl = getFrontendUrl();
+    const isLocalhost = frontendUrl.includes('localhost');
+    
     res.send(`
       <html>
         <script>
-          if (window.opener) {
-            window.opener.postMessage({
-              type: 'INSTAGRAM_AUTH_SUCCESS',
-              data: {
-                account_id: '${id}',
-                username: '${username}',
-                account_type: 'business',
-                connection_type: 'direct',
-                followers_count: ${followers_count || 0}
-              }
-            }, '*');
-            window.close();
-          } else {
-            window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&instagramConnected=true';
+          try {
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'INSTAGRAM_AUTH_SUCCESS',
+                data: {
+                  account_id: '${accountData.id}',
+                  username: '${accountData.username}',
+                  account_type: '${accountData.account_type}',
+                  connection_type: 'direct',
+                  followers_count: ${accountData.followers_count || 0}
+                }
+              }, '*');
+              window.close();
+            } else {
+              // For production, redirect to the correct frontend URL
+              const targetUrl = '${isLocalhost ? frontendUrl : 'http://localhost:5173'}/dashboard/businesses/${businessId}/settings?tab=channels&instagramConnected=true';
+              window.location.href = targetUrl;
+            }
+          } catch(e) {
+            console.error('Error in Instagram callback:', e);
+            alert('Instagram connected successfully! Please close this window and refresh your dashboard.');
           }
         </script>
       </html>
@@ -1089,22 +1109,34 @@ router.get('/instagram/callback', async (req, res) => {
       console.error('Error message:', error.message);
     }
     
-    // Check if it's the "no Instagram business account" error
-    const errorMessage = error.message.includes('No Instagram Business account') 
-      ? 'No Instagram Business account found. Please connect an Instagram Business account to your Facebook page first.'
-      : 'Failed to connect Instagram account';
+    // Determine error message
+    let errorMessage = 'Failed to connect Instagram account';
+    if (error.message.includes('Business account')) {
+      errorMessage = 'Instagram account must be a Business account to connect. Please convert your account to Business in Instagram settings.';
+    } else if (error.response?.data?.error_message) {
+      errorMessage = error.response.data.error_message;
+    }
     
     const frontendUrl = getFrontendUrl();
+    const isLocalhost = frontendUrl.includes('localhost');
+    
     res.send(`
       <html>
         <script>
-          if (window.opener) {
-            window.opener.postMessage({
-              type: 'INSTAGRAM_AUTH_ERROR',
-              error: '${errorMessage}'
-            }, '*');
-            window.close();
-          } else {
+          try {
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'INSTAGRAM_AUTH_ERROR',
+                error: '${errorMessage}'
+              }, '*');
+              window.close();
+            } else {
+              alert('${errorMessage}');
+              // For production, try to redirect to localhost development server
+              const targetUrl = '${isLocalhost ? frontendUrl : 'http://localhost:5173'}/dashboard/businesses';
+              window.location.href = targetUrl;
+            }
+          } catch(e) {
             alert('${errorMessage}');
             window.history.back();
           }

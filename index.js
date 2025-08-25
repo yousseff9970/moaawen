@@ -54,14 +54,28 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
   const { code, state } = req.query;
   
-  // Check if this is an Instagram callback
+  // Check if this is an Instagram callback from direct Instagram OAuth
   if (code && state) {
-    // Redirect to the proper Instagram callback handler
-    const queryString = Object.keys(req.query)
-      .map(key => `${key}=${encodeURIComponent(req.query[key])}`)
-      .join('&');
-    
-    return res.redirect(`/auth/instagram/callback?${queryString}`);
+    try {
+      const stateData = JSON.parse(state);
+      if (stateData.businessId) {
+        // This is an Instagram callback, redirect to the proper Instagram callback handler
+        const queryString = Object.keys(req.query)
+          .map(key => `${key}=${encodeURIComponent(req.query[key])}`)
+          .join('&');
+        
+        return res.redirect(`/auth/instagram/callback?${queryString}`);
+      }
+    } catch (e) {
+      // If state parsing fails, still try to redirect as it might be an Instagram callback
+      if (code) {
+        const queryString = Object.keys(req.query)
+          .map(key => `${key}=${encodeURIComponent(req.query[key])}`)
+          .join('&');
+        
+        return res.redirect(`/auth/instagram/callback?${queryString}`);
+      }
+    }
   }
   
   // Default root response
