@@ -23,11 +23,11 @@ async function getBusinessInfo({ phone_number_id, page_id, domain, shop, instagr
     }
   }
 
-  // Match Instagram by account ID - Enhanced for new structure with ig_id
+  // Match Instagram by account ID - Enhanced for new structure
   if (!business && instagram_account_id) {
     console.log(`🔍 Looking for Instagram account: ${instagram_account_id}`);
     
-    // Try direct Instagram channel lookup (new structure) - using webhook ID (ig_id)
+    // Try direct Instagram channel lookup (new structure)
     business = await collection.findOne({
       [`channels.instagram_${instagram_account_id}.connected`]: true
     });
@@ -37,13 +37,13 @@ async function getBusinessInfo({ phone_number_id, page_id, domain, shop, instagr
       return business;
     }
     
-    // Try facebook_business.instagram_accounts lookup using webhook ID (ig_id)
+    // Try facebook_business.instagram_accounts lookup using Instagram ID
     business = await collection.findOne({
       [`channels.facebook_business.instagram_accounts.${instagram_account_id}`]: { $exists: true }
     });
     
     if (business) {
-      console.log(`📸 Found business via Facebook Business Instagram accounts (webhook ID): ${instagram_account_id}`);
+      console.log(`📸 Found business via Facebook Business Instagram accounts (Instagram ID): ${instagram_account_id}`);
       return business;
     }
     

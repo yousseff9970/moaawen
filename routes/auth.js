@@ -181,9 +181,9 @@ router.get('/facebook/callback', async (req, res) => {
           // 4. Use page access token to fetch Instagram Business accounts
           try {
             console.log(`🔍 Fetching Instagram accounts for page: ${page.id}`);
-            const instagramResponse = await axios.get(`https://graph.facebook.com/v23.0/${page.id}/instagram_accounts`, {
+            const instagramResponse = await axios.get(`https://graph.facebook.com/v19.0/${page.id}/instagram_accounts`, {
               params: {
-                fields: 'id,username,profile_picture_url,ig_id',
+                fields: 'id,username,profile_picture_url',
                 access_token: page.access_token
               }
             });
@@ -195,14 +195,12 @@ router.get('/facebook/callback', async (req, res) => {
               for (const igAccount of instagramResponse.data.data) {
                 console.log(`📱 Found Instagram Account: @${igAccount.username}`);
                 console.log(`🔍 Instagram Account ID: ${igAccount.id}`);
-                console.log(`🔍 Instagram IG_ID: ${igAccount.ig_id}`);
                 console.log(`🔍 Facebook Page ID: ${page.id}`);
                 console.log(`🔍 Are they different? ${igAccount.id !== page.id}`);
 
-                // Save Instagram account info - use ig_id as the main identifier for webhooks
+                // Save Instagram account info - use id as the identifier
                 const instagramAccount = {
-                  instagram_business_account_id: igAccount.ig_id || igAccount.id, // Use ig_id for webhook matching
-                  instagram_account_id: igAccount.id, // Keep the regular ID for API calls
+                  instagram_business_account_id: igAccount.id,
                   username: igAccount.username,
                   profile_picture_url: igAccount.profile_picture_url,
                   facebook_page_id: page.id,
@@ -212,7 +210,7 @@ router.get('/facebook/callback', async (req, res) => {
                 };
 
                 connectedInstagramAccounts.push(instagramAccount);
-                console.log(`💾 Saved Instagram account: ${igAccount.username} (Webhook ID: ${igAccount.ig_id}, API ID: ${igAccount.id})`);
+                console.log(`💾 Saved Instagram account: ${igAccount.username} (ID: ${igAccount.id})`);
               }
             } else {
               console.log(`❌ No Instagram Business Accounts found for page: ${page.name}`);
@@ -1090,8 +1088,7 @@ router.get('/facebook/instagram-accounts/:businessId', async (req, res) => {
     const formattedAccounts = Object.keys(instagramAccounts).map(igId => {
       const account = instagramAccounts[igId];
       return {
-        webhook_id: account.instagram_business_account_id, // This is the ig_id for webhook matching
-        api_id: account.instagram_account_id, // This is the regular ID for API calls
+        instagram_id: account.instagram_business_account_id, // Using regular ID
         username: account.username,
         page_name: account.page_name,
         facebook_page_id: account.facebook_page_id,
@@ -1131,7 +1128,7 @@ router.get('/facebook/test-instagram/:pageId', async (req, res) => {
     // Test the exact API call we're using
     const instagramResponse = await axios.get(`https://graph.facebook.com/v19.0/${pageId}/instagram_accounts`, {
       params: {
-        fields: 'id,username,profile_picture_url,ig_id',
+        fields: 'id,username,profile_picture_url',
         access_token: access_token
       }
     });

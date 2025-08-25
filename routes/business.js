@@ -564,10 +564,10 @@ router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
   try {
     console.log('Connecting Instagram channel for business:', req.params.id, 'by user:', req.user.userId);
     
-    const { page_id, access_token } = req.body;
+    const { instagram_account_id, username, access_token, connection_type, facebook_page_id } = req.body;
     
-    if (!page_id || !access_token) {
-      return res.status(400).json({ error: 'Instagram page_id and access_token are required' });
+    if (!instagram_account_id || !username || !access_token) {
+      return res.status(400).json({ error: 'Instagram account ID, username, and access token are required' });
     }
 
     await client.connect();
@@ -586,11 +586,6 @@ router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
       return res.status(404).json({ error: 'Business not found' });
     }
 
-    // Check if Facebook account is connected first
-    if (!business.channels?.facebook?.access_token) {
-      return res.status(400).json({ error: 'Facebook account must be connected first' });
-    }
-
     // Check ownership
     let isOwner = false;
     if (user.businesses && user.businesses.includes(req.params.id)) {
@@ -605,15 +600,27 @@ router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
       return res.status(403).json({ error: 'Access denied. You do not own this business.' });
     }
 
+    // Prepare Instagram channel data
+    const instagramData = {
+      account_id: instagram_account_id.trim(),
+      username: username.trim(),
+      access_token: access_token.trim(),
+      connection_type: connection_type || 'facebook_business',
+      connected_at: new Date().toISOString(),
+      connected: true
+    };
+
+    // Add Facebook page info if provided (for Facebook Business connections)
+    if (facebook_page_id) {
+      instagramData.facebook_page_id = facebook_page_id.trim();
+    }
+
     // Update the business with Instagram channel
     const result = await businessesCol.updateOne(
       { _id: new ObjectId(req.params.id) },
       { 
         $set: { 
-          'channels.instagram': { 
-            page_id: page_id.trim(),
-            access_token: access_token.trim()
-          },
+          'channels.instagram': instagramData,
           updatedAt: new Date()
         }
       }
@@ -623,12 +630,13 @@ router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Failed to update Instagram channel' });
     }
 
-    console.log('Instagram channel connected successfully');
+    console.log('Instagram channel connected successfully:', instagramData);
 
     res.json({
       success: true,
       message: 'Instagram channel connected successfully',
-      page_id: page_id.trim()
+      instagram_account_id: instagram_account_id.trim(),
+      username: username.trim()
     });
 
   } catch (error) {
