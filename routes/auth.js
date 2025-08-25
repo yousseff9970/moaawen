@@ -130,62 +130,198 @@ router.get('/facebook/callback', async (req, res) => {
     // Handle business channel connection
     if (businessId && existingUser) {
       // This is a business channel connection request
+      console.log('🔵 Processing Facebook Business connection for businessId:', businessId);
       
-      // Update business with Facebook channel info
-      await businessCol.updateOne(
-        { _id: new ObjectId(businessId) },
-        {
-          $set: {
-            'channels.facebook': {
-              account_id: facebookId,
-              access_token: access_token,
-              user_id: facebookId,
-              name: name,
-              email: email,
-              connected_at: new Date()
-            },
-            updatedAt: new Date()
-          }
-        }
-      );
-
-      // Also update user's Facebook info if not already connected
-      if (!existingUser.facebookId) {
-        await usersCol.updateOne(
-          { _id: existingUser._id },
+      try {
+        // 1. Save Facebook channel info with user token
+        await businessCol.updateOne(
+          { _id: new ObjectId(businessId) },
           {
             $set: {
-              facebookId: facebookId,
-              facebookAccessToken: access_token,
-              facebookEmail: email,
-              profilePicture: existingUser.profilePicture || picture?.data?.url,
+              'channels.facebook': {
+                account_id: facebookId,
+                access_token: access_token,
+                user_id: facebookId,
+                name: name,
+                email: email,
+                connected_at: new Date()
+              },
               updatedAt: new Date()
             }
           }
         );
-      }
+        console.log('✅ Saved Facebook channel info');
 
-      // Return success response for business connection
-      const frontendUrl = getFrontendUrl();
-      res.send(`
-        <html>
-          <script>
-            if (window.opener) {
-              window.opener.postMessage({
-                type: 'FACEBOOK_AUTH_SUCCESS',
-                data: {
-                  account_id: '${facebookId}',
-                  name: '${name}',
-                  email: '${email}'
-                }
-              }, '*');
-              window.close();
+        // 2. Fetch user's Facebook Pages
+        const pagesResponse = await axios.get('https://graph.facebook.com/v19.0/me/accounts', {
+          params: {
+            access_token: access_token,
+            fields: 'id,name,access_token'
+          }
+        });
+
+        const pages = pagesResponse.data.data || [];
+        console.log(`📄 Found ${pages.length} Facebook Pages`);
+
+        // 3. For each page, get page access token and fetch Instagram accounts
+        const connectedInstagramAccounts = [];
+        const facebookPages = {};
+
+        for (const page of pages) {
+          console.log(`\n📄 Processing Page: ${page.name} (ID: ${page.id})`);
+          
+          // Save page info
+          facebookPages[page.id] = {
+            id: page.id,
+            name: page.name,
+            access_token: page.access_token,
+            connected_at: new Date()
+          };
+
+          // 4. Use page access token to fetch Instagram Business accounts
+          try {
+            const instagramResponse = await axios.get(`https://graph.facebook.com/v19.0/${page.id}`, {
+              params: {
+                fields: 'instagram_business_account{id,username,account_type,profile_picture_url}',
+                access_token: page.access_token
+              }
+            });
+
+            if (instagramResponse.data.instagram_business_account) {
+              const igAccount = instagramResponse.data.instagram_business_account;
+              console.log(`📱 Found Instagram Account: @${igAccount.username} (ID: ${igAccount.id})`);
+              console.log(`🔍 Instagram Business Account ID: ${igAccount.id}`);
+              console.log(`🔍 Facebook Page ID: ${page.id}`);
+              console.log(`🔍 Are they different? ${igAccount.id !== page.id}`);
+
+              // Save Instagram account info
+              const instagramAccount = {
+                instagram_business_account_id: igAccount.id,
+                username: igAccount.username,
+                account_type: igAccount.account_type,
+                profile_picture_url: igAccount.profile_picture_url,
+                facebook_page_id: page.id,
+                page_name: page.name,
+                page_access_token: page.access_token,
+                connected_at: new Date()
+              };
+
+              connectedInstagramAccounts.push(instagramAccount);
+              console.log(`💾 Saved Instagram account: ${igAccount.id}`);
             } else {
-              window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true';
+              console.log(`❌ No Instagram Business Account found for page: ${page.name}`);
             }
-          </script>
-        </html>
-      `);
+          } catch (igError) {
+            console.error(`❌ Error fetching Instagram for page ${page.name}:`, igError.message);
+          }
+        }
+
+        // 5. Update business with all connected accounts
+        const updateData = {
+          'channels.facebook_business': {
+            connected: true,
+            master_access_token: access_token,
+            user_id: facebookId,
+            name: name,
+            email: email,
+            connected_at: new Date(),
+            pages: facebookPages,
+            instagram_accounts: {}
+          },
+          updatedAt: new Date()
+        };
+
+        // Add Instagram accounts and create direct channel references
+        connectedInstagramAccounts.forEach(igAccount => {
+          // Add to facebook_business.instagram_accounts
+          updateData[`channels.facebook_business.instagram_accounts.${igAccount.instagram_business_account_id}`] = igAccount;
+          
+          // Create direct Instagram channel reference for webhook lookup
+          updateData[`channels.instagram_${igAccount.instagram_business_account_id}`] = {
+            connected: true,
+            connection_type: 'facebook_business',
+            instagram_business_account_id: igAccount.instagram_business_account_id,
+            username: igAccount.username,
+            account_type: igAccount.account_type,
+            facebook_page_id: igAccount.facebook_page_id,
+            page_access_token: igAccount.page_access_token,
+            connected_at: new Date()
+          };
+        });
+
+        // Save all data to database
+        await businessCol.updateOne(
+          { _id: new ObjectId(businessId) },
+          { $set: updateData }
+        );
+
+        console.log(`✅ Saved ${connectedInstagramAccounts.length} Instagram accounts for business ${businessId}`);
+
+        // Also update user's Facebook info if not already connected
+        if (!existingUser.facebookId) {
+          await usersCol.updateOne(
+            { _id: existingUser._id },
+            {
+              $set: {
+                facebookId: facebookId,
+                facebookAccessToken: access_token,
+                facebookEmail: email,
+                profilePicture: existingUser.profilePicture || picture?.data?.url,
+                updatedAt: new Date()
+              }
+            }
+          );
+        }
+
+        // Return success response for business connection
+        const frontendUrl = getFrontendUrl();
+        res.send(`
+          <html>
+            <script>
+              if (window.opener) {
+                window.opener.postMessage({
+                  type: 'FACEBOOK_AUTH_SUCCESS',
+                  data: {
+                    account_id: '${facebookId}',
+                    name: '${name}',
+                    email: '${email}',
+                    pages_count: ${pages.length},
+                    instagram_accounts_count: ${connectedInstagramAccounts.length},
+                    instagram_accounts: ${JSON.stringify(connectedInstagramAccounts.map(acc => ({
+                      id: acc.instagram_business_account_id,
+                      username: acc.username,
+                      page_name: acc.page_name
+                    })))}
+                  }
+                }, '*');
+                window.close();
+              } else {
+                window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true&igAccounts=${connectedInstagramAccounts.length}';
+              }
+            </script>
+          </html>
+        `);
+
+      } catch (connectionError) {
+        console.error('❌ Error during Facebook business connection:', connectionError.message);
+        
+        const frontendUrl = getFrontendUrl();
+        res.send(`
+          <html>
+            <script>
+              if (window.opener) {
+                window.opener.postMessage({
+                  type: 'FACEBOOK_AUTH_ERROR',
+                  error: 'Failed to fetch Instagram accounts: ${connectionError.message}'
+                }, '*');
+                window.close();
+              } else {
+                window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbError=${encodeURIComponent(connectionError.message)}';
+              }
+            </script>
+          </html>
+        `);
+      }
       return;
     }
 
@@ -895,6 +1031,52 @@ router.get('/facebook/pages/:businessId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching Facebook pages:', error);
     res.status(500).json({ error: 'Failed to fetch Facebook pages' });
+  }
+});
+
+// Get connected Instagram accounts for a business
+router.get('/facebook/instagram-accounts/:businessId', async (req, res) => {
+  try {
+    const { businessId } = req.params;
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const businessCol = db.collection('businesses');
+
+    const business = await businessCol.findOne({ _id: new ObjectId(businessId) });
+    if (!business) {
+      return res.status(404).json({ error: 'Business not found' });
+    }
+
+    // Get Instagram accounts from facebook_business channel
+    const facebookBusiness = business.channels?.facebook_business;
+    const instagramAccounts = facebookBusiness?.instagram_accounts || {};
+
+    // Also get direct Instagram channel references
+    const directChannels = {};
+    Object.keys(business.channels || {}).forEach(channelKey => {
+      if (channelKey.startsWith('instagram_')) {
+        const igId = channelKey.replace('instagram_', '');
+        directChannels[igId] = business.channels[channelKey];
+      }
+    });
+
+    res.json({
+      success: true,
+      facebook_connection: {
+        connected: !!facebookBusiness?.connected,
+        master_token_exists: !!facebookBusiness?.master_access_token,
+        pages_count: Object.keys(facebookBusiness?.pages || {}).length,
+        instagram_accounts_count: Object.keys(instagramAccounts).length
+      },
+      instagram_accounts: instagramAccounts,
+      direct_channel_references: directChannels,
+      total_instagram_connections: Object.keys(instagramAccounts).length
+    });
+
+  } catch (error) {
+    console.error('Error fetching Instagram accounts:', error);
+    res.status(500).json({ error: 'Failed to fetch Instagram accounts' });
   }
 });
 

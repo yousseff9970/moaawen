@@ -52,17 +52,20 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const body = req.body;
+    console.log('🔍 Full webhook payload:', JSON.stringify(body, null, 2));
+    
     if (!body.entry) return res.sendStatus(400);
 
     for (const entry of body.entry) {
       const pageId = entry.id;
+      console.log(`📄 Processing entry for page/account ID: ${pageId}`);
+      
       for (const event of entry.messaging || []) {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
-        const isInstagram = senderId.length >= 16;
-        const token = process.env.PAGE_ACCESS_TOKEN;
-        const platform = isInstagram ? 'instagram' : 'messenger';
-
+        const isInstagram = senderId && senderId.length >= 16;
+        console.log(`📨 Message from ${senderId} (Instagram: ${isInstagram})`);
+        
         if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
           continue;
         }
@@ -70,16 +73,51 @@ router.post('/', async (req, res) => {
         processedMessages.add(messageId);
         let messageText = event.message?.text;
 
-        // Load business
+        // Load business - Enhanced for new Instagram structure
         let business;
         try {
-          business = await getBusinessInfo({ page_id: pageId });
+          if (isInstagram) {
+            // For Instagram, try multiple lookup strategies
+            console.log(`🔍 Looking up business for Instagram account: ${pageId}`);
+            try {
+              business = await getBusinessInfo({ instagram_account_id: pageId });
+              console.log(`✅ Found business via Instagram account ID: ${pageId}`);
+            } catch (e) {
+              console.log(`❌ No business found for Instagram account ${pageId}, trying page_id lookup`);
+              business = await getBusinessInfo({ page_id: pageId });
+              console.log(`✅ Found business via page ID: ${pageId}`);
+            }
+          } else {
+            // For Messenger, use page_id
+            business = await getBusinessInfo({ page_id: pageId });
+            console.log(`✅ Found business via Messenger page: ${pageId}`);
+          }
         } catch (e) {
-          console.warn(`⚠️ No business found for page ${pageId}`);
+          console.warn(`⚠️ No business found for ${isInstagram ? 'Instagram account' : 'page'} ${pageId}: ${e.message}`);
           continue;
         }
 
+        // Get appropriate access token for platform
+        let token = process.env.PAGE_ACCESS_TOKEN; // Default fallback
+        const platform = isInstagram ? 'instagram' : 'messenger';
         
+        if (isInstagram) {
+          // For Instagram, get the specific page access token
+          const fbBusiness = business.channels?.facebook_business;
+          if (fbBusiness?.instagram_accounts?.[pageId]) {
+            token = fbBusiness.instagram_accounts[pageId].page_access_token;
+            console.log(`📱 Using page access token for Instagram account: ${pageId}`);
+          } else {
+            // Try direct channel reference
+            const directChannel = business.channels?.[`instagram_${pageId}`];
+            if (directChannel?.page_access_token) {
+              token = directChannel.page_access_token;
+              console.log(`📱 Using direct channel token for Instagram account: ${pageId}`);
+            } else {
+              console.warn(`⚠️ No specific token found for Instagram account ${pageId}, using default`);
+            }
+          }
+        }
 
         // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');
@@ -124,7 +162,7 @@ router.post('/', async (req, res) => {
           }
 
           const filePath = await downloadMedia(image.payload.url, `img_${messageId}.jpg`);
-          const { reply } = await matchImageAndGenerateReply(senderId, filePath, { page_id: pageId });
+          const { reply } = await matchImageAndGenerateReply(senderId, filePath, { page_id: pageId, instagram_account_id: isInstagram ? pageId : null });
           fs.unlink(filePath, () => {});
 
           await trackUsage(business.id, 'image');
@@ -146,7 +184,11 @@ router.post('/', async (req, res) => {
         }
 
         // ✅ BATCHED REPLY
-        scheduleBatchedReply(senderId, messageText, { page_id: pageId }, async (aiReply) => {
+        scheduleBatchedReply(senderId, messageText, { 
+          page_id: pageId, 
+          instagram_account_id: isInstagram ? pageId : null,
+          access_token: token 
+        }, async (aiReply) => {
           const { reply } = aiReply;
           await respond(platform, senderId, xss(reply), token);
           await trackUsage(business.id, 'message');
