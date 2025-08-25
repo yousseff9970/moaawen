@@ -161,17 +161,17 @@ router.get('/auth/callback', async (req, res) => {
 
     // Exchange short-lived token for long-lived token
     console.log('Exchanging for long-lived token...');
-    const longTokenResponse = await axios.get(
-      'https://graph.instagram.com/access_token',
-      {
-        params: {
-          grant_type: 'ig_exchange_token',
-          client_secret: IG_APP_SECRET,
-          access_token: shortToken,
-        },
-        timeout: 15000,
-      }
-    );
+    const longTokenResponse = await axios({
+      method: 'post',
+      url: 'https://graph.instagram.com/access_token',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: qs.stringify({
+        grant_type: 'ig_exchange_token',
+        client_secret: IG_APP_SECRET,
+        access_token: shortToken,
+      }),
+      timeout: 15000,
+    });
 
     const longToken = longTokenResponse.data.access_token;
     const expiresInSec = longTokenResponse.data.expires_in; // ~5184000 (60 days)
@@ -327,16 +327,16 @@ router.post('/refresh/:businessId', authMiddleware, async (req, res) => {
     }
 
     // Refresh the token
-    const refreshResponse = await axios.get(
-      'https://graph.instagram.com/refresh_access_token',
-      {
-        params: {
-          grant_type: 'ig_refresh_token',
-          access_token: business.channels.instagram.access_token,
-        },
-        timeout: 15000,
-      }
-    );
+    const refreshResponse = await axios({
+      method: 'post',
+      url: 'https://graph.instagram.com/refresh_access_token',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: qs.stringify({
+        grant_type: 'ig_refresh_token',
+        access_token: business.channels.instagram.access_token,
+      }),
+      timeout: 15000,
+    });
 
     const newToken = refreshResponse.data.access_token;
     const expiresInSec = refreshResponse.data.expires_in;
