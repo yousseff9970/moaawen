@@ -189,19 +189,49 @@ router.get('/auth/callback', async (req, res) => {
 
     // For business accounts, try to get the Instagram Business Account ID (used in webhooks)
     let businessAccountId = instagramUserId; // Default to user ID
-    if (account_type === 'BUSINESS') {
+    
+    // For Instagram Business accounts, we need to get the Instagram Business Account ID
+    // This is different from the user ID and is what Meta uses in webhooks
+    try {
+      // Try to get Instagram Business Account info through Facebook Graph API
+      // First, let's try to get pages/business accounts associated with this token
+      const pagesResponse = await axios.get('https://graph.facebook.com/me/accounts', {
+        params: {
+          fields: 'id,name,instagram_business_account',
+          access_token: longToken,
+        },
+        timeout: 15000,
+      });
+      
+      console.log('Facebook pages response:', pagesResponse.data);
+      
+      // Look for a page with an Instagram Business Account
+      const pageWithInstagram = pagesResponse.data.data?.find(page => page.instagram_business_account);
+      if (pageWithInstagram) {
+        businessAccountId = pageWithInstagram.instagram_business_account.id;
+        console.log('Found Instagram Business Account ID via Facebook pages:', businessAccountId);
+      } else {
+        console.log('No Instagram Business Account found via Facebook pages, using user ID');
+      }
+    } catch (pagesError) {
+      console.warn('Could not fetch Instagram Business Account via Facebook pages:', pagesError.message);
+      
+      // Alternative: Try Instagram Graph API directly
       try {
-        const businessInfoResponse = await axios.get(`https://graph.instagram.com/${instagramUserId}`, {
+        const businessAccountResponse = await axios.get(`https://graph.instagram.com/${instagramUserId}`, {
           params: {
-            fields: 'id,username,account_type,profile_picture_url',
+            fields: 'id,username,account_type,business_discovery',
             access_token: longToken,
           },
           timeout: 15000,
         });
-        businessAccountId = businessInfoResponse.data.id;
-        console.log('Instagram Business Account ID:', businessAccountId);
+        
+        if (businessAccountResponse.data.id !== instagramUserId) {
+          businessAccountId = businessAccountResponse.data.id;
+          console.log('Found different Instagram Business Account ID:', businessAccountId);
+        }
       } catch (businessError) {
-        console.warn('Could not fetch business account ID, using user ID:', businessError.message);
+        console.warn('Could not fetch business account ID via Instagram API:', businessError.message);
       }
     }
 
@@ -221,7 +251,8 @@ router.get('/auth/callback', async (req, res) => {
             connected: true,
             username: username,
             account_id: instagramUserId,
-            business_account_id: businessAccountId, // This is used in webhooks
+            business_account_id: businessAccountId, // This is the webhook entry ID
+            page_id: businessAccountId, // Also set as page_id for webhook lookup
             access_token: longToken,
             user_id: instagramUserId,
             connection_type: 'direct',

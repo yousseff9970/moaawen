@@ -16,8 +16,6 @@ const { trackUsage } = require('../utils/trackUsage');
 const processedMessages = new Set();
 
 function getFallback(reason) {
-  
-
   if (reason.includes('expired')) return '⚠️ Your subscription expired. Please renew.';
   if (reason.includes('inactive')) return '⚠️ Your account is inactive.';
   if (reason.includes('message_limit')) return '⚠️ Message limit reached. Upgrade your plan.';
@@ -26,6 +24,7 @@ function getFallback(reason) {
 
   return '🚫 Access denied.';
 }
+
 async function respond(platform, id, msg, token) {
   if (platform === 'instagram') {
     await sendInstagramMessage(id, msg, token);
@@ -62,13 +61,6 @@ router.post('/', async (req, res) => {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         
-        // Better Instagram detection: check if the entry ID is an Instagram Business Account ID
-        // Instagram Business Account IDs are typically 17+ digits, Messenger Page IDs are shorter
-        const isInstagram = pageId.length >= 17 || senderId.length >= 16;
-        const platform = isInstagram ? 'instagram' : 'messenger';
-
-        console.log(`📱 Platform: ${platform}, Sender ID: ${senderId}, Page ID: ${pageId}`);
-
         if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
           continue;
         }
@@ -76,35 +68,35 @@ router.post('/', async (req, res) => {
         processedMessages.add(messageId);
         let messageText = event.message?.text;
 
-        // Load business - improved lookup for Instagram direct connections
+        // Load business - try standard page_id lookup first
         let business;
         try {
-          if (isInstagram) {
-            // For Instagram, try multiple lookup strategies
-            business = await getBusinessInfo({ 
-              page_id: pageId,
-              instagram_account_id: pageId 
-            });
-          } else {
-            // For Messenger, use standard page_id lookup
-            business = await getBusinessInfo({ page_id: pageId });
-          }
+          business = await getBusinessInfo({ page_id: pageId });
         } catch (e) {
-          console.warn(`⚠️ No business found for ${platform} page/account ${pageId}`);
+          console.warn(`⚠️ No business found for page ${pageId}`);
           console.warn(`Error details:`, e.message);
           continue;
         }
 
-        // Get dynamic token based on platform and connection type
+        // Determine platform and token based on what's configured in the business
+        let platform = 'messenger'; // Default to messenger
         let token;
-        if (isInstagram) {
-          // For Instagram, get the access_token from the instagram channel
-          token = business.channels?.instagram?.access_token;
-          console.log(`🔑 Instagram token found: ${token ? 'Yes' : 'No'}`);
-        } else {
-          // For Messenger, get the access_token from messenger channel
-          token = business.channels?.messenger?.access_token;
-          console.log(`🔑 Messenger token found: ${token ? 'Yes' : 'No'}`);
+
+        // Check if this business has Instagram connection and if the pageId matches ANY Instagram ID field
+        if (business.channels?.instagram?.connected && 
+            (business.channels.instagram.page_id === pageId || 
+             business.channels.instagram.business_account_id === pageId ||
+             business.channels.instagram.account_id === pageId ||
+             business.channels.instagram.user_id === pageId)) {
+          platform = 'instagram';
+          token = business.channels.instagram.access_token;
+          console.log(`📱 Platform: instagram (${business.channels.instagram.connection_type || 'direct'}), Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
+        }
+        // Default to Messenger
+        else {
+          platform = 'messenger';
+          token = business.channels?.messenger?.access_token || process.env.PAGE_ACCESS_TOKEN;
+          console.log(`📱 Platform: messenger, Page ID: ${pageId}, Token found: ${token ? 'Yes' : 'No'}`);
         }
 
         if (!token) {
@@ -132,7 +124,6 @@ router.post('/', async (req, res) => {
 
           if (transcript === '__TOO_LONG__') {
             const warning = '⚠️ Voice too long. Please resend (max 30s).';
-
             await respond(platform, senderId, warning, token);
             continue;
           }
