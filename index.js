@@ -21,7 +21,6 @@ const whatsappRoutes = require('./routes/whatsapp');
 const adminRoutes = require('./routes/admin');
 const logsRoutes = require('./routes/logs');
 const businessRoutes = require('./routes/business');
-const instagramRoutes = require('./routes/instagram');
 
 const app = express();
 // Temporary CORS fix
@@ -74,15 +73,6 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/shopify', shopifyRoutes);
 app.use('/businesses', businessRoutes);
 
-// Instagram direct login routes
-app.use('/instagram', instagramRoutes);
-
-// Legacy Instagram callback redirect (for compatibility with app settings)
-app.get('/auth/instagram/callback', (req, res) => {
-  // Redirect to the new callback route with all query parameters
-  const queryString = new URLSearchParams(req.query).toString();
-  res.redirect(`/instagram/auth/callback?${queryString}`);
-});
 
 app.use('/api', apiKeyMiddleware, chatRoutes);
 

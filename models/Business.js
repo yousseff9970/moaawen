@@ -58,15 +58,7 @@ const BusinessSchema = new mongoose.Schema({
     instagram: { 
       page_id: String,
       access_token: String,
-      username: String,
-      account_id: String, // Direct Instagram connection
-      user_id: String,
-      connection_type: { type: String, enum: ['direct', 'facebook'], default: 'facebook' },
-      account_type: String, // business, creator, etc.
-      media_count: Number,
-      token_expires_at: Date,
-      connected_at: Date,
-      connected: { type: Boolean, default: false }
+      username: String 
     },
     messenger: { 
       page_id: String,
