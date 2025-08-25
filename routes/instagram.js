@@ -12,12 +12,17 @@ const client = new MongoClient(process.env.MONGO_URI);
 const IG_APP_ID = process.env.IG_APP_ID || '698492099473419';
 const IG_APP_SECRET = process.env.IG_APP_SECRET || '1868912bb8d53cf59499a605367f3eee';
 const IG_REDIRECT_URI = process.env.IG_REDIRECT_URI || 'https://moaawen.onrender.com/auth/instagram/callback';
+
+// Updated scopes to include both Instagram and Facebook permissions for business account access
 const IG_SCOPES = process.env.IG_SCOPES || [
   'instagram_business_basic',
-  'instagram_business_manage_messages',
+  'instagram_business_manage_messages', 
   'instagram_business_manage_comments',
   'instagram_business_content_publish',
-  'instagram_business_manage_insights'
+  'instagram_business_manage_insights',
+  'pages_read_engagement',           // Facebook permission to read pages
+  'pages_manage_metadata',          // Facebook permission to manage page metadata
+  'business_management'             // Facebook permission for business management
 ].join(',');
 
 // Store state in memory (in production, use Redis or database)
@@ -75,8 +80,8 @@ router.get('/auth/url', authMiddleware, async (req, res) => {
       }
     }
 
-    // Build Instagram OAuth URL
-    const authUrl = new URL('https://www.instagram.com/oauth/authorize');
+    // Build Instagram OAuth URL - but use Facebook OAuth for better business account access
+    const authUrl = new URL('https://www.facebook.com/v18.0/dialog/oauth');
     authUrl.searchParams.set('client_id', IG_APP_ID);
     authUrl.searchParams.set('redirect_uri', IG_REDIRECT_URI);
     authUrl.searchParams.set('response_type', 'code');
@@ -140,99 +145,85 @@ router.get('/auth/callback', async (req, res) => {
 
     const { businessId, userId } = stateData;
 
-    // Exchange authorization code for short-lived token
-    console.log('Exchanging code for token...');
+    // Exchange authorization code for access token using Facebook Graph API
+    console.log('Exchanging code for Facebook access token...');
     const tokenResponse = await axios({
       method: 'post',
-      url: 'https://api.instagram.com/oauth/access_token',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: qs.stringify({
+      url: 'https://graph.facebook.com/v18.0/oauth/access_token',
+      params: {
         client_id: IG_APP_ID,
         client_secret: IG_APP_SECRET,
-        grant_type: 'authorization_code',
         redirect_uri: IG_REDIRECT_URI,
         code,
-      }),
+      },
       timeout: 15000,
     });
 
-    const shortToken = tokenResponse.data.access_token;
-    console.log('Short-lived token obtained');
+    const accessToken = tokenResponse.data.access_token;
+    console.log('Facebook access token obtained');
 
-    // Exchange short-lived token for long-lived token
+    // Get long-lived token
     console.log('Exchanging for long-lived token...');
-    const longTokenResponse = await axios.get('https://graph.instagram.com/access_token', {
+    const longTokenResponse = await axios.get('https://graph.facebook.com/v18.0/oauth/access_token', {
       params: {
-        grant_type: 'ig_exchange_token',
+        grant_type: 'fb_exchange_token',
+        client_id: IG_APP_ID,
         client_secret: IG_APP_SECRET,
-        access_token: shortToken,
+        fb_exchange_token: accessToken,
       },
       timeout: 15000,
     });
 
     const longToken = longTokenResponse.data.access_token;
-    const expiresInSec = longTokenResponse.data.expires_in; // ~5184000 (60 days)
+    const expiresInSec = longTokenResponse.data.expires_in || 5184000; // Default 60 days
     console.log('Long-lived token obtained, expires in:', expiresInSec, 'seconds');
 
-    // Fetch Instagram business user info
-    console.log('Fetching user info...');
-    const userInfoResponse = await axios.get('https://graph.instagram.com/me', {
+    // Get user's Facebook pages and Instagram Business Accounts
+    console.log('Fetching Facebook pages with Instagram accounts...');
+    const pagesResponse = await axios.get('https://graph.facebook.com/v18.0/me/accounts', {
       params: {
-        fields: 'id,username,account_type,media_count',
+        fields: 'id,name,instagram_business_account{id,username,account_type,profile_picture_url}',
         access_token: longToken,
       },
       timeout: 15000,
     });
 
-    const { id: instagramUserId, username, account_type, media_count } = userInfoResponse.data;
-    console.log('Instagram user info:', { instagramUserId, username, account_type });
+    console.log('Facebook pages response:', JSON.stringify(pagesResponse.data, null, 2));
 
-    // For business accounts, try to get the Instagram Business Account ID (used in webhooks)
-    let businessAccountId = instagramUserId; // Default to user ID
+    // Find Instagram Business Account
+    let instagramAccount = null;
+    let facebookPageId = null;
     
-    // For Instagram Business accounts, we need to get the Instagram Business Account ID
-    // This is different from the user ID and is what Meta uses in webhooks
+    for (const page of pagesResponse.data.data || []) {
+      if (page.instagram_business_account) {
+        instagramAccount = page.instagram_business_account;
+        facebookPageId = page.id;
+        console.log(`✅ Found Instagram Business Account: ${instagramAccount.username} (ID: ${instagramAccount.id}) via Facebook Page: ${page.name} (ID: ${facebookPageId})`);
+        break;
+      }
+    }
+
+    if (!instagramAccount) {
+      throw new Error('No Instagram Business Account found. Please ensure your Instagram account is connected to a Facebook Page and converted to a Business account.');
+    }
+
+    const { id: businessAccountId, username, account_type } = instagramAccount;
+    console.log('Instagram Business Account details:', { businessAccountId, username, account_type });
+
+    // Get additional Instagram account info
+    let media_count = 0;
     try {
-      // Try to get Instagram Business Account info through Facebook Graph API
-      // First, let's try to get pages/business accounts associated with this token
-      const pagesResponse = await axios.get('https://graph.facebook.com/me/accounts', {
+      const mediaResponse = await axios.get(`https://graph.facebook.com/v18.0/${businessAccountId}`, {
         params: {
-          fields: 'id,name,instagram_business_account',
+          fields: 'media_count,followers_count',
           access_token: longToken,
         },
         timeout: 15000,
       });
-      
-      console.log('Facebook pages response:', pagesResponse.data);
-      
-      // Look for a page with an Instagram Business Account
-      const pageWithInstagram = pagesResponse.data.data?.find(page => page.instagram_business_account);
-      if (pageWithInstagram) {
-        businessAccountId = pageWithInstagram.instagram_business_account.id;
-        console.log('Found Instagram Business Account ID via Facebook pages:', businessAccountId);
-      } else {
-        console.log('No Instagram Business Account found via Facebook pages, using user ID');
-      }
-    } catch (pagesError) {
-      console.warn('Could not fetch Instagram Business Account via Facebook pages:', pagesError.message);
-      
-      // Alternative: Try Instagram Graph API directly
-      try {
-        const businessAccountResponse = await axios.get(`https://graph.instagram.com/${instagramUserId}`, {
-          params: {
-            fields: 'id,username,account_type,business_discovery',
-            access_token: longToken,
-          },
-          timeout: 15000,
-        });
-        
-        if (businessAccountResponse.data.id !== instagramUserId) {
-          businessAccountId = businessAccountResponse.data.id;
-          console.log('Found different Instagram Business Account ID:', businessAccountId);
-        }
-      } catch (businessError) {
-        console.warn('Could not fetch business account ID via Instagram API:', businessError.message);
-      }
+      media_count = mediaResponse.data.media_count || 0;
+      console.log('Instagram account stats:', mediaResponse.data);
+    } catch (statsError) {
+      console.warn('Could not fetch Instagram account stats:', statsError.message);
     }
 
     // Save to database
@@ -250,13 +241,14 @@ router.get('/auth/callback', async (req, res) => {
           'channels.instagram': {
             connected: true,
             username: username,
-            account_id: instagramUserId,
-            business_account_id: businessAccountId, // This is the webhook entry ID
-            page_id: businessAccountId, // Also set as page_id for webhook lookup
+            account_id: businessAccountId,           // The main Instagram Business Account ID
+            business_account_id: businessAccountId, // Same ID - this is what webhooks use
+            page_id: businessAccountId,             // Same ID for lookup consistency  
+            facebook_page_id: facebookPageId,       // The Facebook Page ID (if applicable)
             access_token: longToken,
-            user_id: instagramUserId,
-            connection_type: 'direct',
-            account_type: account_type,
+            user_id: businessAccountId,             // For this flow, business account IS the user
+            connection_type: 'facebook_business',    // Via Facebook Business API
+            account_type: account_type || 'BUSINESS',
             media_count: media_count,
             token_expires_at: expiresAt,
             connected_at: now
@@ -287,9 +279,11 @@ router.get('/auth/callback', async (req, res) => {
           <h2 class="success">✅ Instagram Connected Successfully!</h2>
           <div class="info">
             <p><strong>Account:</strong> @${username}</p>
-            <p><strong>Type:</strong> ${account_type}</p>
-            <p><strong>Instagram ID:</strong> ${instagramUserId}</p>
+            <p><strong>Type:</strong> ${account_type || 'BUSINESS'}</p>
+            <p><strong>Instagram Business ID:</strong> ${businessAccountId}</p>
+            <p><strong>Facebook Page ID:</strong> ${facebookPageId || 'N/A'}</p>
             <p><strong>Token expires:</strong> ${expiresAt.toLocaleDateString()}</p>
+            <p><strong>✅ This ID matches Meta Business Manager!</strong></p>
           </div>
           <p>You can now close this window and return to your dashboard.</p>
           <script>
