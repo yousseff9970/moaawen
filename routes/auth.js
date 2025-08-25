@@ -182,7 +182,7 @@ router.get('/facebook/callback', async (req, res) => {
           try {
             const instagramResponse = await axios.get(`https://graph.facebook.com/v19.0/${page.id}`, {
               params: {
-                fields: 'instagram_business_account{id,username,account_type,profile_picture_url}',
+                fields: 'instagram_accounts{id,username,profile_picture_url}',
                 access_token: page.access_token
               }
             });
@@ -198,7 +198,7 @@ router.get('/facebook/callback', async (req, res) => {
               const instagramAccount = {
                 instagram_business_account_id: igAccount.id,
                 username: igAccount.username,
-                account_type: igAccount.account_type,
+               
                 profile_picture_url: igAccount.profile_picture_url,
                 facebook_page_id: page.id,
                 page_name: page.name,
