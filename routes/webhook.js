@@ -182,6 +182,14 @@ router.post('/', async (req, res) => {
 
         console.log(`🎯 FINAL PLATFORM DECISION: ${platform.toUpperCase()}`);
         console.log(`🔑 Token source: ${token === process.env.PAGE_ACCESS_TOKEN ? 'Environment Variable' : 'Business Channel'}`);
+        
+        // Detect token type for Instagram
+        if (platform === 'instagram' && token) {
+          const isInstagramDirectToken = token.startsWith('IG');
+          console.log(`🔍 Instagram token type: ${isInstagramDirectToken ? 'Instagram Direct (IG...)' : 'Facebook Graph'}`);
+          console.log(`📡 Will use API: ${isInstagramDirectToken ? 'graph.instagram.com' : 'graph.facebook.com'}`);
+        }
+        
         console.log('-'.repeat(60) + '\n');
 
         if (!token) {
@@ -191,7 +199,8 @@ router.post('/', async (req, res) => {
         }
 
         console.log(`✅ PROCESSING MESSAGE: Business "${business.name}" via ${platform.toUpperCase()} (Page: ${pageId})`);
-        console.log(`🔐 Using token: ${token ? token.substring(0, 20) + '...' : 'None'}\n`);
+        console.log(`🔐 Using token: ${token ? token.substring(0, 20) + '...' : 'None'}`);
+        console.log(`🔐 Token type: ${token ? (token.startsWith('IG') ? 'Instagram Direct' : 'Facebook Graph') : 'None'}\n`);
 
         // 🎤 VOICE
         const audio = event.message.attachments?.find(att => att.type === 'audio');
