@@ -933,16 +933,19 @@ router.get('/instagram/login-url', (req, res) => {
     'instagram_business_manage_messages', 
     'instagram_business_manage_comments',
     'instagram_business_content_publish',
-    'instagram_business_manage_insights'
+    'instagram_business_manage_insights',
+    'pages_show_list',
+    'pages_read_engagement'
   ].join('%2C');
 
+  // Use Facebook OAuth with Instagram Business scopes for direct Instagram business login
   const instagramAuthUrl = 
-    `https://www.instagram.com/oauth/authorize` +
-    `?force_reauth=true` +
-    `&client_id=${INSTAGRAM_APP_ID}` +
+    `https://www.facebook.com/v19.0/dialog/oauth` +
+    `?client_id=${INSTAGRAM_APP_ID}` +
     `&redirect_uri=${encodeURIComponent(INSTAGRAM_REDIRECT_URI)}` +
-    `&response_type=code` +
     `&scope=${scopes}` +
+    `&response_type=code` +
+    `&auth_type=rerequest` +
     stateParam;
 
   res.json({ url: instagramAuthUrl });
@@ -975,8 +978,8 @@ router.get('/instagram/callback', async (req, res) => {
       return res.status(400).send('Business ID not found in state');
     }
 
-    // Exchange code for access token using Instagram Graph API
-    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', 
+    // Exchange code for access token using Facebook Graph API
+    const tokenResponse = await axios.post('https://graph.facebook.com/v19.0/oauth/access_token', 
       new URLSearchParams({
         client_id: INSTAGRAM_APP_ID,
         client_secret: INSTAGRAM_APP_SECRET,
@@ -992,26 +995,33 @@ router.get('/instagram/callback', async (req, res) => {
 
     const { access_token, user_id } = tokenResponse.data;
 
-    // Exchange short-lived token for long-lived token
-    const longLivedTokenResponse = await axios.get('https://graph.instagram.com/access_token', {
+    // Get user's Facebook pages to find Instagram business accounts
+    const pagesResponse = await axios.get('https://graph.facebook.com/v19.0/me/accounts', {
       params: {
-        grant_type: 'ig_exchange_token',
-        client_secret: INSTAGRAM_APP_SECRET,
-        access_token: access_token
+        access_token: access_token,
+        fields: 'id,name,access_token,instagram_business_account{id,username,profile_picture_url,followers_count,media_count,biography}'
       }
     });
 
-    const longLivedToken = longLivedTokenResponse.data.access_token;
-
-    // Get Instagram account info using long-lived token
-    const userResponse = await axios.get(`https://graph.instagram.com/me`, {
-      params: {
-        fields: 'id,username,account_type,media_count',
-        access_token: longLivedToken
+    const pages = pagesResponse.data.data || [];
+    
+    // Find the first page with an Instagram business account
+    let instagramAccount = null;
+    let pageData = null;
+    
+    for (const page of pages) {
+      if (page.instagram_business_account) {
+        instagramAccount = page.instagram_business_account;
+        pageData = page;
+        break;
       }
-    });
+    }
 
-    const { id, username, account_type, media_count } = userResponse.data;
+    if (!instagramAccount) {
+      throw new Error('No Instagram Business account found connected to your Facebook pages');
+    }
+
+    const { id, username, profile_picture_url, followers_count, media_count, biography } = instagramAccount;
 
     // Store Instagram connection in business
     await client.connect();
@@ -1025,10 +1035,13 @@ router.get('/instagram/callback', async (req, res) => {
           'channels.instagram': {
             account_id: id,
             username: username,
-            account_type: account_type,
+            account_type: 'business',
             media_count: media_count,
-            access_token: longLivedToken,
-            user_id: user_id,
+            followers_count: followers_count,
+            biography: biography,
+            profile_picture_url: profile_picture_url,
+            access_token: pageData.access_token, // Use page access token for Instagram Business API
+            page_id: pageData.id, // Store connected Facebook page ID
             connected_at: new Date(),
             connection_type: 'direct' // Mark as direct Instagram login
           },
@@ -1048,8 +1061,9 @@ router.get('/instagram/callback', async (req, res) => {
               data: {
                 account_id: '${id}',
                 username: '${username}',
-                account_type: '${account_type}',
-                connection_type: 'direct'
+                account_type: 'business',
+                connection_type: 'direct',
+                followers_count: ${followers_count || 0}
               }
             }, '*');
             window.close();
@@ -1062,6 +1076,23 @@ router.get('/instagram/callback', async (req, res) => {
 
   } catch (error) {
     console.error('Instagram OAuth error:', error);
+    
+    // Log more detailed error information
+    if (error.response) {
+      console.error('Error response status:', error.response.status);
+      console.error('Error response data:', error.response.data);
+      console.error('Error response headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('Error request:', error.request);
+    } else {
+      console.error('Error message:', error.message);
+    }
+    
+    // Check if it's the "no Instagram business account" error
+    const errorMessage = error.message.includes('No Instagram Business account') 
+      ? 'No Instagram Business account found. Please connect an Instagram Business account to your Facebook page first.'
+      : 'Failed to connect Instagram account';
+    
     const frontendUrl = getFrontendUrl();
     res.send(`
       <html>
@@ -1069,11 +1100,11 @@ router.get('/instagram/callback', async (req, res) => {
           if (window.opener) {
             window.opener.postMessage({
               type: 'INSTAGRAM_AUTH_ERROR',
-              error: 'Failed to connect Instagram account'
+              error: '${errorMessage}'
             }, '*');
             window.close();
           } else {
-            alert('Failed to connect Instagram account');
+            alert('${errorMessage}');
             window.history.back();
           }
         </script>
