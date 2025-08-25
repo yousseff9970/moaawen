@@ -898,9 +898,10 @@ router.get('/facebook/pages/:businessId', async (req, res) => {
   }
 });
 
-// Instagram OAuth endpoints for direct Instagram login
-const INSTAGRAM_APP_ID = process.env.INSTAGRAM_APP_ID || '698492099473419';
-const INSTAGRAM_APP_SECRET = process.env.INSTAGRAM_APP_SECRET || '1868912bb8d53cf59499a605367f3eee';
+// Instagram OAuth endpoints for direct Instagram login (via Facebook Graph API)
+// Note: Instagram Business API access requires the same Facebook app credentials
+const INSTAGRAM_APP_ID = process.env.FB_APP_ID || '698492099473419';
+const INSTAGRAM_APP_SECRET = process.env.FB_APP_SECRET || '1868912bb8d53cf59499a605367f3eee';
 const INSTAGRAM_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI || 'https://moaawen.onrender.com/';
 
 // Generate Instagram login URL
