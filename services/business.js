@@ -1,9 +1,9 @@
 const { MongoClient } = require('mongodb');
 const client = new MongoClient(process.env.MONGO_URI);
 
-async function getBusinessInfo({ phone_number_id, page_id, domain, shop }) {
-  if (!phone_number_id && !page_id && !domain && !shop) {
-    throw new Error('getBusinessInfo: Missing all identifiers (phone_number_id, page_id, domain, shop)');
+async function getBusinessInfo({ phone_number_id, page_id, domain, shop, instagram_account_id }) {
+  if (!phone_number_id && !page_id && !domain && !shop && !instagram_account_id) {
+    throw new Error('getBusinessInfo: Missing all identifiers (phone_number_id, page_id, domain, shop, instagram_account_id)');
   }
 
   await client.connect();
@@ -17,11 +17,26 @@ async function getBusinessInfo({ phone_number_id, page_id, domain, shop }) {
     business = await collection.findOne({ 'channels.whatsapp.phone_number_id': phone_number_id });
   }
 
-  // Match Instagram or Messenger
+  // Match Instagram by account/user ID (for direct connections)
+  if (!business && instagram_account_id) {
+    business = await collection.findOne({
+      $or: [
+        { 'channels.instagram.user_id': instagram_account_id },
+        { 'channels.instagram.account_id': instagram_account_id },
+        { 'channels.instagram.business_account_id': instagram_account_id },
+        { 'channels.instagram.page_id': instagram_account_id }
+      ]
+    });
+  }
+
+  // Match Instagram or Messenger by page ID
   if (!business && page_id) {
     business = await collection.findOne({
       $or: [
         { 'channels.instagram.page_id': page_id },
+        { 'channels.instagram.user_id': page_id },
+        { 'channels.instagram.account_id': page_id },
+        { 'channels.instagram.business_account_id': page_id },
         { 'channels.messenger.page_id': page_id }
       ]
     });

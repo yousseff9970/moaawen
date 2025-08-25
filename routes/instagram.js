@@ -187,6 +187,24 @@ router.get('/auth/callback', async (req, res) => {
     const { id: instagramUserId, username, account_type, media_count } = userInfoResponse.data;
     console.log('Instagram user info:', { instagramUserId, username, account_type });
 
+    // For business accounts, try to get the Instagram Business Account ID (used in webhooks)
+    let businessAccountId = instagramUserId; // Default to user ID
+    if (account_type === 'BUSINESS') {
+      try {
+        const businessInfoResponse = await axios.get(`https://graph.instagram.com/${instagramUserId}`, {
+          params: {
+            fields: 'id,username,account_type,profile_picture_url',
+            access_token: longToken,
+          },
+          timeout: 15000,
+        });
+        businessAccountId = businessInfoResponse.data.id;
+        console.log('Instagram Business Account ID:', businessAccountId);
+      } catch (businessError) {
+        console.warn('Could not fetch business account ID, using user ID:', businessError.message);
+      }
+    }
+
     // Save to database
     await client.connect();
     const db = client.db(process.env.DB_NAME || 'moaawen');
@@ -203,6 +221,7 @@ router.get('/auth/callback', async (req, res) => {
             connected: true,
             username: username,
             account_id: instagramUserId,
+            business_account_id: businessAccountId, // This is used in webhooks
             access_token: longToken,
             user_id: instagramUserId,
             connection_type: 'direct',

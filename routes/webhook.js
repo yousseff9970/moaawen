@@ -56,11 +56,15 @@ router.post('/', async (req, res) => {
 
     for (const entry of body.entry) {
       const pageId = entry.id;
+      console.log(`📋 Webhook entry ID: ${pageId}`);
+      
       for (const event of entry.messaging || []) {
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         const isInstagram = senderId.length >= 16;
         const platform = isInstagram ? 'instagram' : 'messenger';
+
+        console.log(`📱 Platform: ${platform}, Sender ID: ${senderId}, Page ID: ${pageId}`);
 
         if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
           continue;
@@ -72,9 +76,17 @@ router.post('/', async (req, res) => {
         // Load business
         let business;
         try {
-          business = await getBusinessInfo({ page_id: pageId });
+          // For Instagram, try both the pageId and senderId as they might represent different IDs
+          if (isInstagram) {
+            business = await getBusinessInfo({ 
+              page_id: pageId, 
+              instagram_account_id: pageId 
+            });
+          } else {
+            business = await getBusinessInfo({ page_id: pageId });
+          }
         } catch (e) {
-          console.warn(`⚠️ No business found for page ${pageId}`);
+          console.warn(`⚠️ No business found for ${platform} page/account ${pageId}`);
           continue;
         }
 
