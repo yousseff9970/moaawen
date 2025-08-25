@@ -248,6 +248,7 @@ async function handleFacebookBusinessCallback(code, businessId, userId, res) {
   });
 
   console.log('📄 Facebook Pages found:', pagesResponse.data.data?.length || 0);
+  console.log('🔍 Full Facebook Pages Response:', JSON.stringify(pagesResponse.data, null, 2));
 
   // 4. Process each page and its Instagram account
   const connectedAccounts = [];
@@ -269,6 +270,9 @@ async function handleFacebookBusinessCallback(code, businessId, userId, res) {
     if (page.instagram_business_account) {
       const igAccount = page.instagram_business_account;
       console.log(`📱 Instagram Account: @${igAccount.username} (ID: ${igAccount.id})`);
+      console.log(`🔍 Instagram Business Account ID: ${igAccount.id}`);
+      console.log(`🔍 Facebook Page ID: ${page.id}`);
+      console.log(`🔍 Are they different? ${igAccount.id !== page.id}`);
       
       // Store Instagram connection linked to Facebook Page
       const instagramConnection = {
@@ -283,6 +287,8 @@ async function handleFacebookBusinessCallback(code, businessId, userId, res) {
         token_type: 'facebook',
         connected_at: new Date()
       };
+      
+      console.log(`💾 Saving Instagram connection with ID: ${instagramConnection.instagram_business_account_id}`);
       
       connectedAccounts.push({
         page: pageConnection,
@@ -408,6 +414,7 @@ async function saveFacebookBusinessConnections(businessId, connectedAccounts, ma
     
     // Add Instagram account if exists
     if (account.instagram) {
+      console.log(`💾 Storing Instagram account with ID: ${account.instagram.instagram_business_account_id}`);
       updateData[`channels.facebook_business.instagram_accounts.${account.instagram.instagram_business_account_id}`] = account.instagram;
       
       // Also create a direct Instagram channel reference for webhook lookup
@@ -422,6 +429,8 @@ async function saveFacebookBusinessConnections(businessId, connectedAccounts, ma
         token_type: 'facebook',
         connected_at: now
       };
+      
+      console.log(`✅ Created channel reference: channels.instagram_${account.instagram.instagram_business_account_id}`);
     }
   });
 
