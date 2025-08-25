@@ -50,6 +50,28 @@ app.set('view engine', 'ejs');
 
 // -------------------- ROUTES --------------------
 
+// Instagram callback handler at root level (for production redirect compatibility)
+app.get('/', (req, res) => {
+  const { code, state } = req.query;
+  
+  // Check if this is an Instagram callback
+  if (code && state) {
+    // Redirect to the proper Instagram callback handler
+    const queryString = Object.keys(req.query)
+      .map(key => `${key}=${encodeURIComponent(req.query[key])}`)
+      .join('&');
+    
+    return res.redirect(`/auth/instagram/callback?${queryString}`);
+  }
+  
+  // Default root response
+  res.json({ 
+    message: 'Moaawen AI Backend API',
+    version: '1.0.0',
+    status: 'running'
+  });
+});
+
 // Authentication routes
 app.use('/auth', authRoutes);
 

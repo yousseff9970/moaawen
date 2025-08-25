@@ -901,7 +901,7 @@ router.get('/facebook/pages/:businessId', async (req, res) => {
 // Instagram OAuth endpoints for direct Instagram login
 const INSTAGRAM_APP_ID = process.env.INSTAGRAM_APP_ID || '698492099473419';
 const INSTAGRAM_APP_SECRET = process.env.INSTAGRAM_APP_SECRET || '1868912bb8d53cf59499a605367f3eee';
-const INSTAGRAM_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI || 'https://moaawen.ai/';
+const INSTAGRAM_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI || 'https://moaawen.onrender.com/';
 
 // Generate Instagram login URL
 router.get('/instagram/login-url', (req, res) => {
@@ -975,26 +975,39 @@ router.get('/instagram/callback', async (req, res) => {
       return res.status(400).send('Business ID not found in state');
     }
 
-    // Exchange code for access token
-    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', {
-      client_id: INSTAGRAM_APP_ID,
-      client_secret: INSTAGRAM_APP_SECRET,
-      grant_type: 'authorization_code',
-      redirect_uri: INSTAGRAM_REDIRECT_URI,
-      code: code
-    }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+    // Exchange code for access token using Instagram Graph API
+    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', 
+      new URLSearchParams({
+        client_id: INSTAGRAM_APP_ID,
+        client_secret: INSTAGRAM_APP_SECRET,
+        grant_type: 'authorization_code',
+        redirect_uri: INSTAGRAM_REDIRECT_URI,
+        code: code
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    });
+    );
 
     const { access_token, user_id } = tokenResponse.data;
 
-    // Get Instagram account info
+    // Exchange short-lived token for long-lived token
+    const longLivedTokenResponse = await axios.get('https://graph.instagram.com/access_token', {
+      params: {
+        grant_type: 'ig_exchange_token',
+        client_secret: INSTAGRAM_APP_SECRET,
+        access_token: access_token
+      }
+    });
+
+    const longLivedToken = longLivedTokenResponse.data.access_token;
+
+    // Get Instagram account info using long-lived token
     const userResponse = await axios.get(`https://graph.instagram.com/me`, {
       params: {
         fields: 'id,username,account_type,media_count',
-        access_token: access_token
+        access_token: longLivedToken
       }
     });
 
@@ -1014,7 +1027,7 @@ router.get('/instagram/callback', async (req, res) => {
             username: username,
             account_type: account_type,
             media_count: media_count,
-            access_token: access_token,
+            access_token: longLivedToken,
             user_id: user_id,
             connected_at: new Date(),
             connection_type: 'direct' // Mark as direct Instagram login
@@ -1067,6 +1080,17 @@ router.get('/instagram/callback', async (req, res) => {
       </html>
     `);
   }
+});
+
+// Handle Instagram callback from production URL (temporary compatibility)
+router.get('/instagram/prod-callback', async (req, res) => {
+  // This handles callbacks from https://moaawen.ai/ temporarily
+  // Redirect to the proper callback with all parameters
+  const queryString = Object.keys(req.query)
+    .map(key => `${key}=${encodeURIComponent(req.query[key])}`)
+    .join('&');
+  
+  res.redirect(`/auth/instagram/callback?${queryString}`);
 });
 
 module.exports = router;
