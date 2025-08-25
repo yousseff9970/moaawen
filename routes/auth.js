@@ -222,38 +222,57 @@ router.get('/facebook/callback', async (req, res) => {
           }
         }
 
-        // 5. Update business with all connected accounts
+        console.log(`✅ Processed all ${pages.length} Facebook Pages, found ${connectedInstagramAccounts.length} Instagram accounts`);
+
+        // Check for duplicate Instagram account IDs
+        const igIds = connectedInstagramAccounts.map(acc => acc.instagram_business_account_id);
+        const uniqueIgIds = [...new Set(igIds)];
+        if (igIds.length !== uniqueIgIds.length) {
+          console.warn(`⚠️ Found duplicate Instagram account IDs:`, igIds);
+        }
+
+        // 5. Build the complete facebook_business object with all Instagram accounts
+        const facebookBusinessData = {
+          connected: true,
+          master_access_token: access_token,
+          user_id: facebookId,
+          name: name,
+          email: email,
+          connected_at: new Date(),
+          pages: facebookPages,
+          instagram_accounts: {}
+        };
+
+        // Add all Instagram accounts to the structure
+        connectedInstagramAccounts.forEach(igAccount => {
+          facebookBusinessData.instagram_accounts[igAccount.instagram_business_account_id] = igAccount;
+        });
+
+        // Build the complete update object
         const updateData = {
-          'channels.facebook_business': {
-            connected: true,
-            master_access_token: access_token,
-            user_id: facebookId,
-            name: name,
-            email: email,
-            connected_at: new Date(),
-            pages: facebookPages,
-            instagram_accounts: {}
-          },
+          'channels.facebook_business': facebookBusinessData,
           updatedAt: new Date()
         };
 
-        // Add Instagram accounts and create direct channel references
+        // Add direct Instagram channel references for webhook lookup
         connectedInstagramAccounts.forEach(igAccount => {
-          // Add to facebook_business.instagram_accounts
-          updateData[`channels.facebook_business.instagram_accounts.${igAccount.instagram_business_account_id}`] = igAccount;
-          
-          // Create direct Instagram channel reference for webhook lookup
           updateData[`channels.instagram_${igAccount.instagram_business_account_id}`] = {
             connected: true,
             connection_type: 'facebook_business',
             instagram_business_account_id: igAccount.instagram_business_account_id,
             username: igAccount.username,
-            account_type: igAccount.account_type,
             facebook_page_id: igAccount.facebook_page_id,
             page_access_token: igAccount.page_access_token,
             connected_at: new Date()
           };
         });
+
+        console.log(`💾 Prepared update data for ${connectedInstagramAccounts.length} Instagram accounts`);
+        console.log(`🔍 Instagram accounts being saved:`, connectedInstagramAccounts.map(acc => ({
+          id: acc.instagram_business_account_id,
+          username: acc.username,
+          page: acc.page_name
+        })));
 
         // Save all data to database
         await businessCol.updateOne(
@@ -261,7 +280,7 @@ router.get('/facebook/callback', async (req, res) => {
           { $set: updateData }
         );
 
-        console.log(`✅ Saved ${connectedInstagramAccounts.length} Instagram accounts for business ${businessId}`);
+        console.log(`✅ Successfully saved ${connectedInstagramAccounts.length} Instagram accounts for business ${businessId}`);
 
         // Also update user's Facebook info if not already connected
         if (!existingUser.facebookId) {
