@@ -898,4 +898,175 @@ router.get('/facebook/pages/:businessId', async (req, res) => {
   }
 });
 
+// Instagram OAuth endpoints for direct Instagram login
+const INSTAGRAM_APP_ID = process.env.INSTAGRAM_APP_ID || '698492099473419';
+const INSTAGRAM_APP_SECRET = process.env.INSTAGRAM_APP_SECRET || '1868912bb8d53cf59499a605367f3eee';
+const INSTAGRAM_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI || 'https://moaawen.ai/';
+
+// Generate Instagram login URL
+router.get('/instagram/login-url', (req, res) => {
+  const { businessId } = req.query;
+  
+  if (!businessId) {
+    return res.status(400).json({ error: 'Business ID is required' });
+  }
+
+  // Check if user is authenticated
+  const authHeader = req.headers.authorization;
+  let stateParam = '';
+  
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    try {
+      jwt.verify(token, JWT_SECRET);
+      stateParam = `&state=${encodeURIComponent(JSON.stringify({ token, businessId }))}`;
+    } catch (e) {
+      // Invalid token, continue without state
+      stateParam = `&state=${encodeURIComponent(JSON.stringify({ businessId }))}`;
+    }
+  } else {
+    stateParam = `&state=${encodeURIComponent(JSON.stringify({ businessId }))}`;
+  }
+
+  const scopes = [
+    'instagram_business_basic',
+    'instagram_business_manage_messages', 
+    'instagram_business_manage_comments',
+    'instagram_business_content_publish',
+    'instagram_business_manage_insights'
+  ].join('%2C');
+
+  const instagramAuthUrl = 
+    `https://www.instagram.com/oauth/authorize` +
+    `?force_reauth=true` +
+    `&client_id=${INSTAGRAM_APP_ID}` +
+    `&redirect_uri=${encodeURIComponent(INSTAGRAM_REDIRECT_URI)}` +
+    `&response_type=code` +
+    `&scope=${scopes}` +
+    stateParam;
+
+  res.json({ url: instagramAuthUrl });
+});
+
+// Instagram OAuth callback
+router.get('/instagram/callback', async (req, res) => {
+  try {
+    const { code, state } = req.query;
+    
+    if (!code) {
+      return res.status(400).send('Authorization code not provided');
+    }
+
+    // Parse state to get businessId and token
+    let businessId = null;
+    let userToken = null;
+    
+    if (state) {
+      try {
+        const stateData = JSON.parse(state);
+        businessId = stateData.businessId;
+        userToken = stateData.token;
+      } catch (e) {
+        console.error('Error parsing state:', e);
+      }
+    }
+
+    if (!businessId) {
+      return res.status(400).send('Business ID not found in state');
+    }
+
+    // Exchange code for access token
+    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', {
+      client_id: INSTAGRAM_APP_ID,
+      client_secret: INSTAGRAM_APP_SECRET,
+      grant_type: 'authorization_code',
+      redirect_uri: INSTAGRAM_REDIRECT_URI,
+      code: code
+    }, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    const { access_token, user_id } = tokenResponse.data;
+
+    // Get Instagram account info
+    const userResponse = await axios.get(`https://graph.instagram.com/me`, {
+      params: {
+        fields: 'id,username,account_type,media_count',
+        access_token: access_token
+      }
+    });
+
+    const { id, username, account_type, media_count } = userResponse.data;
+
+    // Store Instagram connection in business
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const businessCol = db.collection('businesses');
+
+    await businessCol.updateOne(
+      { _id: new ObjectId(businessId) },
+      {
+        $set: {
+          'channels.instagram': {
+            account_id: id,
+            username: username,
+            account_type: account_type,
+            media_count: media_count,
+            access_token: access_token,
+            user_id: user_id,
+            connected_at: new Date(),
+            connection_type: 'direct' // Mark as direct Instagram login
+          },
+          updatedAt: new Date()
+        }
+      }
+    );
+
+    // Return success response
+    const frontendUrl = getFrontendUrl();
+    res.send(`
+      <html>
+        <script>
+          if (window.opener) {
+            window.opener.postMessage({
+              type: 'INSTAGRAM_AUTH_SUCCESS',
+              data: {
+                account_id: '${id}',
+                username: '${username}',
+                account_type: '${account_type}',
+                connection_type: 'direct'
+              }
+            }, '*');
+            window.close();
+          } else {
+            window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&instagramConnected=true';
+          }
+        </script>
+      </html>
+    `);
+
+  } catch (error) {
+    console.error('Instagram OAuth error:', error);
+    const frontendUrl = getFrontendUrl();
+    res.send(`
+      <html>
+        <script>
+          if (window.opener) {
+            window.opener.postMessage({
+              type: 'INSTAGRAM_AUTH_ERROR',
+              error: 'Failed to connect Instagram account'
+            }, '*');
+            window.close();
+          } else {
+            alert('Failed to connect Instagram account');
+            window.history.back();
+          }
+        </script>
+      </html>
+    `);
+  }
+});
+
 module.exports = router;
