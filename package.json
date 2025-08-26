@@ -28,11 +28,13 @@
     "jimp": "^1.6.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "mailersend": "^2.6.0",
     "mongoose": "^8.16.0",
     "music-metadata": "^11.4.0",
     "natural": "^8.1.0",
     "new": "file:",
     "node-cache": "^5.1.2",
+    "nodemailer": "^7.0.5",
     "redis": "^5.6.1",
     "xss": "^1.0.15"
   },
