@@ -2,7 +2,8 @@
 const { 
   express, fs, xss, scheduleBatchedReply, downloadVoiceFile, transcribeWithWhisper,
   downloadMedia, matchImageAndGenerateReply, logConversation, getBusinessInfo,
-  checkAccess, trackUsage, processedMessages, getFallback, respond
+  checkAccess, trackUsage, processedMessages, processedEvents, createEventSignature,
+  isDuplicateEvent, getFallback, respond
 } = require('./shared');
 
 const router = express.Router();
@@ -34,8 +35,32 @@ router.post('/instagram', async (req, res) => {
       console.log(`📄 Processing Instagram entry for account ID: ${pageId}`);
       
       for (const event of entry.messaging || []) {
+        // Check for duplicate event first (before any processing)
+        if (isDuplicateEvent(event, pageId)) {
+          console.log(`⏭️ Skipping duplicate event for page ${pageId}`);
+          continue;
+        }
+        
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
+        
+        // Skip non-message events (read receipts, delivery confirmations, etc.)
+        if (!event.message) {
+          console.log(`⏭️ Skipping non-message event (read/delivery/etc.)`);
+          continue;
+        }
+        
+        // Skip echo messages (messages sent by the bot)
+        if (event.message.is_echo) {
+          console.log(`⏭️ Skipping echo message: ${messageId}`);
+          continue;
+        }
+        
+        // Skip messages sent by the bot itself (sender ID = page ID)
+        if (senderId === pageId) {
+          console.log(`⏭️ Skipping bot's own message from ${senderId}`);
+          continue;
+        }
         
         // Detect Instagram platform - Instagram sender IDs are typically longer (16+ chars)
         const isInstagram = senderId && senderId.length >= 16;
@@ -47,12 +72,12 @@ router.post('/instagram', async (req, res) => {
           continue;
         }
         
-        if (!senderId || !event.message || !messageId || event.message.is_echo) {
-          console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}, is_echo=${event.message?.is_echo}`);
+        if (!senderId || !messageId) {
+          console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
           continue;
         }
 
-        // Check for duplicate processing
+        // Check for duplicate processing by message ID
         if (processedMessages.has(messageId)) {
           console.log(`⏭️ Skipping duplicate message: ${messageId}`);
           continue;

@@ -20,20 +20,20 @@ const replyTimeouts = new Map();
 const pendingMessages = new Map();
 const generateReply = async (senderId, userMessage, metadata = {}) => {
   const start = Date.now();
-  const { phone_number_id, page_id, domain, instagram_account_id } = metadata;
+  const { phone_number_id, page_id, domain, instagram_account_id, shop } = metadata;
 
-  if (!phone_number_id && !page_id && !domain && !instagram_account_id) {
+  if (!phone_number_id && !page_id && !domain && !instagram_account_id && !shop) {
     logToJson({
       layer: 'error',
       senderId,
       businessId: null,
       message: userMessage,
-      error: 'Missing identifiers (phone_number_id, page_id, domain, instagram_account_id)'
+      error: 'Missing identifiers (phone_number_id, page_id, domain, instagram_account_id, shop)'
     });
     throw new Error('Unsupported metadata or missing identifiers');
   }
 
-  const business = await getBusinessInfo({ phone_number_id, page_id, domain, instagram_account_id });
+  const business = await getBusinessInfo({ phone_number_id, page_id, domain, instagram_account_id, shop });
 
   // 🛡️ Plan/access check
   const { checkAccess } = require('../utils/businessPolicy');

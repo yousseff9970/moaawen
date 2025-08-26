@@ -13,6 +13,7 @@ const { checkAccess } = require('../../utils/businessPolicy');
 const { trackUsage } = require('../../utils/trackUsage');
 
 const processedMessages = new Set();
+const processedEvents = new Map(); // Track events by timestamp + sender + recipient
 
 // Clean up old processed messages every 30 minutes to prevent memory leaks
 setInterval(() => {
@@ -20,7 +21,37 @@ setInterval(() => {
     console.log(`🧹 Cleaning up processed messages cache (${processedMessages.size} entries)`);
     processedMessages.clear();
   }
+  if (processedEvents.size > 1000) {
+    console.log(`🧹 Cleaning up processed events cache (${processedEvents.size} entries)`);
+    processedEvents.clear();
+  }
 }, 30 * 60 * 1000);
+
+// Helper function to create unique event signature
+function createEventSignature(event, pageId) {
+  const senderId = event.sender?.id;
+  const timestamp = event.timestamp;
+  const messageText = event.message?.text;
+  
+  return `${pageId}-${senderId}-${timestamp}-${messageText?.substring(0, 50)}`;
+}
+
+// Helper function to check if event is duplicate
+function isDuplicateEvent(event, pageId) {
+  const signature = createEventSignature(event, pageId);
+  const now = Date.now();
+  
+  if (processedEvents.has(signature)) {
+    const lastSeen = processedEvents.get(signature);
+    // If we've seen this exact event in the last 5 minutes, it's a duplicate
+    if (now - lastSeen < 5 * 60 * 1000) {
+      return true;
+    }
+  }
+  
+  processedEvents.set(signature, now);
+  return false;
+}
 
 function getFallback(reason) {
   if (reason.includes('expired')) return '⚠️ Your subscription expired. Please renew.';
@@ -56,6 +87,9 @@ module.exports = {
   checkAccess,
   trackUsage,
   processedMessages,
+  processedEvents,
+  createEventSignature,
+  isDuplicateEvent,
   getFallback,
   respond
 };
