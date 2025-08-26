@@ -10,4 +10,8 @@ const channelRoutes = require('./channels');
 router.use('/', crudRoutes);
 router.use('/', channelRoutes);
 
+// Mount products routes
+const productsRouter = require('../products');
+router.use('/:businessId/products', productsRouter);
+
 module.exports = router;
