@@ -144,7 +144,7 @@ router.post('/:businessId/channels/shopify/sync', async (req, res) => {
     const { shop_domain, access_token } = business.channels.shopify;
 
     // Sync products
-    const result = await syncShopifyProducts(businessId, shop_domain, access_token);
+    const result = await syncShopifyProducts(businessId, shop_domain, access_token, business);
 
     // Update last sync time
     await businessesCol.updateOne(
@@ -176,7 +176,7 @@ router.post('/:businessId/channels/shopify/sync', async (req, res) => {
 });
 
 // Helper function to sync products
-async function syncShopifyProducts(businessId, shop, accessToken) {
+async function syncShopifyProducts(businessId, shop, accessToken, business) {
   console.log(`📦 Starting product sync for business ${businessId}, shop ${shop}...`);
 
   const client_instance = shopifyClient(shop, accessToken);

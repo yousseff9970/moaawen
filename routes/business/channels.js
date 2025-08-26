@@ -551,7 +551,7 @@ router.delete('/:id/channels/:channelType', authMiddleware, async (req, res) => 
     console.log('Disconnecting channel:', req.params.channelType, 'for business:', req.params.id, 'by user:', req.user.userId);
     
     const { channelType } = req.params;
-    const allowedChannels = ['whatsapp', 'instagram', 'website', 'facebook', 'messenger', 'tiktok'];
+    const allowedChannels = ['whatsapp', 'instagram', 'website', 'facebook', 'messenger', 'tiktok', 'shopify'];
     
     if (!allowedChannels.includes(channelType)) {
       return res.status(400).json({ error: 'Invalid channel type' });
