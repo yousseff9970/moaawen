@@ -76,15 +76,8 @@ router.post('/instagram', async (req, res) => {
         processedEvents.add(eventSignature);
         console.log(`✅ Processing new Instagram event: ${eventSignature}`);
         
-        // Detect Instagram platform - Instagram sender IDs are typically longer (16+ chars)
-        const isInstagram = senderId && senderId.length >= 16;
-        console.log(`📨 Message from ${senderId} - Detected platform: ${isInstagram ? 'Instagram' : 'Not Instagram'}`);
-        
-        // Only process if this is actually an Instagram message
-        if (!isInstagram) {
-          console.log(`⏭️ Skipping non-Instagram message from ${senderId}`);
-          continue;
-        }
+        // This is an Instagram webhook (object: "instagram"), so process all messages as Instagram
+        console.log(`📨 Instagram message from ${senderId} (Instagram webhook detected)`);
         
         if (!senderId || !messageId) {
           console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);

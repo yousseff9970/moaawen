@@ -76,15 +76,8 @@ router.post('/messenger', async (req, res) => {
         processedEvents.add(eventSignature);
         console.log(`✅ Processing new Messenger event: ${eventSignature}`);
         
-        // Detect Messenger platform - Messenger sender IDs are typically shorter (< 16 chars)
-        const isMessenger = senderId && senderId.length < 16;
-        console.log(`📨 Message from ${senderId} - Detected platform: ${isMessenger ? 'Messenger' : 'Not Messenger'}`);
-        
-        // Only process if this is actually a Messenger message
-        if (!isMessenger) {
-          console.log(`⏭️ Skipping non-Messenger message from ${senderId}`);
-          continue;
-        }
+        // This is a Messenger webhook (object: "page"), so process all messages as Messenger
+        console.log(`📨 Messenger message from ${senderId} (Page webhook detected)`);
         
         if (!senderId || !messageId) {
           console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
