@@ -109,10 +109,31 @@ router.post('/login', async (req, res) => {
 
     // Check if user registered normally (has password) and email is not verified
     if (user.password && !user.isEmailVerified) {
+      // Generate new OTP and send verification email automatically
+      const otp = generateOTP();
+      const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      // Update user with new OTP
+      await usersCol.updateOne(
+        { email },
+        { 
+          $set: { 
+            emailVerificationOTP: otp,
+            otpExpiry: otpExpiry
+          }
+        }
+      );
+
+      // Send verification email
+      const emailResult = await sendVerificationEmail(email, otp, user.businessName || '');
+      
       return res.status(403).json({ 
-        message: 'Please verify your email address before logging in.',
+        message: emailResult.success 
+          ? 'Please verify your email address. We\'ve sent a new verification code to your email.' 
+          : 'Please verify your email address before logging in.',
         requiresVerification: true,
-        email: email
+        email: email,
+        emailSent: emailResult.success
       });
     }
 
