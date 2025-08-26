@@ -90,11 +90,6 @@ router.post('/messenger', async (req, res) => {
           console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
           continue;
         }
-        
-        if (!senderId || !messageId) {
-          console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
-          continue;
-        }
 
         let messageText = event.message?.text;
 
