@@ -31,7 +31,7 @@ const scopes = [
 });
 
 router.get('/callback', async (req, res) => {
-  const { shop, hmac, code } = req.query;
+  const { shop, hmac, code, state } = req.query;
   if (!shop || !hmac || !code) return res.status(400).send('Missing params');
 
   const query = { ...req.query };
@@ -40,6 +40,16 @@ router.get('/callback', async (req, res) => {
   const hash = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(message).digest('hex');
 
   if (hash !== hmac) return res.status(403).send('HMAC validation failed');
+
+  // Check if this is a business-specific connection
+  let businessConnection = null;
+  if (state) {
+    try {
+      businessConnection = JSON.parse(Buffer.from(state, 'base64').toString());
+    } catch (err) {
+      console.warn('Invalid state parameter:', err.message);
+    }
+  }
 
   try {
     console.log(`🔗 Processing Shopify callback for ${shop}...`);
@@ -87,12 +97,69 @@ router.get('/callback', async (req, res) => {
       console.warn(`⚠️ No products found for ${shop}. This might indicate a scoping issue.`);
     }
 
-    // Save store data
-    console.log(`💾 Saving data for ${shop}...`);
-    const businessDoc = await saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, fullCollections);
+    // Handle business-specific connection vs global connection
+    if (businessConnection && businessConnection.businessId) {
+      // Business-specific connection
+      console.log(`🏢 Business-specific connection for business ${businessConnection.businessId}`);
+      
+      const { MongoClient, ObjectId } = require('mongodb');
+      const mongoClient = new MongoClient(process.env.MONGO_URI);
+      await mongoClient.connect();
+      const businessesCol = mongoClient.db().collection('businesses');
 
-    console.log(`🟢 ${businessDoc.name} (${shop}) saved/updated successfully`);
-    res.send(`✅ ${businessDoc.name} connected and synced with ${flatProducts.length} products and ${variantCount} variants.`);
+      // Check if business exists
+      const business = await businessesCol.findOne({ _id: new ObjectId(businessConnection.businessId) });
+      if (!business) {
+        return res.status(404).send(`
+          <script>
+            window.opener.postMessage({
+              type: 'SHOPIFY_AUTH_ERROR',
+              error: 'Business not found'
+            }, '*');
+            window.close();
+          </script>
+        `);
+      }
+
+      // Update business with Shopify connection
+      await businessesCol.updateOne(
+        { _id: new ObjectId(businessConnection.businessId) },
+        {
+          $set: {
+            'channels.shopify': {
+              shop_domain: shop,
+              access_token: accessToken,
+              connected_at: new Date().toISOString(),
+              last_sync: new Date().toISOString()
+            },
+            products: flatProducts,
+            collections: fullCollections,
+            shop: shop, // For backward compatibility
+            accessToken: accessToken, // For backward compatibility
+            updatedAt: new Date()
+          }
+        }
+      );
+
+      console.log(`✅ Business ${businessConnection.businessId} connected to Shopify store ${shop}`);
+      
+      res.send(`
+        <script>
+          window.opener.postMessage({
+            type: 'SHOPIFY_AUTH_SUCCESS',
+            data: { shop: '${shop}', businessId: '${businessConnection.businessId}' }
+          }, '*');
+          window.close();
+        </script>
+      `);
+    } else {
+      // Original global connection method
+      console.log(`💾 Saving data for ${shop} (global method)...`);
+      const businessDoc = await saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, fullCollections);
+
+      console.log(`🟢 ${businessDoc.name} (${shop}) saved/updated successfully`);
+      res.send(`✅ ${businessDoc.name} connected and synced with ${flatProducts.length} products and ${variantCount} variants.`);
+    }
     
   } catch (err) {
     console.error(`❌ OAuth error for ${shop}:`, err.response?.data || err.message);
