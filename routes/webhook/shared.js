@@ -14,6 +14,14 @@ const { trackUsage } = require('../../utils/trackUsage');
 
 const processedMessages = new Set();
 
+// Clean up old processed messages every 30 minutes to prevent memory leaks
+setInterval(() => {
+  if (processedMessages.size > 1000) {
+    console.log(`🧹 Cleaning up processed messages cache (${processedMessages.size} entries)`);
+    processedMessages.clear();
+  }
+}, 30 * 60 * 1000);
+
 function getFallback(reason) {
   if (reason.includes('expired')) return '⚠️ Your subscription expired. Please renew.';
   if (reason.includes('inactive')) return '⚠️ Your account is inactive.';

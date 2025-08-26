@@ -47,11 +47,19 @@ router.post('/instagram', async (req, res) => {
           continue;
         }
         
-        if (!senderId || !event.message || !messageId || event.message.is_echo || processedMessages.has(messageId)) {
+        if (!senderId || !event.message || !messageId || event.message.is_echo) {
+          console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}, is_echo=${event.message?.is_echo}`);
+          continue;
+        }
+
+        // Check for duplicate processing
+        if (processedMessages.has(messageId)) {
+          console.log(`⏭️ Skipping duplicate message: ${messageId}`);
           continue;
         }
 
         processedMessages.add(messageId);
+        console.log(`✅ Processing new Instagram message: ${messageId} from ${senderId}`);
         let messageText = event.message?.text;
 
         // Load business - Instagram lookup using the account ID (pageId)
