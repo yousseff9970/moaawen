@@ -13,7 +13,7 @@ const { checkAccess } = require('../../utils/businessPolicy');
 const { trackUsage } = require('../../utils/trackUsage');
 
 const processedMessages = new Set();
-const processedEvents = new Map(); // Track events by timestamp + sender + recipient
+const processedEvents = new Set(); // Track processed event signatures
 
 // Clean up old processed messages every 30 minutes to prevent memory leaks
 setInterval(() => {
@@ -28,28 +28,33 @@ setInterval(() => {
 }, 30 * 60 * 1000);
 
 // Helper function to create unique event signature
-function createEventSignature(event, pageId) {
-  const senderId = event.sender?.id;
-  const timestamp = event.timestamp;
-  const messageText = event.message?.text;
-  
-  return `${pageId}-${senderId}-${timestamp}-${messageText?.substring(0, 50)}`;
+function createEventSignature(eventData) {
+  // Support both old format (event, pageId) and new format (eventData object)
+  if (typeof eventData === 'object' && eventData.platform) {
+    // New format: { platform, account_id, from, timestamp, message_id, content }
+    const { platform, account_id, from, timestamp, message_id, content } = eventData;
+    return `${platform}-${account_id}-${from}-${timestamp}-${content?.substring(0, 50)}`;
+  } else {
+    // Old format: (event, pageId) - for backward compatibility
+    const event = arguments[0];
+    const pageId = arguments[1];
+    const senderId = event.sender?.id;
+    const timestamp = event.timestamp;
+    const messageText = event.message?.text;
+    
+    return `${pageId}-${senderId}-${timestamp}-${messageText?.substring(0, 50)}`;
+  }
 }
 
-// Helper function to check if event is duplicate
+// Helper function to check if event is duplicate (legacy function - use processedEvents.has() directly instead)
 function isDuplicateEvent(event, pageId) {
   const signature = createEventSignature(event, pageId);
-  const now = Date.now();
   
   if (processedEvents.has(signature)) {
-    const lastSeen = processedEvents.get(signature);
-    // If we've seen this exact event in the last 5 minutes, it's a duplicate
-    if (now - lastSeen < 5 * 60 * 1000) {
-      return true;
-    }
+    return true;
   }
   
-  processedEvents.set(signature, now);
+  processedEvents.add(signature);
   return false;
 }
 

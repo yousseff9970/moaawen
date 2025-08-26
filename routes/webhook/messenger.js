@@ -35,18 +35,12 @@ router.post('/messenger', async (req, res) => {
       console.log(`📄 Processing Messenger entry for page ID: ${pageId}`);
       
       for (const event of entry.messaging || []) {
-        // Check for duplicate event first (before any processing)
-        if (isDuplicateEvent(event, pageId)) {
-          console.log(`⏭️ Skipping duplicate event for page ${pageId}`);
-          continue;
-        }
-        
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         
         // Skip non-message events (read receipts, delivery confirmations, etc.)
         if (!event.message) {
-          console.log(`⏭️ Skipping non-message event (read/delivery/etc.)`);
+          console.log(`⏭️ Skipping non-message event (read/delivery/etc.) from ${senderId}`);
           continue;
         }
         
@@ -62,6 +56,26 @@ router.post('/messenger', async (req, res) => {
           continue;
         }
         
+        // Create event signature for duplicate detection (Messenger-specific)
+        const eventSignature = createEventSignature({
+          platform: 'messenger',
+          account_id: pageId,
+          from: senderId,
+          timestamp: event.timestamp,
+          message_id: messageId,
+          content: event.message?.text || 'media'
+        });
+        
+        // Check for duplicate event using signature
+        if (processedEvents.has(eventSignature)) {
+          console.log(`⏭️ Skipping duplicate Messenger event: ${eventSignature}`);
+          continue;
+        }
+        
+        // Mark event as processed
+        processedEvents.add(eventSignature);
+        console.log(`✅ Processing new Messenger event: ${eventSignature}`);
+        
         // Detect Messenger platform - Messenger sender IDs are typically shorter (< 16 chars)
         const isMessenger = senderId && senderId.length < 16;
         console.log(`📨 Message from ${senderId} - Detected platform: ${isMessenger ? 'Messenger' : 'Not Messenger'}`);
@@ -76,15 +90,12 @@ router.post('/messenger', async (req, res) => {
           console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
           continue;
         }
-
-        // Check for duplicate processing by message ID
-        if (processedMessages.has(messageId)) {
-          console.log(`⏭️ Skipping duplicate message: ${messageId}`);
+        
+        if (!senderId || !messageId) {
+          console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
           continue;
         }
 
-        processedMessages.add(messageId);
-        console.log(`✅ Processing new Messenger message: ${messageId} from ${senderId}`);
         let messageText = event.message?.text;
 
         // Load business - Messenger lookup using the page ID

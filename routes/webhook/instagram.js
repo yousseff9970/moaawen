@@ -35,18 +35,12 @@ router.post('/instagram', async (req, res) => {
       console.log(`📄 Processing Instagram entry for account ID: ${pageId}`);
       
       for (const event of entry.messaging || []) {
-        // Check for duplicate event first (before any processing)
-        if (isDuplicateEvent(event, pageId)) {
-          console.log(`⏭️ Skipping duplicate event for page ${pageId}`);
-          continue;
-        }
-        
         const senderId = event.sender?.id;
         const messageId = event.message?.mid;
         
         // Skip non-message events (read receipts, delivery confirmations, etc.)
         if (!event.message) {
-          console.log(`⏭️ Skipping non-message event (read/delivery/etc.)`);
+          console.log(`⏭️ Skipping non-message event (read/delivery/etc.) from ${senderId}`);
           continue;
         }
         
@@ -62,6 +56,26 @@ router.post('/instagram', async (req, res) => {
           continue;
         }
         
+        // Create event signature for duplicate detection (Instagram-specific)
+        const eventSignature = createEventSignature({
+          platform: 'instagram',
+          account_id: pageId,
+          from: senderId,
+          timestamp: event.timestamp,
+          message_id: messageId,
+          content: event.message?.text || 'media'
+        });
+        
+        // Check for duplicate event using signature
+        if (processedEvents.has(eventSignature)) {
+          console.log(`⏭️ Skipping duplicate Instagram event: ${eventSignature}`);
+          continue;
+        }
+        
+        // Mark event as processed
+        processedEvents.add(eventSignature);
+        console.log(`✅ Processing new Instagram event: ${eventSignature}`);
+        
         // Detect Instagram platform - Instagram sender IDs are typically longer (16+ chars)
         const isInstagram = senderId && senderId.length >= 16;
         console.log(`📨 Message from ${senderId} - Detected platform: ${isInstagram ? 'Instagram' : 'Not Instagram'}`);
@@ -76,15 +90,6 @@ router.post('/instagram', async (req, res) => {
           console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
           continue;
         }
-
-        // Check for duplicate processing by message ID
-        if (processedMessages.has(messageId)) {
-          console.log(`⏭️ Skipping duplicate message: ${messageId}`);
-          continue;
-        }
-
-        processedMessages.add(messageId);
-        console.log(`✅ Processing new Instagram message: ${messageId} from ${senderId}`);
         let messageText = event.message?.text;
 
         // Load business - Instagram lookup using the account ID (pageId)
