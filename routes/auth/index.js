@@ -10,8 +10,8 @@ const businessRouter = require('./business');
 // Mount Facebook routes
 router.use('/facebook', facebookRouter);
 
-// Mount user authentication routes directly on auth root
-router.use('/', userRouter);
+// Mount user authentication routes under /user
+router.use('/user', userRouter);
 
 // Mount business routes with /facebook prefix for consistency with original structure
 router.use('/facebook', businessRouter);
