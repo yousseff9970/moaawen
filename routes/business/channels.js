@@ -38,6 +38,18 @@ router.put('/:id/channels/website', authMiddleware, async (req, res) => {
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
+    // Check if domain is already connected to another business
+    const existingBusiness = await businessesCol.findOne({
+      'channels.website.domain': cleanDomain,
+      _id: { $ne: new ObjectId(req.params.id) }
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ 
+        error: `Domain "${cleanDomain}" is already connected to another business. Each domain can only be connected to one business.` 
+      });
+    }
+
     // Verify business ownership (reuse existing logic)
     const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
     if (!user) {
@@ -107,6 +119,9 @@ router.put('/:id/channels/facebook', authMiddleware, async (req, res) => {
     const db = client.db(process.env.DB_NAME || 'moaawen');
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
+
+    // Note: Facebook accounts can be shared across multiple businesses
+    // as they serve as the parent account for Instagram and Messenger
 
     // Verify business ownership (reuse existing logic)
     const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
@@ -181,6 +196,18 @@ router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
     const db = client.db(process.env.DB_NAME || 'moaawen');
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
+
+    // Check if Instagram account is already connected to another business
+    const existingBusiness = await businessesCol.findOne({
+      'channels.instagram.account_id': instagram_account_id.trim(),
+      _id: { $ne: new ObjectId(req.params.id) }
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ 
+        error: `Instagram account "${username}" is already connected to another business. Each Instagram account can only be connected to one business.` 
+      });
+    }
 
     // Verify business ownership
     const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
@@ -268,6 +295,18 @@ router.put('/:id/channels/messenger', authMiddleware, async (req, res) => {
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
+    // Check if Messenger page is already connected to another business
+    const existingBusiness = await businessesCol.findOne({
+      'channels.messenger.page_id': page_id.trim(),
+      _id: { $ne: new ObjectId(req.params.id) }
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ 
+        error: `Messenger page is already connected to another business. Each Messenger page can only be connected to one business.` 
+      });
+    }
+
     // Verify business ownership
     const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
     if (!user) {
@@ -330,6 +369,93 @@ router.put('/:id/channels/messenger', authMiddleware, async (req, res) => {
   }
 });
 
+// Connect/Update WhatsApp channel
+router.put('/:id/channels/whatsapp', authMiddleware, async (req, res) => {
+  try {
+    console.log('Connecting WhatsApp channel for business:', req.params.id, 'by user:', req.user.userId);
+    
+    const { phone_number_id, phone_number, access_token } = req.body;
+    
+    if (!phone_number_id || !phone_number || !access_token) {
+      return res.status(400).json({ error: 'WhatsApp phone_number_id, phone_number, and access_token are required' });
+    }
+
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const businessesCol = db.collection('businesses');
+    const usersCol = db.collection('users');
+
+    // Check if WhatsApp phone number is already connected to another business
+    const existingBusiness = await businessesCol.findOne({
+      'channels.whatsapp.phone_number_id': phone_number_id.trim(),
+      _id: { $ne: new ObjectId(req.params.id) }
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ 
+        error: `WhatsApp number "${phone_number}" is already connected to another business. Each WhatsApp number can only be connected to one business.` 
+      });
+    }
+
+    // Verify business ownership
+    const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const business = await businessesCol.findOne({ _id: new ObjectId(req.params.id) });
+    if (!business) {
+      return res.status(404).json({ error: 'Business not found' });
+    }
+
+    // Check ownership
+    let isOwner = false;
+    if (user.businesses && user.businesses.includes(req.params.id)) {
+      isOwner = true;
+    } else if (business.userId && business.userId.toString() === req.user.userId) {
+      isOwner = true;
+    } else if (business.contact?.email && business.contact.email === user.email) {
+      isOwner = true;
+    }
+
+    if (!isOwner) {
+      return res.status(403).json({ error: 'Access denied. You do not own this business.' });
+    }
+
+    // Update the business with WhatsApp channel
+    const result = await businessesCol.updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { 
+        $set: { 
+          'channels.whatsapp': { 
+            phone_number_id: phone_number_id.trim(),
+            phone_number: phone_number.trim(),
+            access_token: access_token.trim()
+          },
+          updatedAt: new Date()
+        }
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(400).json({ error: 'Failed to update WhatsApp channel' });
+    }
+
+    console.log('WhatsApp channel connected successfully');
+
+    res.json({
+      success: true,
+      message: 'WhatsApp channel connected successfully',
+      phone_number_id: phone_number_id.trim(),
+      phone_number: phone_number.trim()
+    });
+
+  } catch (error) {
+    console.error('Error connecting WhatsApp channel:', error);
+    res.status(500).json({ error: 'Failed to connect WhatsApp channel' });
+  }
+});
+
 // Connect/Update TikTok channel
 router.put('/:id/channels/tiktok', authMiddleware, async (req, res) => {
   try {
@@ -352,6 +478,18 @@ router.put('/:id/channels/tiktok', authMiddleware, async (req, res) => {
     const db = client.db(process.env.DB_NAME || 'moaawen');
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
+
+    // Check if TikTok account is already connected to another business
+    const existingBusiness = await businessesCol.findOne({
+      'channels.tiktok.account_id': cleanAccountId,
+      _id: { $ne: new ObjectId(req.params.id) }
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ 
+        error: `TikTok account "${cleanAccountId}" is already connected to another business. Each TikTok account can only be connected to one business.` 
+      });
+    }
 
     // Verify business ownership (reuse existing logic)
     const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
