@@ -55,26 +55,26 @@ function getUserId(req) {
 function generalKey(req) {
   const key = getApiKey(req);
   if (key) {
-    console.log(`🔑 Rate limit using API key: key_${key}`);
+    //console.log(`🔑 Rate limit using API key: key_${key}`);
     return `key_${key}`;
   }
   const uid = getUserId(req);
   if (uid) {
-    console.log(`🔑 Rate limit using user ID: user_${uid}`);
+    //console.log(`🔑 Rate limit using user ID: user_${uid}`);
     return `user_${uid}`;
   }
   const ipKey = `ip_${getClientIP(req)}`;
-  console.log(`🔑 Rate limit using IP: ${ipKey}`);
+  //console.log(`🔑 Rate limit using IP: ${ipKey}`);
   return ipKey; // Using custom IPv6-safe IP function
 }
 const authKey   = (req) => {
   const key = `auth_${generalKey(req)}`;
-  console.log(`🔒 Auth rate limit key: ${key}`);
+  //console.log(`🔒 Auth rate limit key: ${key}`);
   return key;
 };   // still prioritizes user/api key
 const publicKey = (req) => {
   const key = `public_ip_${getClientIP(req)}`;
-  console.log(`🌐 Public rate limit key: ${key}`);
+  //console.log(`🌐 Public rate limit key: ${key}`);
   return key;
 };
 

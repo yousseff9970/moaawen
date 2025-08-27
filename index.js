@@ -146,8 +146,8 @@ app.use('/admin',     authMiddleware, requireAdmin,    adminRoutes);
 app.use('/dashboard', publicLimiter, authMiddleware, requireVerified, dashboardRoutes);
 app.use('/businesses', authMiddleware, businessRoutes);
 
-// Shopify integration (protect if it exposes sensitive actions)
-app.use('/shopify', authMiddleware, shopifyRoutes);
+// Shopify integration - Public routes for OAuth and webhooks (no auth required)
+app.use('/shopify', cors(corsOptions.permissive), publicLimiter, shopifyRoutes);
 
 // API (API key first, then rate limit) - Permissive CORS for widget usage
 app.use('/api', cors(corsOptions.permissive), apiKeyMiddleware, limiter, chatRoutes);
