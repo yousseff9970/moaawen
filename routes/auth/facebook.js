@@ -296,7 +296,7 @@ router.get('/callback', async (req, res) => {
         const frontendUrl = getFrontendUrl();
         res.send(`
           <html>
-            <script>
+            <script nonce="${req.nonce}">
               if (window.opener) {
                 window.opener.postMessage({
                   type: 'FACEBOOK_AUTH_SUCCESS',
@@ -327,7 +327,7 @@ router.get('/callback', async (req, res) => {
         const frontendUrl = getFrontendUrl();
         res.send(`
           <html>
-            <script>
+            <script nonce="${req.nonce}">
               if (window.opener) {
                 window.opener.postMessage({
                   type: 'FACEBOOK_AUTH_ERROR',
@@ -465,7 +465,7 @@ router.get('/callback', async (req, res) => {
       // This was a business connection request, send popup response
       res.send(`
         <html>
-          <script>
+          <script nonce="${req.nonce}">
             if (window.opener) {
               window.opener.postMessage({
                 type: 'FACEBOOK_AUTH_ERROR',

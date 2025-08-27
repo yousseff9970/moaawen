@@ -27,12 +27,65 @@ const app = express();
 // --- Security & IP correctness ---
 app.disable('x-powered-by');
 app.set('trust proxy', 1);                 // behind 1 proxy (NGINX/Cloudflare/Render/etc.)
-// global
+
+// Configure helmet with relaxed CSP for OAuth flows
+app.use((req, res, next) => {
+  // Generate a unique nonce for each request
+  req.nonce = require('crypto').randomBytes(16).toString('base64');
+  next();
+});
+
 app.use(helmet({
-  // keep defaults, BUT allow cross-origin resources if your site serves a public widget
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // or set to false to disable header
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow cross-origin resources for widget
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        (req, res) => `'nonce-${req.nonce}'`, // Dynamic nonce
+        "https://connect.facebook.net", // Facebook SDK
+        "https://www.facebook.com", // Facebook OAuth
+        "https://apis.google.com", // Google APIs
+        "https://accounts.google.com", // Google OAuth
+        "https://cdn.jsdelivr.net", // CDN resources
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'", // Allow inline styles
+        "https://fonts.googleapis.com", // Google Fonts
+        "https://cdn.jsdelivr.net",
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com", // Google Fonts
+        "https://cdn.jsdelivr.net",
+      ],
+      imgSrc: [
+        "'self'",
+        "data:", // Data URLs for images
+        "https:", // Allow HTTPS images
+        "http:", // Allow HTTP images (for development)
+      ],
+      connectSrc: [
+        "'self'",
+        "https://api.facebook.com", // Facebook API
+        "https://graph.facebook.com", // Facebook Graph API
+        "https://www.facebook.com", // Facebook OAuth
+        "https://accounts.google.com", // Google OAuth
+        "https://oauth2.googleapis.com", // Google OAuth
+        "https://moaawen.onrender.com", // Your API
+        "wss:", // WebSocket connections
+      ],
+      frameSrc: [
+        "'self'",
+        "https://www.facebook.com", // Facebook OAuth dialogs
+        "https://accounts.google.com", // Google OAuth
+        "https://www.google.com", // Google OAuth
+      ],
+      formAction: ["'self'"],
+    },
+  },
 }));
-                         // sensible security headers
 
 // --- CORS Configuration ---
 const defaultOrigins = [
