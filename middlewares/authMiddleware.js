@@ -81,7 +81,7 @@ function authMiddleware(req, res, next) {
 
     // Log successful authentication (optional - can be disabled in production)
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`Auth success: ${decoded.email} (${decoded.userId})`);
+      
     }
 
     next();

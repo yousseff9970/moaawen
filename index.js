@@ -1,13 +1,13 @@
+// server.js
 const express = require('express');
-const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require('path');
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const helmet = require('helmet');
 
 // Middlewares
-const rateLimiter = require('./middlewares/rateLimit');
+const { limiter, authLimiter, publicLimiter } = require('./middlewares/rateLimit');
 const apiKeyMiddleware = require('./middlewares/apiKey');
 const { authMiddleware, requireVerified, requireAdmin } = require('./middlewares/authMiddleware');
 
@@ -23,76 +23,114 @@ const logsRoutes = require('./routes/logs');
 const businessRoutes = require('./routes/business');
 
 const app = express();
-// Temporary CORS fix
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); 
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-api-key");
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // stop here for preflight
-  }
+// --- Security & IP correctness ---
+app.disable('x-powered-by');
+app.set('trust proxy', 1);                 // behind 1 proxy (NGINX/Cloudflare/Render/etc.)
+app.use(helmet());                         // sensible security headers
 
-  next();
-});
+// --- CORS (restrict origins; supports cookies later if you move to HttpOnly) ---
+const defaultOrigins = [
+  'https://moaawen.ai',
+  'https://moaawen.netlify.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+   'http://localhost:8080',
+];
+const envOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+const allowedOrigins = envOrigins.length ? envOrigins : defaultOrigins;
 
-// -------------------- GLOBAL MIDDLEWARES --------------------
-app.use(cors());
-app.use(rateLimiter); // Apply rate limiting globally
-app.use(bodyParser.json()); // Parse JSON body
-app.use(express.urlencoded({ extended: true })); 
-app.use(express.json()); // Parse additional JSON (alternative to bodyParser)
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);   // allow Postman/cURL
+    return allowedOrigins.includes(origin) ? cb(null, true) : cb(new Error('CORS blocked'), false);
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'X-Requested-With'],
+}));
+// The CORS middleware already handles OPTIONS preflight requests, no need for separate options handler
+
+// --- Parsers ---
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '1mb' }));  // single JSON parser (drop bodyParser)
 app.use(cookieParser());
 
-// Static files & view engine
+// --- Static & views ---
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
 // -------------------- ROUTES --------------------
 
-// Root route handler
-app.get('/', (req, res) => {
-  // Default root response
-  res.json({ 
-    message: 'Moaawen AI Backend API',
-    version: '1.0.0',
-    status: 'running'
-  });
+// Health/root (apply general rate limiter)
+app.get('/', limiter, (req, res) => {
+  res.json({ message: 'Moaawen AI Backend API', version: '1.0.0', status: 'running' });
 });
 
-// Authentication routes
-app.use('/auth', authRoutes);
+// Webhooks
+// If you verify HMAC (Shopify/Stripe), mount RAW parser before handlers for that path.
+// Example for Shopify ONLY if you verify signature inside webhookRoutes:
+// const shopifyWebhook = require('./routes/webhookShopify');
+// app.use('/webhook/shopify', express.raw({ type: 'application/json' }), shopifyWebhook);
+app.use('/webhook', publicLimiter, webhookRoutes);
 
-// Protected test route (check JWT auth flow)
+// Auth (stricter limits)
+app.use('/auth', authLimiter, authRoutes);
+
+// Protected quick check
 app.get('/dashboard/data', authMiddleware, (req, res) => {
   res.json({ message: `Hello ${req.user.email}, you have access.` });
 });
 
-// Business & dashboard routes
-app.use('/dashboard', dashboardRoutes);
-app.use('/shopify', shopifyRoutes);
-app.use('/businesses', businessRoutes);
+// Protected areas
+app.use('/admin',     authMiddleware, requireAdmin,    adminRoutes);
+app.use('/dashboard', publicLimiter, authMiddleware, requireVerified, dashboardRoutes);
+app.use('/businesses', authMiddleware, businessRoutes);
 
+// Shopify integration (protect if it exposes sensitive actions)
+app.use('/shopify', authMiddleware, shopifyRoutes);
 
-app.use('/api', apiKeyMiddleware, chatRoutes);
+// API (API key first, then rate limit)
+app.use('/api', apiKeyMiddleware, limiter, chatRoutes);
 
-// Webhooks
-app.use('/webhook', webhookRoutes);
-app.use('/whatsapp', whatsappRoutes);
+// WhatsApp & Logs (relaxed/public limits as appropriate)
+app.use('/whatsapp', publicLimiter, whatsappRoutes);
+app.use(publicLimiter, logsRoutes);
 
-// Admin panel
-app.use('/admin', adminRoutes);
+// 404
+app.use((req, res) => res.status(404).json({ success: false, message: 'Not found' }));
 
-// Logs
-app.use(logsRoutes);
+// Error handler (last)
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  if (process.env.NODE_ENV !== 'production') console.error(err);
+  res.status(status).json({
+    success: false,
+    message: status === 500 ? 'Internal server error' : err.message,
+  });
+});
 
-// -------------------- SESSION --------------------
-app.use(session({
-  secret: 'moaawen_super_secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } 
-}));
+// -------------------- SESSION (optional; only if you really use it) --------------------
+// If you must keep sessions, prefer Redis store and secure cookies.
+// Otherwise, remove this whole block to reduce attack surface.
+if (process.env.SESSION_SECRET) {
+  const session = require('express-session');
+  const useSecureCookie = process.env.NODE_ENV === 'production';
+  app.use(require('express-session')({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,            // don't create sessions until needed
+    cookie: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: useSecureCookie,           // needs trust proxy to work on HTTPS behind proxy
+      maxAge: 1000 * 60 * 60 * 12,       // 12h
+    }
+  }));
+}
 
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 3000;

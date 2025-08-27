@@ -10,5 +10,8 @@ module.exports = (req, res, next) => {
     });
   }
 
+  // Set flag for rate limiter to identify valid API key
+  req.validApiKey = clientKey;
+  
   next();
 };
