@@ -27,7 +27,12 @@ const app = express();
 // --- Security & IP correctness ---
 app.disable('x-powered-by');
 app.set('trust proxy', 1);                 // behind 1 proxy (NGINX/Cloudflare/Render/etc.)
-app.use(helmet());                         // sensible security headers
+// global
+app.use(helmet({
+  // keep defaults, BUT allow cross-origin resources if your site serves a public widget
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // or set to false to disable header
+}));
+                         // sensible security headers
 
 // --- CORS Configuration ---
 const defaultOrigins = [
