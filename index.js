@@ -72,14 +72,41 @@ const corsOptions = {
   }
 };
 
-// --- Static & views with permissive CORS for widget files ---
-app.use('/public', cors(corsOptions.permissive), express.static(path.join(__dirname, 'public')));
+
+app.get(
+  '/widget.js',
+  // allow cross-origin embedding of this JS file
+  helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }),
+  // permissive CORS headers (not strictly required for <script>, but fine)
+  cors({
+    origin: true, credentials: false,
+    methods: ['GET', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-api-key', 'X-Requested-With', 'Accept', 'Origin'],
+    exposedHeaders: ['RateLimit-Limit','RateLimit-Remaining','RateLimit-Reset','Retry-After'],
+  }),
+  (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+    // good caching for CDN; tweak as you like
+    res.setHeader('Cache-Control', 'public, max-age=300, immutable');
+    // explicitly allow cross-origin (in case helmet isn’t applied)
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.sendFile(path.join(__dirname, 'public', 'widget.js'));
+  }
+);
+// permissive static for /public assets used by the widget (icons, CSS, etc.)
+app.use(
+  '/public',
+  cors({ origin: true, credentials: false }),
+  express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    },
+  })
+);
+
+// generic static (your app’s own assets) can stay as-is
 app.use(express.static(path.join(__dirname, 'public')));
-// Widget static files - also need permissive CORS
-app.get('/widget.js', cors(corsOptions.permissive), (req, res, next) => {
-  res.setHeader('Content-Type', 'application/javascript');
-  next();
-});
+
 
 // Apply default restrictive CORS
 app.use(cors(corsOptions.restrictive));
