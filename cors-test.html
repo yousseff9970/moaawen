@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test - Widget from Different Domain</title>
+</head>
+<body>
+    <h1>CORS Test for Moaawen Widget</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        const results = document.getElementById('test-results');
+        
+        // Test 1: Load widget.js file
+        function testWidgetFile() {
+            results.innerHTML += '<h3>Test 1: Loading widget.js file</h3>';
+            
+            fetch('https://moaawen.onrender.com/widget.js')
+                .then(response => {
+                    if (response.ok) {
+                        results.innerHTML += '<p>✅ Widget.js loaded successfully</p>';
+                        return response.text();
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                })
+                .then(text => {
+                    results.innerHTML += `<p>✅ Widget content received (${text.length} characters)</p>`;
+                })
+                .catch(error => {
+                    results.innerHTML += `<p>❌ Widget.js failed to load: ${error.message}</p>`;
+                });
+        }
+        
+        // Test 2: Test API endpoint
+        function testAPIEndpoint() {
+            results.innerHTML += '<h3>Test 2: Testing API endpoint</h3>';
+            
+            fetch('https://moaawen.onrender.com/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'test-key' // This will fail auth but should pass CORS
+                },
+                body: JSON.stringify({
+                    message: 'Test message',
+                    sessionId: 'test-session',
+                    domain: window.location.hostname
+                })
+            })
+            .then(response => {
+                results.innerHTML += `<p>✅ API endpoint responded with status: ${response.status}</p>`;
+                if (response.status === 429) {
+                    results.innerHTML += '<p>📝 Rate limited (expected)</p>';
+                } else if (response.status === 401) {
+                    results.innerHTML += '<p>📝 Unauthorized (expected - test API key)</p>';
+                } else if (response.status === 403) {
+                    results.innerHTML += '<p>📝 Forbidden (expected - test API key)</p>';
+                }
+                return response.json();
+            })
+            .then(data => {
+                results.innerHTML += `<p>📝 Response: ${JSON.stringify(data)}</p>`;
+            })
+            .catch(error => {
+                if (error.message.includes('CORS')) {
+                    results.innerHTML += `<p>❌ CORS error: ${error.message}</p>`;
+                } else {
+                    results.innerHTML += `<p>📝 API error (not CORS): ${error.message}</p>`;
+                }
+            });
+        }
+        
+        // Test 3: Check CORS headers
+        function testCORSHeaders() {
+            results.innerHTML += '<h3>Test 3: Checking CORS headers</h3>';
+            
+            fetch('https://moaawen.onrender.com/', {
+                method: 'OPTIONS'
+            })
+            .then(response => {
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                };
+                
+                results.innerHTML += '<p>✅ CORS headers received:</p>';
+                results.innerHTML += `<pre>${JSON.stringify(corsHeaders, null, 2)}</pre>`;
+            })
+            .catch(error => {
+                results.innerHTML += `<p>❌ Failed to check CORS headers: ${error.message}</p>`;
+            });
+        }
+        
+        // Run tests
+        setTimeout(() => {
+            testWidgetFile();
+            setTimeout(() => testAPIEndpoint(), 1000);
+            setTimeout(() => testCORSHeaders(), 2000);
+        }, 500);
+    </script>
+</body>
+</html>

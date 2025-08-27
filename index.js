@@ -29,13 +29,14 @@ app.disable('x-powered-by');
 app.set('trust proxy', 1);                 // behind 1 proxy (NGINX/Cloudflare/Render/etc.)
 app.use(helmet());                         // sensible security headers
 
-// --- CORS (restrict origins; supports cookies later if you move to HttpOnly) ---
+// --- CORS Configuration ---
 const defaultOrigins = [
   'https://moaawen.ai',
   'https://moaawen.netlify.app',
   'https://moaawen.onrender.com',
+  'http://localhost:5173',
   'http://localhost:3000',
-   'http://localhost:8080',
+  'http://localhost:8080',
 ];
 const envOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
@@ -43,23 +44,39 @@ const envOrigins = (process.env.CORS_ORIGINS || '')
   .filter(Boolean);
 const allowedOrigins = envOrigins.length ? envOrigins : defaultOrigins;
 
-app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin) return cb(null, true);   // allow Postman/cURL
-    return allowedOrigins.includes(origin) ? cb(null, true) : cb(new Error('CORS blocked'), false);
+// Flexible CORS for different route types
+const corsOptions = {
+  // Default restrictive CORS for admin/auth routes
+  restrictive: {
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);   // allow Postman/cURL
+      return allowedOrigins.includes(origin) ? cb(null, true) : cb(new Error('CORS blocked'), false);
+    },
+    credentials: true,
+    methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'X-Requested-With'],
   },
-  credentials: true,
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'X-Requested-With'],
-}));
-// The CORS middleware already handles OPTIONS preflight requests, no need for separate options handler
+  
+  // Permissive CORS for widget/API endpoints (protected by API keys)
+  permissive: {
+    origin: true, // Allow all origins
+    credentials: false, // No credentials needed for API key auth
+    methods: ['GET','POST','OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-api-key', 'X-Requested-With', 'Accept', 'Origin'],
+    exposedHeaders: ['RateLimit-Limit', 'RateLimit-Remaining', 'RateLimit-Reset', 'Retry-After'],
+  }
+};
+
+// Apply default restrictive CORS
+app.use(cors(corsOptions.restrictive));
 
 // --- Parsers ---
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));  // single JSON parser (drop bodyParser)
 app.use(cookieParser());
 
-// --- Static & views ---
+// --- Static & views with permissive CORS for widget files ---
+app.use('/public', cors(corsOptions.permissive), express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
@@ -93,8 +110,14 @@ app.use('/businesses', authMiddleware, businessRoutes);
 // Shopify integration (protect if it exposes sensitive actions)
 app.use('/shopify', authMiddleware, shopifyRoutes);
 
-// API (API key first, then rate limit)
-app.use('/api', apiKeyMiddleware, limiter, chatRoutes);
+// API (API key first, then rate limit) - Permissive CORS for widget usage
+app.use('/api', cors(corsOptions.permissive), apiKeyMiddleware, limiter, chatRoutes);
+
+// Widget static files - also need permissive CORS
+app.get('/widget.js', cors(corsOptions.permissive), (req, res, next) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  next();
+});
 
 // WhatsApp & Logs (relaxed/public limits as appropriate)
 app.use('/whatsapp', publicLimiter, whatsappRoutes);
