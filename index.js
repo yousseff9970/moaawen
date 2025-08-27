@@ -67,6 +67,15 @@ const corsOptions = {
   }
 };
 
+// --- Static & views with permissive CORS for widget files ---
+app.use('/public', cors(corsOptions.permissive), express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+// Widget static files - also need permissive CORS
+app.get('/widget.js', cors(corsOptions.permissive), (req, res, next) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  next();
+});
+
 // Apply default restrictive CORS
 app.use(cors(corsOptions.restrictive));
 
@@ -75,9 +84,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));  // single JSON parser (drop bodyParser)
 app.use(cookieParser());
 
-// --- Static & views with permissive CORS for widget files ---
-app.use('/public', cors(corsOptions.permissive), express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.set('view engine', 'ejs');
 
 // -------------------- ROUTES --------------------
@@ -113,11 +120,6 @@ app.use('/shopify', authMiddleware, shopifyRoutes);
 // API (API key first, then rate limit) - Permissive CORS for widget usage
 app.use('/api', cors(corsOptions.permissive), apiKeyMiddleware, limiter, chatRoutes);
 
-// Widget static files - also need permissive CORS
-app.get('/widget.js', cors(corsOptions.permissive), (req, res, next) => {
-  res.setHeader('Content-Type', 'application/javascript');
-  next();
-});
 
 // WhatsApp & Logs (relaxed/public limits as appropriate)
 app.use('/whatsapp', publicLimiter, whatsappRoutes);
