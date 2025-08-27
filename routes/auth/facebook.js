@@ -322,7 +322,7 @@ router.get('/callback', async (req, res) => {
                 <h2>✅ Facebook Connected Successfully!</h2>
                 <p>Redirecting back to dashboard...</p>
               </div>
-              <script nonce="${req.nonce}">
+              <script>
                 console.log('Facebook auth success - attempting to close popup');
                 
                 function closePopupAndRedirect() {
@@ -415,7 +415,7 @@ router.get('/callback', async (req, res) => {
                 <h2>❌ Connection Error</h2>
                 <p>Failed to connect Instagram accounts. Redirecting back...</p>
               </div>
-              <script nonce="${req.nonce}">
+              <script>
                 console.log('Facebook auth error - attempting to close popup');
                 
                 function closePopupAndRedirect() {
@@ -603,7 +603,7 @@ router.get('/callback', async (req, res) => {
               <h2>❌ Connection Failed</h2>
               <p>Failed to connect Facebook account. Closing window...</p>
             </div>
-            <script nonce="${req.nonce}">
+            <script>
               console.log('Facebook auth failed - attempting to close popup');
               
               function closePopupAndRedirect() {

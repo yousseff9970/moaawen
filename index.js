@@ -4,7 +4,6 @@ require('dotenv').config();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const helmet = require('helmet');
 
 // Middlewares
 const { limiter, authLimiter, publicLimiter } = require('./middlewares/rateLimit');
@@ -27,65 +26,6 @@ const app = express();
 // --- Security & IP correctness ---
 app.disable('x-powered-by');
 app.set('trust proxy', 1);                 // behind 1 proxy (NGINX/Cloudflare/Render/etc.)
-
-// Configure helmet with relaxed CSP for OAuth flows
-app.use((req, res, next) => {
-  // Generate a unique nonce for each request
-  req.nonce = require('crypto').randomBytes(16).toString('base64');
-  next();
-});
-
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow cross-origin resources for widget
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        (req, res) => `'nonce-${req.nonce}'`, // Dynamic nonce
-        "https://connect.facebook.net", // Facebook SDK
-        "https://www.facebook.com", // Facebook OAuth
-        "https://apis.google.com", // Google APIs
-        "https://accounts.google.com", // Google OAuth
-        "https://cdn.jsdelivr.net", // CDN resources
-      ],
-      styleSrc: [
-        "'self'",
-        "'unsafe-inline'", // Allow inline styles
-        "https://fonts.googleapis.com", // Google Fonts
-        "https://cdn.jsdelivr.net",
-      ],
-      fontSrc: [
-        "'self'",
-        "https://fonts.gstatic.com", // Google Fonts
-        "https://cdn.jsdelivr.net",
-      ],
-      imgSrc: [
-        "'self'",
-        "data:", // Data URLs for images
-        "https:", // Allow HTTPS images
-        "http:", // Allow HTTP images (for development)
-      ],
-      connectSrc: [
-        "'self'",
-        "https://api.facebook.com", // Facebook API
-        "https://graph.facebook.com", // Facebook Graph API
-        "https://www.facebook.com", // Facebook OAuth
-        "https://accounts.google.com", // Google OAuth
-        "https://oauth2.googleapis.com", // Google OAuth
-        "https://moaawen.onrender.com", // Your API
-        "wss:", // WebSocket connections
-      ],
-      frameSrc: [
-        "'self'",
-        "https://www.facebook.com", // Facebook OAuth dialogs
-        "https://accounts.google.com", // Google OAuth
-        "https://www.google.com", // Google OAuth
-      ],
-      formAction: ["'self'"],
-    },
-  },
-}));
 
 // --- CORS Configuration ---
 const defaultOrigins = [
@@ -128,8 +68,7 @@ const corsOptions = {
 
 app.get(
   '/widget.js',
-  // allow cross-origin embedding of this JS file
-  helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }),
+
   // permissive CORS headers (not strictly required for <script>, but fine)
   cors({
     origin: true, credentials: false,
