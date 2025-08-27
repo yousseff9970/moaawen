@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { MongoClient, ObjectId } = require('mongodb');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { authMiddleware, requireVerified } = require('../middlewares/authMiddleware');
 
 const client = new MongoClient(process.env.MONGO_URI);
 

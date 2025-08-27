@@ -9,7 +9,7 @@ const cors = require('cors');
 // Middlewares
 const rateLimiter = require('./middlewares/rateLimit');
 const apiKeyMiddleware = require('./middlewares/apiKey');
-const authMiddleware = require('./middlewares/authMiddleware');
+const { authMiddleware, requireVerified, requireAdmin } = require('./middlewares/authMiddleware');
 
 // Routes
 const authRoutes = require('./routes/auth');

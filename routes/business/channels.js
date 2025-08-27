@@ -1,9 +1,10 @@
 // routes/business/channels.js
-const { express, MongoClient, ObjectId, authMiddleware, client } = require('./shared');
+const { express, MongoClient, ObjectId, authMiddleware, requireVerified, client } = require('./shared');
 const router = express.Router();
 
 // Connect/Update website channel
-router.put('/:id/channels/website', authMiddleware, async (req, res) => {
+// Connect website widget - requires verification
+router.put('/:id/channels/website', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Connecting website channel for business:', req.params.id, 'by user:', req.user.userId);
     
@@ -105,7 +106,8 @@ router.put('/:id/channels/website', authMiddleware, async (req, res) => {
 });
 
 // Connect/Update Facebook account
-router.put('/:id/channels/facebook', authMiddleware, async (req, res) => {
+// Connect Facebook - requires verification
+router.put('/:id/channels/facebook', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Connecting Facebook account for business:', req.params.id, 'by user:', req.user.userId);
     
@@ -182,7 +184,8 @@ router.put('/:id/channels/facebook', authMiddleware, async (req, res) => {
 });
 
 // Connect/Update Instagram channel
-router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
+// Connect Instagram - requires verification
+router.put('/:id/channels/instagram', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Connecting Instagram channel for business:', req.params.id, 'by user:', req.user.userId);
     
@@ -280,7 +283,8 @@ router.put('/:id/channels/instagram', authMiddleware, async (req, res) => {
 });
 
 // Connect/Update Messenger channel
-router.put('/:id/channels/messenger', authMiddleware, async (req, res) => {
+// Connect Messenger - requires verification
+router.put('/:id/channels/messenger', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Connecting Messenger channel for business:', req.params.id, 'by user:', req.user.userId);
     
@@ -370,7 +374,8 @@ router.put('/:id/channels/messenger', authMiddleware, async (req, res) => {
 });
 
 // Connect/Update WhatsApp channel
-router.put('/:id/channels/whatsapp', authMiddleware, async (req, res) => {
+// Connect WhatsApp - requires verification
+router.put('/:id/channels/whatsapp', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Connecting WhatsApp channel for business:', req.params.id, 'by user:', req.user.userId);
     
@@ -457,7 +462,8 @@ router.put('/:id/channels/whatsapp', authMiddleware, async (req, res) => {
 });
 
 // Connect/Update TikTok channel
-router.put('/:id/channels/tiktok', authMiddleware, async (req, res) => {
+// Connect TikTok - requires verification
+router.put('/:id/channels/tiktok', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Connecting TikTok channel for business:', req.params.id, 'by user:', req.user.userId);
     
@@ -546,7 +552,8 @@ router.put('/:id/channels/tiktok', authMiddleware, async (req, res) => {
 });
 
 // Disconnect channel
-router.delete('/:id/channels/:channelType', authMiddleware, async (req, res) => {
+// Disconnect channel - requires verification
+router.delete('/:id/channels/:channelType', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Disconnecting channel:', req.params.channelType, 'for business:', req.params.id, 'by user:', req.user.userId);
     

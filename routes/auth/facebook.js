@@ -445,7 +445,11 @@ router.get('/callback', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { 
+        userId: user._id, 
+        email: user.email,
+        verified: user.isEmailVerified !== false // Social auth users are considered verified by default
+      },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -720,7 +724,11 @@ router.post('/callback', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { 
+        userId: user._id, 
+        email: user.email,
+        verified: user.isEmailVerified !== false // Social auth users are considered verified by default
+      },
       JWT_SECRET,
       { expiresIn: '7d' }
     );

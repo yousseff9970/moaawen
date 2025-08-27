@@ -144,7 +144,11 @@ router.post('/login', async (req, res) => {
 
     // Generate JWT token (expires in 7 days)
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { 
+        userId: user._id, 
+        email: user.email,
+        verified: user.isEmailVerified || false
+      },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -211,7 +215,11 @@ router.post('/verify-email', async (req, res) => {
 
     // Generate JWT token for auto-login after verification
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { 
+        userId: user._id, 
+        email: user.email,
+        verified: true // User just verified their email
+      },
       JWT_SECRET,
       { expiresIn: '7d' }
     );

@@ -1,5 +1,5 @@
 // routes/business/crud.js
-const { express, MongoClient, ObjectId, authMiddleware, planSettings, client } = require('./shared');
+const { express, MongoClient, ObjectId, authMiddleware, requireVerified, planSettings, client } = require('./shared');
 const router = express.Router();
 
 // Test endpoint
@@ -176,8 +176,8 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// Create a new business
-router.post('/', authMiddleware, async (req, res) => {
+// Create a new business - requires verified email
+router.post('/', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Creating new business for user:', req.user.userId);
     console.log('Business data:', req.body);
@@ -270,7 +270,8 @@ router.post('/', authMiddleware, async (req, res) => {
 });
 
 // Update business details
-router.put('/:id', authMiddleware, async (req, res) => {
+// Update business details - requires verified email
+router.put('/:id', authMiddleware, requireVerified, async (req, res) => {
   try {
     console.log('Updating business with ID:', req.params.id, 'for user:', req.user.userId); // Debug log
     console.log('Update data:', req.body); // Debug log
