@@ -80,8 +80,8 @@ const publicKey = (req) => {
 
 // ---- Memory-only limiters ----
 const limiter = rateLimit({
-  windowMs: 120 * 1000,  // 1 minute
-  max: 3,              // 60 req/min
+  windowMs: 60 * 1000,  // 1 minute
+  max: 100,              // 100 req/min
   keyGenerator: generalKey,
   standardHeaders: true, // adds RateLimit-* and Retry-After
   legacyHeaders: false,
@@ -98,8 +98,8 @@ const limiter = rateLimit({
 });
 
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 3,                  // stricter for auth
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 20,                  // stricter for auth
   keyGenerator: authKey,
   standardHeaders: true,
   legacyHeaders: false,
@@ -114,8 +114,8 @@ const authLimiter = rateLimit({
 });
 
 const publicLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 3,               // More reasonable for public endpoints
+  windowMs: 5 * 60 * 1000,
+  max: 800,               // More reasonable for public endpoints
   keyGenerator: publicKey,
   standardHeaders: true,
   legacyHeaders: false,

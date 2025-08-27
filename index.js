@@ -33,7 +33,7 @@ app.use(helmet());                         // sensible security headers
 const defaultOrigins = [
   'https://moaawen.ai',
   'https://moaawen.netlify.app',
-  'http://localhost:5173',
+  'https://moaawen.onrender.com',
   'http://localhost:3000',
    'http://localhost:8080',
 ];
