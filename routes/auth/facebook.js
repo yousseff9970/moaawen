@@ -296,28 +296,90 @@ router.get('/callback', async (req, res) => {
         const frontendUrl = getFrontendUrl();
         res.send(`
           <html>
-            <script nonce="${req.nonce}">
-              if (window.opener) {
-                window.opener.postMessage({
-                  type: 'FACEBOOK_AUTH_SUCCESS',
-                  data: {
-                    account_id: '${facebookId}',
-                    name: '${name}',
-                    email: '${email}',
-                    pages_count: ${pages.length},
-                    instagram_accounts_count: ${connectedInstagramAccounts.length},
-                    instagram_accounts: ${JSON.stringify(connectedInstagramAccounts.map(acc => ({
-                      id: acc.instagram_business_account_id,
-                      username: acc.username,
-                      page_name: acc.page_name
-                    })))}
+            <head>
+              <title>Facebook Connection Success</title>
+              <style>
+                body { 
+                  font-family: Arial, sans-serif; 
+                  display: flex; 
+                  justify-content: center; 
+                  align-items: center; 
+                  height: 100vh; 
+                  margin: 0; 
+                  background: #f0f2f5;
+                }
+                .container { 
+                  text-align: center; 
+                  background: white; 
+                  padding: 2rem; 
+                  border-radius: 8px; 
+                  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <h2>✅ Facebook Connected Successfully!</h2>
+                <p>Redirecting back to dashboard...</p>
+              </div>
+              <script nonce="${req.nonce}">
+                console.log('Facebook auth success - attempting to close popup');
+                
+                function closePopupAndRedirect() {
+                  if (window.opener && !window.opener.closed) {
+                    console.log('Posting message to parent window');
+                    try {
+                      window.opener.postMessage({
+                        type: 'FACEBOOK_AUTH_SUCCESS',
+                        data: {
+                          account_id: '${facebookId}',
+                          name: '${name}',
+                          email: '${email}',
+                          pages_count: ${pages.length},
+                          instagram_accounts_count: ${connectedInstagramAccounts.length},
+                          instagram_accounts: ${JSON.stringify(connectedInstagramAccounts.map(acc => ({
+                            id: acc.instagram_business_account_id,
+                            username: acc.username,
+                            page_name: acc.page_name
+                          })))}
+                        }
+                      }, '*');
+                      
+                      // Try to close after a short delay
+                      setTimeout(() => {
+                        console.log('Attempting to close popup window');
+                        window.close();
+                        
+                        // Fallback: if window didn't close, redirect parent
+                        setTimeout(() => {
+                          if (!window.closed) {
+                            console.log('Window close failed, redirecting parent');
+                            window.opener.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true&igAccounts=${connectedInstagramAccounts.length}';
+                          }
+                        }, 500);
+                      }, 100);
+                      
+                    } catch (err) {
+                      console.error('Error posting message:', err);
+                      // Fallback to direct redirect
+                      window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true&igAccounts=${connectedInstagramAccounts.length}';
+                    }
+                  } else {
+                    console.log('No opener window, redirecting directly');
+                    window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true&igAccounts=${connectedInstagramAccounts.length}';
                   }
-                }, '*');
-                window.close();
-              } else {
-                window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true&igAccounts=${connectedInstagramAccounts.length}';
-              }
-            </script>
+                }
+                
+                // Execute immediately and with a fallback timeout
+                closePopupAndRedirect();
+                
+                // Fallback: redirect after 3 seconds if nothing else worked
+                setTimeout(() => {
+                  console.log('Fallback redirect after 3 seconds');
+                  window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbConnected=true&igAccounts=${connectedInstagramAccounts.length}';
+                }, 3000);
+              </script>
+            </body>
           </html>
         `);
 
@@ -327,17 +389,67 @@ router.get('/callback', async (req, res) => {
         const frontendUrl = getFrontendUrl();
         res.send(`
           <html>
-            <script nonce="${req.nonce}">
-              if (window.opener) {
-                window.opener.postMessage({
-                  type: 'FACEBOOK_AUTH_ERROR',
-                  error: 'Failed to fetch Instagram accounts: ${connectionError.message}'
-                }, '*');
-                window.close();
-              } else {
-                window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbError=${encodeURIComponent(connectionError.message)}';
-              }
-            </script>
+            <head>
+              <title>Facebook Connection Error</title>
+              <style>
+                body { 
+                  font-family: Arial, sans-serif; 
+                  display: flex; 
+                  justify-content: center; 
+                  align-items: center; 
+                  height: 100vh; 
+                  margin: 0; 
+                  background: #f0f2f5;
+                }
+                .container { 
+                  text-align: center; 
+                  background: white; 
+                  padding: 2rem; 
+                  border-radius: 8px; 
+                  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <h2>❌ Connection Error</h2>
+                <p>Failed to connect Instagram accounts. Redirecting back...</p>
+              </div>
+              <script nonce="${req.nonce}">
+                console.log('Facebook auth error - attempting to close popup');
+                
+                function closePopupAndRedirect() {
+                  if (window.opener && !window.opener.closed) {
+                    try {
+                      window.opener.postMessage({
+                        type: 'FACEBOOK_AUTH_ERROR',
+                        error: 'Failed to fetch Instagram accounts: ${connectionError.message}'
+                      }, '*');
+                      
+                      setTimeout(() => {
+                        window.close();
+                        setTimeout(() => {
+                          if (!window.closed) {
+                            window.opener.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbError=${encodeURIComponent(connectionError.message)}';
+                          }
+                        }, 500);
+                      }, 100);
+                      
+                    } catch (err) {
+                      window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbError=${encodeURIComponent(connectionError.message)}';
+                    }
+                  } else {
+                    window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbError=${encodeURIComponent(connectionError.message)}';
+                  }
+                }
+                
+                closePopupAndRedirect();
+                
+                setTimeout(() => {
+                  window.location.href = '${frontendUrl}/dashboard/businesses/${businessId}/settings?tab=channels&fbError=${encodeURIComponent(connectionError.message)}';
+                }, 3000);
+              </script>
+            </body>
           </html>
         `);
       }
@@ -465,18 +577,69 @@ router.get('/callback', async (req, res) => {
       // This was a business connection request, send popup response
       res.send(`
         <html>
-          <script nonce="${req.nonce}">
-            if (window.opener) {
-              window.opener.postMessage({
-                type: 'FACEBOOK_AUTH_ERROR',
-                error: 'Failed to connect Facebook account'
-              }, '*');
-              window.close();
-            } else {
-              alert('Failed to connect Facebook account');
-              window.history.back();
-            }
-          </script>
+          <head>
+            <title>Facebook Connection Failed</title>
+            <style>
+              body { 
+                font-family: Arial, sans-serif; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                height: 100vh; 
+                margin: 0; 
+                background: #f0f2f5;
+              }
+              .container { 
+                text-align: center; 
+                background: white; 
+                padding: 2rem; 
+                border-radius: 8px; 
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h2>❌ Connection Failed</h2>
+              <p>Failed to connect Facebook account. Closing window...</p>
+            </div>
+            <script nonce="${req.nonce}">
+              console.log('Facebook auth failed - attempting to close popup');
+              
+              function closePopupAndRedirect() {
+                if (window.opener && !window.opener.closed) {
+                  try {
+                    window.opener.postMessage({
+                      type: 'FACEBOOK_AUTH_ERROR',
+                      error: 'Failed to connect Facebook account'
+                    }, '*');
+                    
+                    setTimeout(() => {
+                      window.close();
+                      setTimeout(() => {
+                        if (!window.closed) {
+                          window.opener.location.href = window.opener.location.href;
+                        }
+                      }, 500);
+                    }, 100);
+                    
+                  } catch (err) {
+                    alert('Failed to connect Facebook account');
+                    window.history.back();
+                  }
+                } else {
+                  alert('Failed to connect Facebook account');
+                  window.history.back();
+                }
+              }
+              
+              closePopupAndRedirect();
+              
+              setTimeout(() => {
+                window.history.back();
+              }, 3000);
+            </script>
+          </body>
         </html>
       `);
     } else {
