@@ -117,7 +117,13 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     console.log(`Product database built for business ${business.name}:`);
     console.log(`Number of products: ${productDatabase.length}`);
     if (productDatabase.length > 0) {
-      console.log(`Sample product IDs:`, productDatabase.slice(0, 3).map(p => ({ id: p.id, title: p.title })));
+      console.log(`Sample product structure:`);
+      productDatabase.slice(0, 2).forEach(p => {
+        console.log(`  Product ID: ${p.id} | Title: ${p.title}`);
+        p.variants.slice(0, 2).forEach(v => {
+          console.log(`    Variant ID: ${v.id} | Name: ${v.name} | Price: $${v.price}`);
+        });
+      });
     }
     
     // Determine platform from metadata
@@ -284,11 +290,15 @@ Detect genuine buying interest through phrases like:
 **5. AI ORDER ACTIONS FORMAT:**
 When you need to perform order actions, use these specific action commands at the end of your response:
 
-**CRITICAL: USE ONLY REAL PRODUCT AND VARIANT IDs FROM THE DATABASE ABOVE**
+**CRITICAL: UNDERSTAND PRODUCT vs VARIANT IDs**
+- Each product has a main PRODUCT_ID (e.g., "8057184747709")  
+- Each product has multiple VARIANT_IDs (e.g., "45292206129341", "45292206129342")
+- NEVER use the same ID for both productId and variantId
+- ALWAYS use: ADD_PRODUCT: PRODUCT_ID, VARIANT_ID, quantity
 
 **Available Action Commands:**
 - ADD_PRODUCT: productId, variantId, quantity
-- UPDATE_INFO: name="value", phone="value", address="value"
+- UPDATE_INFO: name="value", phone="value", address="value"  
 - CONFIRM_ORDER: true
 - CANCEL_ORDER: true
 
@@ -299,6 +309,17 @@ When you need to perform order actions, use these specific action commands at th
 - One action per line within the action block
 - Actions are executed automatically after your response
 
+**EXAMPLE - CORRECT FORMAT:**
+[AI_ORDER_ACTIONS]
+ADD_PRODUCT: 8057184747709, 45292206129341, 2
+UPDATE_INFO: name="John", phone="03123456"
+[/AI_ORDER_ACTIONS]
+
+**WRONG - DO NOT DO THIS:**
+[AI_ORDER_ACTIONS]
+ADD_PRODUCT: 8057184747709, 8057184747709, 2  ← WRONG: Same ID used twice
+[/AI_ORDER_ACTIONS]
+
 **6. CONVERSATION EXAMPLES:**
 
 Customer: "What colors do you have for this shirt?"
@@ -307,8 +328,10 @@ AI: "Great question! 😊 This shirt comes in several beautiful colors - we have
 Customer: "بدي اشتري القميص الأحمر"
 AI: "أكيد! 😊 القميص الأحمر خيار ممتاز. بأي مقاس بدك ياه؟ عنا S, M, L, XL"
 [AI_ORDER_ACTIONS]
-ADD_PRODUCT: {use_actual_product_id_from_database}, {use_actual_variant_id_from_database}, 1
+ADD_PRODUCT: {product_id_from_database}, {variant_id_from_database}, 1
 [/AI_ORDER_ACTIONS]
+
+**Remember: Product ID ≠ Variant ID. Always use different IDs.**
 
 Customer: "My name is John, phone 03-123-456"
 AI: "Perfect John! 😊 I have your contact details. Just need your delivery address to complete the order."
@@ -474,6 +497,28 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
         if (line.startsWith('ADD_PRODUCT:')) {
           const params = line.replace('ADD_PRODUCT:', '').trim();
           const [productId, variantId, quantity] = params.split(',').map(p => p.trim());
+          
+          console.log(`Processing ADD_PRODUCT: productId=${productId}, variantId=${variantId}, quantity=${quantity}`);
+          
+          // Check if AI used the same ID for both product and variant (common error)
+          if (productId === variantId) {
+            console.log(`AI used same ID for product and variant (${productId}) - attempting to fix...`);
+            
+            // Find the product and use its first available variant
+            const foundProduct = productDatabase.find(p => p.id === productId);
+            if (foundProduct && foundProduct.variants.length > 0) {
+              const firstVariant = foundProduct.variants.find(v => v.inStock !== false) || foundProduct.variants[0];
+              console.log(`Auto-correcting: Using variant ${firstVariant.id} for product ${productId}`);
+              
+              try {
+                await addItemToOrder(senderId, businessId, productId, firstVariant.id, parseInt(quantity) || 1);
+                console.log(`Successfully added corrected product: ${foundProduct.title} - ${firstVariant.name}`);
+                continue;
+              } catch (error) {
+                console.error(`Error adding corrected product:`, error);
+              }
+            }
+          }
           
           // Validate IDs exist in product database
           const foundProduct = productDatabase.find(p => p.id === productId);
