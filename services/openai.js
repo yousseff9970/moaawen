@@ -450,6 +450,13 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
     }
 
     console.log('🤖 Processing AI Order Actions for:', senderId);
+    console.log('📋 Available Products in Database:');
+    productDatabase.forEach(p => {
+      console.log(`  - Product ID: ${p.id}, Title: "${p.title}"`);
+      p.variants.forEach(v => {
+        console.log(`    - Variant ID: ${v.id}, Name: "${v.name}"`);
+      });
+    });
     
     // Extract action commands from AI response
     const actionMatch = aiResponse.match(/\[AI_ORDER_ACTIONS\](.*?)\[\/AI_ORDER_ACTIONS\]/s);
@@ -469,6 +476,43 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
           const [productId, variantId, quantity] = params.split(',').map(p => p.trim());
           
           console.log(`🔍 Processing ADD_PRODUCT:`, { productId, variantId, quantity });
+          
+          // Validate IDs exist in product database
+          const foundProduct = productDatabase.find(p => p.id === productId);
+          if (!foundProduct) {
+            console.error(`❌ AI sent invalid product ID: ${productId}`);
+            console.log('🔄 Attempting fuzzy product matching...');
+            
+            // Try to find product by title matching
+            const productMatch = findProductByUserMessage(userMessage, productDatabase);
+            if (productMatch) {
+              console.log(`✅ Found alternative: ${productMatch.productId} -> ${productMatch.variantId}`);
+              try {
+                await addItemToOrder(senderId, businessId, productMatch.productId, productMatch.variantId, parseInt(quantity) || 1);
+                console.log(`✅ Successfully added fallback product`);
+              } catch (error) {
+                console.error(`❌ Error adding fallback product:`, error);
+              }
+            }
+            continue;
+          }
+          
+          const foundVariant = foundProduct.variants.find(v => v.id === variantId);
+          if (!foundVariant) {
+            console.error(`❌ AI sent invalid variant ID: ${variantId} for product: ${productId}`);
+            // Use first available variant as fallback
+            const fallbackVariant = foundProduct.variants[0];
+            if (fallbackVariant) {
+              console.log(`🔄 Using fallback variant: ${fallbackVariant.id}`);
+              try {
+                await addItemToOrder(senderId, businessId, productId, fallbackVariant.id, parseInt(quantity) || 1);
+                console.log(`✅ Successfully added product with fallback variant`);
+              } catch (error) {
+                console.error(`❌ Error adding product with fallback variant:`, error);
+              }
+            }
+            continue;
+          }
           
           try {
             await addItemToOrder(senderId, businessId, productId, variantId, parseInt(quantity) || 1);
@@ -727,6 +771,112 @@ function parseCustomerInfo(infoData) {
 }
 
 /**
+ * Shared product matching logic
+ */
+function matchProductFromMessage(userMessage, productDatabase) {
+  try {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Define patterns for matching
+    const sizePatterns = {
+      's': ['small', 's ', ' s', 'صغير'],
+      'm': ['medium', 'm ', ' m', 'متوسط'],
+      'l': ['large', 'l ', ' l', 'كبير'],
+      'xl': ['xl', 'extra large'],
+      'xxl': ['xxl', '2xl']
+    };
+    
+    const colorPatterns = {
+      'pink': ['pink', 'وردي'],
+      'blue': ['blue', 'أزرق'],
+      'red': ['red', 'أحمر'],
+      'green': ['green', 'أخضر'],
+      'black': ['black', 'أسود'],
+      'white': ['white', 'أبيض']
+    };
+    
+    // Try to match products by title
+    for (const product of productDatabase) {
+      const productTitle = product.title.toLowerCase();
+      
+      // Check if product title is mentioned
+      if (lowerMessage.includes(productTitle)) {
+        console.log(`📦 Found product match: ${product.title}`);
+        
+        // Try to find specific variant based on options mentioned
+        let selectedVariant = null;
+        let bestMatch = 0;
+        
+        // Try to match variants based on options
+        for (const variant of product.variants) {
+          if (variant.inStock === false) continue; // Skip out of stock
+          
+          let matches = 0;
+          
+          // Check option1 (usually color)
+          if (variant.option1) {
+            const option1Lower = variant.option1.toLowerCase();
+            for (const [color, patterns] of Object.entries(colorPatterns)) {
+              if (patterns.some(pattern => lowerMessage.includes(pattern)) && 
+                  option1Lower.includes(color)) {
+                matches++;
+                break;
+              }
+            }
+          }
+          
+          // Check option2 (usually size)
+          if (variant.option2) {
+            const option2Lower = variant.option2.toLowerCase();
+            for (const [size, patterns] of Object.entries(sizePatterns)) {
+              if (patterns.some(pattern => lowerMessage.includes(pattern)) && 
+                  option2Lower.includes(size)) {
+                matches++;
+                break;
+              }
+            }
+          }
+          
+          // If this variant has more matches, select it
+          if (matches > bestMatch) {
+            bestMatch = matches;
+            selectedVariant = variant;
+          }
+        }
+        
+        // If no specific variant found, use first available
+        if (!selectedVariant) {
+          selectedVariant = product.variants.find(v => v.inStock !== false);
+        }
+        
+        if (selectedVariant) {
+          return {
+            productId: product.id,
+            variantId: selectedVariant.id,
+            productTitle: product.title,
+            variantName: selectedVariant.name
+          };
+        }
+        
+        break; // Only process first product match
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error in matchProductFromMessage:', error);
+    return null;
+  }
+}
+
+/**
+ * Find product by analyzing user message
+ */
+function findProductByUserMessage(userMessage, productDatabase) {
+  return matchProductFromMessage(userMessage, productDatabase);
+}
+
+/**
  * Fallback product matching from user message
  */
 async function fallbackProductMatching(senderId, businessId, userMessage, productDatabase) {
@@ -739,98 +889,16 @@ async function fallbackProductMatching(senderId, businessId, userMessage, produc
       return; // No buying intent detected
     }
     
-    const lowerMessage = userMessage.toLowerCase();
+    // Use the shared product matching logic
+    const productMatch = matchProductFromMessage(userMessage, productDatabase);
     
-    // Try to match products by title
-    for (const product of productDatabase) {
-      const productTitle = product.title.toLowerCase();
-      
-      // Check if product title is mentioned
-      if (lowerMessage.includes(productTitle)) {
-        console.log(`📦 Found product match: ${product.title}`);
-        
-        // Try to find specific variant based on options mentioned
-        let selectedVariant = null;
-        
-        // Look for size mentions
-        const sizePatterns = {
-          'small': ['s', 'small', 'صغير'],
-          'medium': ['m', 'medium', 'متوسط'],
-          'large': ['l', 'large', 'كبير'],
-          'xl': ['xl', 'extra large'],
-          'xxl': ['xxl', '2xl']
-        };
-        
-        // Look for color mentions
-        const colorPatterns = {
-          'pink': ['pink', 'وردي'],
-          'blue': ['blue', 'أزرق'],
-          'red': ['red', 'أحمر'],
-          'green': ['green', 'أخضر'],
-          'black': ['black', 'أسود'],
-          'white': ['white', 'أبيض']
-        };
-        
-        // Try to match variants based on options
-        for (const variant of product.variants) {
-          if (variant.inStock === false) continue; // Skip out of stock
-          
-          let matches = 0;
-          let totalOptions = 0;
-          
-          // Check option1 (usually color)
-          if (variant.option1) {
-            totalOptions++;
-            const option1Lower = variant.option1.toLowerCase();
-            
-            // Check color patterns
-            for (const [color, patterns] of Object.entries(colorPatterns)) {
-              if (patterns.some(pattern => lowerMessage.includes(pattern)) && 
-                  option1Lower.includes(color)) {
-                matches++;
-                break;
-              }
-            }
-          }
-          
-          // Check option2 (usually size)
-          if (variant.option2) {
-            totalOptions++;
-            const option2Lower = variant.option2.toLowerCase();
-            
-            // Check size patterns
-            for (const [size, patterns] of Object.entries(sizePatterns)) {
-              if (patterns.some(pattern => lowerMessage.includes(pattern)) && 
-                  option2Lower.includes(size)) {
-                matches++;
-                break;
-              }
-            }
-          }
-          
-          // If we have some matches or no specific options mentioned, select this variant
-          if (matches > 0 || totalOptions === 0) {
-            selectedVariant = variant;
-            break;
-          }
-        }
-        
-        // If no specific variant found, use first available
-        if (!selectedVariant) {
-          selectedVariant = product.variants.find(v => v.inStock !== false);
-        }
-        
-        if (selectedVariant) {
-          try {
-            console.log(`🎯 Fallback adding: Product ${product.id}, Variant ${selectedVariant.id}`);
-            await addItemToOrder(senderId, businessId, product.id, selectedVariant.id, 1);
-            console.log(`✅ Fallback successfully added: ${product.title} - ${selectedVariant.name || 'Standard'}`);
-          } catch (error) {
-            console.error(`❌ Fallback error adding product:`, error);
-          }
-        }
-        
-        break; // Only process first product match
+    if (productMatch) {
+      try {
+        console.log(`🎯 Fallback adding: Product ${productMatch.productId}, Variant ${productMatch.variantId}`);
+        await addItemToOrder(senderId, businessId, productMatch.productId, productMatch.variantId, 1);
+        console.log(`✅ Fallback successfully added: ${productMatch.productTitle} - ${productMatch.variantName}`);
+      } catch (error) {
+        console.error(`❌ Fallback error adding product:`, error);
       }
     }
     

@@ -68,12 +68,7 @@ async function getActiveOrder(customerId, businessId, platform) {
  */
 async function addItemToOrder(customerId, businessId, productId, variantId, quantity = 1) {
   try {
-    console.log('🔍 addItemToOrder Debug:');
-    console.log('CustomerId:', customerId);
-    console.log('BusinessId:', businessId);
-    console.log('ProductId:', productId);
-    console.log('VariantId:', variantId);
-    console.log('Quantity:', quantity);
+    console.log('🔍 addItemToOrder:', { customerId, businessId, productId, variantId, quantity });
     
     const order = await getActiveOrder(customerId, businessId, 'whatsapp'); // Default platform
     
@@ -89,25 +84,22 @@ async function addItemToOrder(customerId, businessId, productId, variantId, quan
       throw new Error('Business not found');
     }
     
-    console.log('📦 Available products in business:');
-    business.products.forEach(p => {
-      console.log(`- Product ID: ${p.id}, Title: ${p.title}`);
-      p.variants.forEach(v => {
-        console.log(`  - Variant ID: ${v.id}, Name: ${v.variantName || v.option1 + ' / ' + v.option2}`);
-      });
+    // Find product and variant (handle both string and number IDs)
+    const product = business.products.find(p => {
+      const productIdMatch = String(p.id) === String(productId);
+      return productIdMatch;
     });
-    
-    // Find product and variant
-    const product = business.products.find(p => p.id === productId);
     if (!product) {
-      console.error(`❌ Product with ID ${productId} not found in business products`);
+      console.error(`❌ Product ${productId} not found. Available:`, business.products.map(p => ({ id: p.id, title: p.title })));
       throw new Error(`Product not found: ${productId}`);
     }
     
-    const variant = product.variants.find(v => v.id === variantId);
+    const variant = product.variants.find(v => {
+      const variantIdMatch = String(v.id) === String(variantId);
+      return variantIdMatch;
+    });
     if (!variant) {
-      console.error(`❌ Variant with ID ${variantId} not found in product ${productId}`);
-      console.log('Available variants:', product.variants.map(v => ({ id: v.id, name: v.variantName })));
+      console.error(`❌ Variant ${variantId} not found in product ${productId}. Available:`, product.variants.map(v => ({ id: v.id, name: v.variantName })));
       throw new Error(`Variant not found: ${variantId}`);
     }
     
@@ -221,10 +213,7 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
   try {
     const order = await getActiveOrder(customerId, businessId, 'whatsapp');
     
-    console.log('🔍 Updating customer info - Debug:');
-    console.log('Current customer:', order.customer);
-    console.log('New customer data:', customerData);
-    console.log('Current collected info:', order.orderFlow.collectedInfo);
+    console.log('🔍 Updating customer info:', Object.keys(customerData));
     
     // Update customer info
     const updateFields = {};
