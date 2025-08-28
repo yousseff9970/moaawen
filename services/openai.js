@@ -492,154 +492,182 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
  * AI-Powered Order Action Processor
  * Processes the AI response to extract and execute order actions
  */
+/**
+ * AI-Powered Order Action Processor (hardened)
+ * - Normalizes IDs (strings)
+ * - Robust action parsing
+ * - Smart repair when productId === variantId or variant invalid
+ * - Platform-agnostic confirmation
+ */
 async function processAIOrderActions(senderId, businessId, userMessage, aiResponse, productDatabase) {
   try {
-    // Skip if no products available
-    if (!productDatabase || productDatabase.length === 0) {
-      return;
-    }
-    
-    // Extract action commands from AI response
+    if (!Array.isArray(productDatabase) || productDatabase.length === 0) return;
+
+    // -------- helpers --------
+    const toId = (v) => String(v ?? '').trim().replace(/^"|"$/g, '');
+    const toQty = (v) => {
+      const m = String(v ?? '').match(/\d+/);
+      const n = m ? parseInt(m[0], 10) : 1;
+      return n > 0 ? n : 1;
+    };
+    const findProduct = (pid) => productDatabase.find(p => String(p.id) === String(pid));
+    const findVariant = (prod, vid) => prod?.variants.find(v => String(v.id) === String(vid));
+    const firstAvailableVariant = (prod) => prod?.variants?.find(v => v.inStock !== false) || prod?.variants?.[0];
+
     const actionMatch = aiResponse.match(/\[AI_ORDER_ACTIONS\](.*?)\[\/AI_ORDER_ACTIONS\]/s);
-    if (actionMatch) {
-      const actions = actionMatch[1].trim();
-      
-      // Process each action line
-      const actionLines = actions.split('\n').filter(line => line.trim());
-      
-      for (const actionLine of actionLines) {
-        const line = actionLine.trim();
-        
-        // Process ADD_PRODUCT actions
-        if (line.startsWith('ADD_PRODUCT:')) {
-          const params = line.replace('ADD_PRODUCT:', '').trim();
-          const [productId, variantId, quantity] = params.split(',').map(p => p.trim());
-          
-          console.log(`Processing ADD_PRODUCT: productId=${productId}, variantId=${variantId}, quantity=${quantity}`);
-          
-          // Check if AI used the same ID for both product and variant (common error)
-          if (productId === variantId) {
-            console.log(`AI used same ID for product and variant (${productId}) - attempting to fix...`);
-            
-            // Find the product and use its first available variant
-            const foundProduct = productDatabase.find(p => p.id === productId);
-            if (foundProduct && foundProduct.variants.length > 0) {
-              const firstVariant = foundProduct.variants.find(v => v.inStock !== false) || foundProduct.variants[0];
-              console.log(`Auto-correcting: Using variant ${firstVariant.id} for product ${productId}`);
-              
-              try {
-                await addItemToOrder(senderId, businessId, productId, firstVariant.id, parseInt(quantity) || 1);
-                console.log(`Successfully added corrected product: ${foundProduct.title} - ${firstVariant.name}`);
-                continue;
-              } catch (error) {
-                console.error(`Error adding corrected product:`, error);
-              }
-            }
-          }
-          
-          // Validate IDs exist in product database
-          const foundProduct = productDatabase.find(p => p.id === productId);
-          if (!foundProduct) {
-            console.error(`AI sent invalid product ID: ${productId}`);
-            console.error(`Available product IDs:`, productDatabase.map(p => p.id));
-            
-            // Try to find product by title matching
-            const productMatch = findProductByUserMessage(userMessage, productDatabase);
-            if (productMatch) {
-              console.log(`Found alternative product: ${productMatch.productId}`);
-              try {
-                await addItemToOrder(senderId, businessId, productMatch.productId, productMatch.variantId, parseInt(quantity) || 1);
-                console.log(`Successfully added fallback product: ${productMatch.productTitle}`);
-              } catch (error) {
-                console.error(`Error adding fallback product:`, error);
-              }
-            } else {
-              console.error(`No fallback product found for user message: "${userMessage}"`);
-            }
-            continue;
-          }
-          
-          const foundVariant = foundProduct.variants.find(v => v.id === variantId);
-          if (!foundVariant) {
-            console.error(`AI sent invalid variant ID: ${variantId} for product: ${productId}`);
-            // Use first available variant as fallback
-            const fallbackVariant = foundProduct.variants[0];
-            if (fallbackVariant) {
-              try {
-                await addItemToOrder(senderId, businessId, productId, fallbackVariant.id, parseInt(quantity) || 1);
-              } catch (error) {
-                console.error(`Error adding product with fallback variant:`, error);
-              }
-            }
-            continue;
-          }
-          
-          try {
-            await addItemToOrder(senderId, businessId, productId, variantId, parseInt(quantity) || 1);
-          } catch (error) {
-            console.error(`Error adding AI product to order:`, error);
-          }
-        }
-        
-        // Process UPDATE_INFO actions
-        else if (line.startsWith('UPDATE_INFO:')) {
-          const infoData = line.replace('UPDATE_INFO:', '').trim();
-          const customerInfo = parseCustomerInfo(infoData);
-          
-          if (customerInfo && Object.keys(customerInfo).length > 0) {
+ if (!actionMatch) {
+  // Try structured AI analysis first, then fall back to simple keyword matcher
+  await processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase)
+    .catch(e => console.error('AI analysis failed:', e));
+  await fallbackProductMatching(senderId, businessId, userMessage, productDatabase);
+  return;
+}
+
+
+    const actions = actionMatch[1].trim();
+    const actionLines = actions.split('\n').map(l => l.trim()).filter(Boolean);
+
+    for (const line of actionLines) {
+      // ------------- ADD_PRODUCT -------------
+      if (line.toUpperCase().startsWith('ADD_PRODUCT:')) {
+        // lenient parsing: allow quotes/spaces/extra commas
+        const raw = line.slice('ADD_PRODUCT:'.length).trim();
+        const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+        const rawPid = parts[0];
+        const rawVid = parts[1];
+        const rawQty = parts[2];
+
+        const productId = toId(rawPid);
+        const variantId = rawVid ? toId(rawVid) : '';
+        const quantity = toQty(rawQty);
+
+        console.log(`Processing ADD_PRODUCT: productId=${productId}, variantId=${variantId}, quantity=${quantity}`);
+
+        // product = variant mistake → auto-pick a valid variant
+        if (productId && variantId && productId === variantId) {
+          console.log(`AI used same ID for product and variant (${productId}) - attempting to fix...`);
+          const prod = findProduct(productId);
+          const chosen = firstAvailableVariant(prod);
+          if (prod && chosen) {
             try {
-              await updateCustomerInfo(senderId, businessId, customerInfo);
-            } catch (error) {
-              console.error(`Error updating AI customer info:`, error);
-            }
-          }
-        }
-        
-        // Process CONFIRM_ORDER actions
-        else if (line.startsWith('CONFIRM_ORDER:') && line.includes('true')) {
-          try {
-            // Check if order has items before confirming
-            const currentOrder = await getActiveOrder(senderId, businessId, 'whatsapp');
-            if (!currentOrder || currentOrder.items.length === 0) {
-              console.error(`Cannot confirm order: No items in cart`);
+              await addItemToOrder(senderId, businessId, String(prod.id), String(chosen.id), quantity);
+              console.log(`Auto-corrected with variant ${chosen.id} for product ${prod.id}`);
               continue;
+            } catch (e) {
+              console.error('Error adding corrected product:', e);
+              // fall through to normal flow
             }
-            
-            const result = await confirmOrder(senderId, businessId);
-            console.log(`Order confirmed successfully: ${result.orderId || 'N/A'}`);
-          } catch (error) {
-            console.error(`Error confirming AI order:`, error);
           }
         }
-        
-        // Process CANCEL_ORDER actions
-        else if (line.startsWith('CANCEL_ORDER:') && line.includes('true')) {
+
+        // validate product
+        const prod = findProduct(productId);
+        if (!prod) {
+          console.error(`AI sent invalid product ID: ${productId}`);
+          console.error('Available product IDs:', productDatabase.map(p => String(p.id)));
+
+          // try fallback by understanding the user message
+          const productMatch = findProductByUserMessage(userMessage, productDatabase);
+          if (productMatch) {
+            try {
+              await addItemToOrder(
+                senderId,
+                businessId,
+                String(productMatch.productId),
+                String(productMatch.variantId),
+                quantity
+              );
+              console.log(`Successfully added fallback product: ${productMatch.productTitle}`);
+            } catch (e) {
+              console.error('Error adding fallback product:', e);
+            }
+          } else {
+            console.error(`No fallback product found for user message: "${userMessage}"`);
+          }
+          continue;
+        }
+
+        // validate / infer variant
+        let variant = variantId ? findVariant(prod, variantId) : null;
+        if (!variant) {
+          console.error(`AI sent invalid/missing variant ID: ${variantId} for product: ${productId}`);
+          // 1) try to infer from message (size/color)
+          const inferred = matchProductFromMessage(userMessage, [prod]);
+          if (inferred && String(inferred.variantId)) {
+            variant = findVariant(prod, inferred.variantId);
+          }
+          // 2) otherwise first available
+          if (!variant) {
+            variant = firstAvailableVariant(prod);
+          }
+          if (!variant) {
+            console.error(`No variants available to add for product ${productId}`);
+            await processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase)
+  .catch(e => console.error('AI analysis repair failed:', e));
+
+            continue;
+          }
+        }
+
+        try {
+          await addItemToOrder(senderId, businessId, String(prod.id), String(variant.id), quantity);
+        } catch (e) {
+          console.error('Error adding AI product to order:', e);
+        }
+      }
+
+      // ------------- UPDATE_INFO -------------
+      else if (line.toUpperCase().startsWith('UPDATE_INFO:')) {
+        const infoData = line.slice('UPDATE_INFO:'.length).trim();
+        const customerInfo = parseCustomerInfo(infoData);
+        if (customerInfo && Object.keys(customerInfo).length > 0) {
           try {
-            await cancelOrder(senderId, businessId);
-          } catch (error) {
-            console.error(`Error cancelling AI order:`, error);
+            await updateCustomerInfo(senderId, businessId, customerInfo);
+          } catch (e) {
+            console.error('Error updating AI customer info:', e);
           }
         }
       }
-    } else {
-      // Temporarily disable processWithAIIntelligence to prevent JSON parsing errors
-      // await processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase);
-      
-      // Use only direct fallback matching for now
-      await fallbackProductMatching(senderId, businessId, userMessage, productDatabase);
-    }
 
+      // ------------- CONFIRM_ORDER -------------
+      else if (line.toUpperCase().startsWith('CONFIRM_ORDER:') && /true/i.test(line)) {
+        try {
+          // platform-agnostic lookup (don't force 'whatsapp')
+          const currentOrder = await getActiveOrder(senderId, businessId);
+          if (!currentOrder || !Array.isArray(currentOrder.items) || currentOrder.items.length === 0) {
+            console.error('Cannot confirm order: No items in cart');
+            continue;
+          }
+          const result = await confirmOrder(senderId, businessId);
+          console.log(`Order confirmed successfully: ${result?.orderId || 'N/A'}`);
+        } catch (e) {
+          console.error('Error confirming AI order:', e);
+        }
+      }
+
+      // ------------- CANCEL_ORDER -------------
+      else if (line.toUpperCase().startsWith('CANCEL_ORDER:') && /true/i.test(line)) {
+        try {
+          await cancelOrder(senderId, businessId);
+        } catch (e) {
+          console.error('Error cancelling AI order:', e);
+        }
+      }
+    }
   } catch (error) {
     console.error('Error in processAIOrderActions:', error);
   }
 }
+
 
 /**
  * Use AI to intelligently analyze the conversation and determine actions
  */
 async function processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase) {
   try {
-    // Create comprehensive analysis prompt
+    if (!Array.isArray(productDatabase) || productDatabase.length === 0) return;
+
+    // ---------- Build analysis prompt ----------
     const analysisPrompt = {
       role: 'system',
       content: `You are an AI Order Analysis System. Analyze the user message and AI response to determine what order actions should be taken.
@@ -664,182 +692,173 @@ ${p.variants.filter(v => v.inStock !== false).map(v => `  VARIANT_ID: "${v.id}" 
 **AI RESPONSE:** "${aiResponse}"
 
 **ANALYSIS TASK:**
-1. **Product Intent**: Did the user mention wanting to buy/order any specific products?
-   - Match user intent to EXACT product titles and variant specifications
-   - If user mentions size/color/options, find the matching variant ID
-   - If user mentions general product, select the first available (in-stock) variant
-   - ALWAYS return BOTH productId (parent) AND variantId (specific variant)
-   - USE THE EXACT IDs FROM THE DATABASE ABOVE - DO NOT MODIFY OR GUESS IDs
+1. **Product Intent**: Detect any specific product(s) the user wants. 
+   - Return BOTH "productId" (parent) AND "variantId" (specific variant).
+   - If size/color not provided, DO NOT GUESS a variantId; return no product or ask for the missing option.
+2. **Customer Info**: Extract name/phone/address if present.
+3. **Order Action**: "confirm" / "cancel" / null.
 
-2. **Customer Info**: Did the user provide name, phone, or address information?
-   - Extract any personal information mentioned
-
-3. **Order Action**: Did the user confirm, cancel, or modify their order?
-   - Look for confirmation words like "yes", "confirm", "نعم", "موافق"
-   - Look for cancellation words like "no", "cancel", "لا", "الغاء"
-
-**CRITICAL MATCHING RULES:**
-- When user says "Crop Top" → find PRODUCT_ID for "Crop Top"
-- When user specifies "Pink S" → find VARIANT_ID with OPTIONS "Pink / S"
-- When user says "medium" → find VARIANT_ID with option containing "M" or "Medium"
-- When user says general product name → select first VARIANT_ID from that product
-- COPY THE EXACT PRODUCT_ID AND VARIANT_ID FROM THE DATABASE - DO NOT GUESS OR MODIFY
-
-**EXAMPLE MATCHING:**
-User: "I want the crop top in pink size S"
-→ Find PRODUCT_ID from database for "Crop Top"
-→ Find VARIANT_ID from database for Pink / S variant
-→ Return: {"productId": "actual_product_id", "variantId": "actual_variant_id", "quantity": 1}
-
-**CRITICAL: NEVER USE FAKE IDs - ONLY USE IDs FROM THE DATABASE ABOVE**
-
-**OUTPUT FORMAT:** 
-You MUST respond with ONLY a valid JSON object. No additional text before or after.
-VALID EXAMPLE:
+**OUTPUT FORMAT (STRICT JSON ONLY):**
 {
   "products": [{"productId": "actual_id_from_database", "variantId": "actual_variant_id_from_database", "quantity": 1}],
   "customerInfo": {"name": "John", "phone": "+96103123456", "address": "Beirut"},
   "orderAction": "confirm"
-}
-
-If no actions needed:
-{"products": [], "customerInfo": {}, "orderAction": null}`
+}`
     };
 
-    const response = await axios.post('https://api.openai.com/v1/responses', {
-      model: 'gpt-5-mini',
-      input: [analysisPrompt],   
-      reasoning: { effort: "medium" }, 
-      max_output_tokens: 800,   
-      text: {
-        verbosity: "low"   
-      }
-    }, {
-      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
-    });
+    const response = await axios.post(
+      'https://api.openai.com/v1/responses',
+      {
+        model: 'gpt-5-mini',
+        input: [analysisPrompt],
+        reasoning: { effort: 'medium' },
+        max_output_tokens: 1200,
+        text: { verbosity: 'low' }
+      },
+      { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
+    );
 
+    // ---------- Extract text ----------
     const analysisText = response.data.output
       ?.flatMap(o => o.content || [])
-      .filter(c => c.type === "output_text")
+      .filter(c => c.type === 'output_text')
       .map(c => c.text)
-      .join(" ")
+      .join(' ')
+      .trim() || '';
+
+    // ---------- Sanitize to JSON ----------
+    let cleanedText = analysisText
+      .replace(/```json|```/g, '')        // strip fences
+      .replace(/\u200b/g, '')             // zero-width
       .trim();
-    
+
+    const firstBrace = cleanedText.indexOf('{');
+    const lastBrace  = cleanedText.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+      cleanedText = cleanedText.substring(firstBrace, lastBrace + 1);
+    }
+
+    console.log(`Attempting to parse AI analysis: ${cleanedText.substring(0, 200)}...`);
+
+    let analysis;
     try {
-      // Clean the response to ensure it's valid JSON
-      let cleanedText = analysisText.trim();
-      
-      // Remove any text before the first { or after the last }
-      const firstBrace = cleanedText.indexOf('{');
-      const lastBrace = cleanedText.lastIndexOf('}');
-      
-      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-        cleanedText = cleanedText.substring(firstBrace, lastBrace + 1);
-      }
-      
-      console.log(`Attempting to parse AI analysis: ${cleanedText.substring(0, 200)}...`);
-      
-      const analysis = JSON.parse(cleanedText);
-      
-      // Validate the structure
-      if (typeof analysis !== 'object' || analysis === null) {
-        throw new Error('Analysis result is not a valid object');
-      }
-      
-      // Ensure required properties exist
-      if (!analysis.products) analysis.products = [];
-      if (!analysis.customerInfo) analysis.customerInfo = {};
-      if (!analysis.orderAction) analysis.orderAction = null;
-      
-      console.log(`AI Analysis parsed successfully:`, {
-        productCount: analysis.products.length,
-        hasCustomerInfo: Object.keys(analysis.customerInfo).length > 0,
-        orderAction: analysis.orderAction
-      });
-      
-      // Process product additions
-      if (analysis.products && analysis.products.length > 0) {
-        for (const product of analysis.products) {
-          try {
-            // Validate that both IDs exist in the product database
-            const foundProduct = productDatabase.find(p => p.id === product.productId);
-            if (!foundProduct) {
-              console.error(`Product ID ${product.productId} not found in database`);
+      analysis = JSON.parse(cleanedText);
+    } catch (e) {
+      console.error('Error parsing AI analysis JSON:', e.message);
+      console.error('Raw response:', analysisText);
+      return; // bail gracefully
+    }
+
+    // ---------- Normalize structure ----------
+    if (typeof analysis !== 'object' || analysis === null) return;
+    if (!Array.isArray(analysis.products)) analysis.products = [];
+    if (!analysis.customerInfo || typeof analysis.customerInfo !== 'object') analysis.customerInfo = {};
+    if (typeof analysis.orderAction !== 'string') analysis.orderAction = null;
+
+    console.log('AI Analysis parsed:', {
+      productCount: analysis.products.length,
+      hasCustomerInfo: Object.keys(analysis.customerInfo).length > 0,
+      orderAction: analysis.orderAction
+    });
+
+    // ---------- Helpers ----------
+    const toId = v => String(v ?? '').trim().replace(/^"|"$/g, '');
+    const toQty = v => {
+      const m = String(v ?? '').match(/\d+/);
+      const n = m ? parseInt(m[0], 10) : 1;
+      return n > 0 ? n : 1;
+    };
+    const findProduct = pid => productDatabase.find(p => String(p.id) === String(pid));
+    const findVariant = (prod, vid) => prod?.variants.find(v => String(v.id) === String(vid));
+    const firstAvailableVariant = prod => prod?.variants?.find(v => v.inStock !== false) || prod?.variants?.[0];
+
+    // ---------- Apply products ----------
+    if (analysis.products.length > 0) {
+      for (const item of analysis.products) {
+        try {
+          const productId = toId(item.productId);
+          let variantId    = toId(item.variantId);
+          const quantity   = toQty(item.quantity);
+
+          let prod = findProduct(productId);
+          if (!prod) {
+            console.error(`Product ID ${productId} not found in database`);
+            continue;
+          }
+
+          let variant = variantId ? findVariant(prod, variantId) : null;
+
+          // If variant missing/invalid, try to infer from userMessage, else first available
+          if (!variant) {
+            const inferred = matchProductFromMessage(userMessage, [prod]);
+            if (inferred && String(inferred.variantId)) {
+              variant = findVariant(prod, inferred.variantId);
+            }
+            if (!variant) {
+              variant = firstAvailableVariant(prod);
+            }
+            if (!variant) {
+              console.error(`No available variants for product ${productId}`);
               continue;
             }
-            
-            const foundVariant = foundProduct.variants.find(v => v.id === product.variantId);
-            if (!foundVariant) {
-              console.error(`Variant ID ${product.variantId} not found for product ${product.productId}`);
-              // Fallback to first available variant
-              const firstAvailableVariant = foundProduct.variants.find(v => v.inStock !== false);
-              if (firstAvailableVariant) {
-                product.variantId = firstAvailableVariant.id;
-              } else {
-                console.error(`No available variants for product ${product.productId}`);
-                continue;
-              }
-            }
-            
-            await addItemToOrder(senderId, businessId, product.productId, product.variantId, product.quantity || 1);
-          } catch (error) {
-            console.error(`Error adding AI analyzed product:`, error);
+            variantId = String(variant.id);
           }
-        }
-      }
-      
-      // Process customer info updates
-      if (analysis.customerInfo && Object.keys(analysis.customerInfo).length > 0) {
-        const cleanInfo = {};
-        if (analysis.customerInfo.name) cleanInfo.name = analysis.customerInfo.name;
-        if (analysis.customerInfo.phone) cleanInfo.phone = cleanCustomerPhone(analysis.customerInfo.phone);
-        if (analysis.customerInfo.address) cleanInfo.address = analysis.customerInfo.address;
-        
-        if (Object.keys(cleanInfo).length > 0) {
-          try {
-            await updateCustomerInfo(senderId, businessId, cleanInfo);
-          } catch (error) {
-            console.error(`Error updating AI analyzed customer info:`, error);
-          }
-        }
-      }
-      
-      // Process order actions
-      if (analysis.orderAction === 'confirm') {
-        try {
-          const result = await confirmOrder(senderId, businessId);
+
+          await addItemToOrder(
+            senderId,
+            businessId,
+            String(prod.id),
+            String(variant.id),
+            quantity
+          );
         } catch (error) {
-          console.error(`Error confirming AI analyzed order:`, error);
+          console.error('Error adding AI analyzed product:', error);
         }
-      } else if (analysis.orderAction === 'cancel') {
-        try {
-          await cancelOrder(senderId, businessId);
-        } catch (error) {
-          console.error(`Error cancelling AI analyzed order:`, error);
-        }
-      }
-      
-    } catch (parseError) {
-      console.error('Error parsing AI analysis response:', parseError.message);
-      console.error('Raw response that failed to parse:', analysisText);
-      console.error('Length of raw response:', analysisText.length);
-      
-      // Try to identify the issue
-      if (analysisText.includes('```')) {
-        console.error('Response contains markdown code blocks - this is incorrect formatting');
-      }
-      if (!analysisText.startsWith('{')) {
-        console.error('Response does not start with { - likely has extra text');
-      }
-      if (!analysisText.endsWith('}')) {
-        console.error('Response does not end with } - likely has extra text');
       }
     }
-    
+
+    // ---------- Apply customer info ----------
+    if (analysis.customerInfo && Object.keys(analysis.customerInfo).length > 0) {
+      const cleanInfo = {};
+      if (analysis.customerInfo.name)   cleanInfo.name = String(analysis.customerInfo.name).trim();
+      if (analysis.customerInfo.phone)  cleanInfo.phone = cleanCustomerPhone(String(analysis.customerInfo.phone));
+      if (analysis.customerInfo.address) cleanInfo.address = String(analysis.customerInfo.address).trim();
+
+      if (Object.keys(cleanInfo).length > 0) {
+        try {
+          await updateCustomerInfo(senderId, businessId, cleanInfo);
+        } catch (e) {
+          console.error('Error updating AI analyzed customer info:', e);
+        }
+      }
+    }
+
+    // ---------- Apply order action ----------
+    if (analysis.orderAction === 'confirm') {
+      try {
+        // check there are items (platform-agnostic)
+        const currentOrder = await getActiveOrder(senderId, businessId);
+        if (currentOrder && Array.isArray(currentOrder.items) && currentOrder.items.length > 0) {
+          await confirmOrder(senderId, businessId);
+        } else {
+          console.error('Cannot confirm: no items in cart');
+        }
+      } catch (e) {
+        console.error('Error confirming AI analyzed order:', e);
+      }
+    } else if (analysis.orderAction === 'cancel') {
+      try {
+        await cancelOrder(senderId, businessId);
+      } catch (e) {
+        console.error('Error cancelling AI analyzed order:', e);
+      }
+    }
+
   } catch (error) {
     console.error('Error in AI intelligence analysis:', error);
   }
 }
+
 
 /**
  * Parse customer info from action line

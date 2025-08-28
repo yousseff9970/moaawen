@@ -13,63 +13,88 @@ function priceNum(x) {
 
 // Build comprehensive product data for AI to analyze
 function buildProductDatabase(products = []) {
-  if (!products || products.length === 0) {
-    return "No products available.";
+  // Always return an array (never a string)
+  if (!Array.isArray(products) || products.length === 0) {
+    return [];
   }
 
-  const productDatabase = products.map(product => {
-    // Only include variants that are in stock
+  const toStr = (v) => v == null ? "" : String(v).trim();
+  const toNum = (v) => {
+    const n = Number(String(v).replace(/[^\d.]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const productDatabase = products.map((product) => {
+    // Only include variants that are in stock (undefined => treated as in stock)
     const variants = (product.variants || [])
-      .filter(variant => variant.inStock !== false) // Exclude out of stock variants
-      .map(variant => {
-        const dp = priceNum(variant.discountedPrice);
-        const op = priceNum(variant.originalPrice);
-        
+      .filter((variant) => variant.inStock !== false)
+      .map((variant) => {
+        const dp = toNum(variant.discountedPrice);
+        const op = toNum(variant.originalPrice);
+
+        // Build a consistent, human-readable name
+        const computedName = variant.variantName ||
+          [variant.option1, variant.option2, variant.option3]
+            .filter(Boolean)
+            .join(" / ") ||
+          "Standard";
+
         return {
-          id: variant.id,
-          name: variant.variantName || [variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ') || 'Standard',
-          option1: variant.option1,
-          option2: variant.option2,
-          option3: variant.option3,
+          // 🔒 IDs normalized to strings
+          id: toStr(variant.id),
+          // keep both raw + lc for matching
+          name: computedName,
+          name_lc: toStr(computedName).toLowerCase(),
+          option1: toStr(variant.option1) || null,
+          option2: toStr(variant.option2) || null,
+          option3: toStr(variant.option3) || null,
+          option1_lc: toStr(variant.option1).toLowerCase() || null,
+          option2_lc: toStr(variant.option2).toLowerCase() || null,
+          option3_lc: toStr(variant.option3).toLowerCase() || null,
+
           price: dp,
           originalPrice: op,
-          isDiscounted: variant.isDiscounted,
-          savings: variant.isDiscounted && op && dp ? (op - dp).toFixed(2) : 0,
-          sku: variant.sku,
-          barcode: variant.barcode,
-          weight: variant.weight
+          isDiscounted: Boolean(variant.isDiscounted),
+          savings: (variant.isDiscounted && op && dp) ? Number((op - dp).toFixed(2)) : 0,
+
+          sku: toStr(variant.sku) || null,
+          barcode: toStr(variant.barcode) || null,
+          weight: toNum(variant.weight) || 0,
+          inStock: variant.inStock !== false,
         };
       });
 
-    // Skip products that have no in-stock variants
-    if (variants.length === 0) {
-      return null;
-    }
+    // Skip products with no in-stock variants
+    if (variants.length === 0) return null;
 
-    // Calculate product-level aggregates
-    const prices = variants.map(v => v.price).filter(Boolean);
+    const prices = variants.map(v => v.price).filter(n => Number.isFinite(n));
     const minPrice = prices.length ? Math.min(...prices) : null;
     const maxPrice = prices.length ? Math.max(...prices) : null;
-    const totalVariants = variants.length;
-    const hasDiscounts = variants.some(v => v.isDiscounted);
 
+    const title = toStr(product.title);
     return {
-      id: product.id,
-      title: product.title,
+      // 🔒 Product ID normalized to string
+      id: toStr(product.id),
+      title,
+      title_lc: title.toLowerCase(),
+
       description: safeText(product.description, 200),
-      vendor: product.vendor,
-      type: product.type,
-      tags: product.tags,
+      vendor: toStr(product.vendor) || null,
+      type: toStr(product.type) || null,
+      tags: Array.isArray(product.tags) ? product.tags : [],
+
       minPrice,
       maxPrice,
-      totalVariants,
-      hasDiscounts,
-      variants
+      totalVariants: variants.length,
+      hasDiscounts: variants.some(v => v.isDiscounted),
+
+      variants,
     };
-  }).filter(Boolean); // Remove null products (those with no in-stock variants)
+  }).filter(Boolean);
 
   return productDatabase;
 }
+
 
 // Format product database as structured text for AI
 function formatProductDatabaseForAI(productDatabase) {
