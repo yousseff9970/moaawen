@@ -13,8 +13,7 @@ const {
 } = require('./catalogBuilder');
 const { updateSession, getSessionHistory, getSessionSummary } = require('./sessionManager');
 
-const generalModelPath = path.join(__dirname, 'mappings/model_general.json');
-const generalModel = loadJsonArrayFile(generalModelPath);
+
 
 const replyTimeouts = new Map();
 const pendingMessages = new Map();
@@ -63,41 +62,6 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   }
 
   // Intent/model/FAQ layers
-  const normalizedMsg = normalize(userMessage);
-  const businessModel = getBusinessModel(business.id);
-
-  const modelMatch = matchModelResponse(normalizedMsg, businessModel);
-  if (modelMatch) {
-    const duration = Date.now() - start;
-    logToJson({
-      layer: 'model_business',
-      senderId,
-      businessId: business.id,
-      intent: modelMatch.intent,
-      language: modelMatch.language,
-      duration,
-      message: userMessage,
-      matchedWith: normalizedMsg,
-      ai_reply: modelMatch.reply
-    });
-    return { reply: modelMatch.reply, source: 'model', layer_used: 'model_business', duration };
-  }
-
-  const generalMatch = matchModelResponse(normalizedMsg, generalModel);
-  if (generalMatch) {
-    const duration = Date.now() - start;
-    logToJson({
-      layer: 'model_general',
-      senderId,
-      businessId: business.id,
-      intent: generalMatch.intent,
-      duration,
-      message: userMessage,
-      matchedWith: normalizedMsg,
-      ai_reply: generalMatch.reply
-    });
-    return { reply: generalMatch.reply, source: 'model', layer_used: 'model_general', duration };
-  }
 
   const faqAnswer = matchFAQSmart(userMessage, business.faqs || []);
   if (faqAnswer) {
@@ -188,6 +152,7 @@ You have COMPLETE access to all product and variant data above. Use your intelli
    - Product comparisons, recommendations
    - Category browsing, specific searches
    - Stock availability, pricing questions
+   - IMPORTANT: never say in stock and out of stock. just show whats availble and dont say anything about out of stock products
 
 2. **Handle ALL languages naturally**:
    - Arabic: "عندك قميص أحمر مقاس متوسط؟"
@@ -200,7 +165,7 @@ You have COMPLETE access to all product and variant data above. Use your intelli
    - Smart alternatives when requested item unavailable
    - Category recommendations
    - Price comparisons
-   - Stock status updates
+   
 
 4. **Format responses beautifully**:
    - Use emojis and clear structure
@@ -220,6 +185,7 @@ You have COMPLETE access to all product and variant data above. Use your intelli
 3. **Suggest alternatives** if exact request unavailable  
 4. **Be conversational and helpful** - don't just list data
 5. **Format beautifully** with emojis and structure
+6. **Never say in stock or out of stock** 
 
 Use your AI intelligence to understand what users want and provide the most helpful response using the complete product data above.` : `
 

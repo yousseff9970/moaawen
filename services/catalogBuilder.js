@@ -18,32 +18,38 @@ function buildProductDatabase(products = []) {
   }
 
   const productDatabase = products.map(product => {
-    const variants = (product.variants || []).map(variant => {
-      const dp = priceNum(variant.discountedPrice);
-      const op = priceNum(variant.originalPrice);
-      
-      return {
-        id: variant.id,
-        name: variant.variantName || [variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ') || 'Standard',
-        option1: variant.option1,
-        option2: variant.option2,
-        option3: variant.option3,
-        price: dp,
-        originalPrice: op,
-        isDiscounted: variant.isDiscounted,
-        savings: variant.isDiscounted && op && dp ? (op - dp).toFixed(2) : 0,
-        inStock: variant.inStock !== false,
-        sku: variant.sku,
-        barcode: variant.barcode,
-        weight: variant.weight
-      };
-    });
+    // Only include variants that are in stock
+    const variants = (product.variants || [])
+      .filter(variant => variant.inStock !== false) // Exclude out of stock variants
+      .map(variant => {
+        const dp = priceNum(variant.discountedPrice);
+        const op = priceNum(variant.originalPrice);
+        
+        return {
+          id: variant.id,
+          name: variant.variantName || [variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ') || 'Standard',
+          option1: variant.option1,
+          option2: variant.option2,
+          option3: variant.option3,
+          price: dp,
+          originalPrice: op,
+          isDiscounted: variant.isDiscounted,
+          savings: variant.isDiscounted && op && dp ? (op - dp).toFixed(2) : 0,
+          sku: variant.sku,
+          barcode: variant.barcode,
+          weight: variant.weight
+        };
+      });
+
+    // Skip products that have no in-stock variants
+    if (variants.length === 0) {
+      return null;
+    }
 
     // Calculate product-level aggregates
     const prices = variants.map(v => v.price).filter(Boolean);
     const minPrice = prices.length ? Math.min(...prices) : null;
     const maxPrice = prices.length ? Math.max(...prices) : null;
-    const inStockVariants = variants.filter(v => v.inStock).length;
     const totalVariants = variants.length;
     const hasDiscounts = variants.some(v => v.isDiscounted);
 
@@ -57,11 +63,10 @@ function buildProductDatabase(products = []) {
       minPrice,
       maxPrice,
       totalVariants,
-      inStockVariants,
       hasDiscounts,
       variants
     };
-  });
+  }).filter(Boolean); // Remove null products (those with no in-stock variants)
 
   return productDatabase;
 }
@@ -84,7 +89,7 @@ function formatProductDatabaseForAI(productDatabase) {
         ? `$${product.minPrice}` 
         : `$${product.minPrice} - $${product.maxPrice}`)
       : 'Contact for pricing'}\n`;
-    output += `STOCK STATUS: ${product.inStockVariants}/${product.totalVariants} variants in stock\n`;
+    output += `VARIANTS AVAILABLE: ${product.totalVariants}\n`;
     output += `HAS DISCOUNTS: ${product.hasDiscounts ? 'Yes' : 'No'}\n\n`;
 
     if (product.variants.length > 0) {
@@ -99,7 +104,6 @@ function formatProductDatabaseForAI(productDatabase) {
           output += ` (was $${variant.originalPrice}, save $${variant.savings})`;
         }
         output += `\n`;
-        output += `     Stock: ${variant.inStock ? 'IN STOCK' : 'OUT OF STOCK'}\n`;
         if (variant.sku) output += `     SKU: ${variant.sku}\n`;
         output += `\n`;
       });
@@ -127,13 +131,12 @@ function groupProductsByCategory(productDatabase) {
   
   Object.entries(categories).forEach(([category, products]) => {
     const totalProducts = products.length;
-    const inStockProducts = products.filter(p => p.inStockVariants > 0).length;
     const onSaleProducts = products.filter(p => p.hasDiscounts).length;
     
-    output += `${category.toUpperCase()}: ${totalProducts} products, ${inStockProducts} in stock, ${onSaleProducts} on sale\n`;
+    output += `${category.toUpperCase()}: ${totalProducts} products available, ${onSaleProducts} on sale\n`;
     
     products.forEach(product => {
-      output += `  - ${product.title} (${product.inStockVariants}/${product.totalVariants} variants available)\n`;
+      output += `  - ${product.title} (${product.totalVariants} variants available)\n`;
     });
     output += `\n`;
   });
