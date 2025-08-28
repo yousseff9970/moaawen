@@ -68,8 +68,6 @@ async function getActiveOrder(customerId, businessId, platform) {
  */
 async function addItemToOrder(customerId, businessId, productId, variantId, quantity = 1) {
   try {
-    console.log('🔍 addItemToOrder:', { customerId, businessId, productId, variantId, quantity });
-    
     const order = await getActiveOrder(customerId, businessId, 'whatsapp'); // Default platform
     
     // Get business using the businessId directly
@@ -213,8 +211,6 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
   try {
     const order = await getActiveOrder(customerId, businessId, 'whatsapp');
     
-    console.log('🔍 Updating customer info:', Object.keys(customerData));
-    
     // Update customer info
     const updateFields = {};
     
@@ -223,7 +219,6 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
       order.orderFlow.collectedInfo.hasName = true;
       updateFields['customer.name'] = customerData.name.trim();
       updateFields['orderFlow.collectedInfo.hasName'] = true;
-      console.log('✅ Updated name:', customerData.name.trim());
     }
     
     if (customerData.phone && customerData.phone.trim()) {
@@ -231,7 +226,6 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
       order.orderFlow.collectedInfo.hasPhone = true;
       updateFields['customer.phone'] = customerData.phone.trim();
       updateFields['orderFlow.collectedInfo.hasPhone'] = true;
-      console.log('✅ Updated phone:', customerData.phone.trim());
     }
     
     if (customerData.address && customerData.address.trim()) {
@@ -239,7 +233,6 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
       order.orderFlow.collectedInfo.hasAddress = true;
       updateFields['customer.address'] = customerData.address.trim();
       updateFields['orderFlow.collectedInfo.hasAddress'] = true;
-      console.log('✅ Updated address:', customerData.address.trim());
     }
     
     if (customerData.email) {
@@ -290,13 +283,6 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
 async function confirmOrder(customerId, businessId) {
   try {
     const order = await getActiveOrder(customerId, businessId, 'whatsapp');
-    
-    console.log('🔍 Confirming order - Debug info:');
-    console.log('Order items:', order.items.length);
-    console.log('Customer info:', order.customer);
-    console.log('Collected info flags:', order.orderFlow.collectedInfo);
-    console.log('Is complete check:', isOrderFlowComplete(order));
-    console.log('Missing info:', getMissingInfo(order));
     
     if (!isOrderFlowComplete(order)) {
       throw new Error(`Order information is incomplete. Missing: ${getMissingInfo(order).join(', ')}`);
