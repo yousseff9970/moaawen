@@ -69,7 +69,18 @@ async function getActiveOrder(customerId, businessId, platform) {
 async function addItemToOrder(customerId, businessId, productId, variantId, quantity = 1) {
   try {
     const order = await getActiveOrder(customerId, businessId, 'whatsapp'); // Default platform
-    const business = await getBusinessInfo({ _id: new ObjectId(businessId) });
+    
+    // Get business using the businessId directly
+    const { MongoClient } = require('mongodb');
+    const client = new MongoClient(process.env.MONGO_URI);
+    await client.connect();
+    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const businessCollection = db.collection('businesses');
+    
+    const business = await businessCollection.findOne({ _id: new ObjectId(businessId) });
+    if (!business) {
+      throw new Error('Business not found');
+    }
     
     // Find product and variant
     const product = business.products.find(p => p.id === productId);
@@ -192,28 +203,36 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
   try {
     const order = await getActiveOrder(customerId, businessId, 'whatsapp');
     
+    console.log('🔍 Updating customer info - Debug:');
+    console.log('Current customer:', order.customer);
+    console.log('New customer data:', customerData);
+    console.log('Current collected info:', order.orderFlow.collectedInfo);
+    
     // Update customer info
     const updateFields = {};
     
-    if (customerData.name) {
-      order.customer.name = customerData.name;
+    if (customerData.name && customerData.name.trim()) {
+      order.customer.name = customerData.name.trim();
       order.orderFlow.collectedInfo.hasName = true;
-      updateFields['customer.name'] = customerData.name;
+      updateFields['customer.name'] = customerData.name.trim();
       updateFields['orderFlow.collectedInfo.hasName'] = true;
+      console.log('✅ Updated name:', customerData.name.trim());
     }
     
-    if (customerData.phone) {
-      order.customer.phone = customerData.phone;
+    if (customerData.phone && customerData.phone.trim()) {
+      order.customer.phone = customerData.phone.trim();
       order.orderFlow.collectedInfo.hasPhone = true;
-      updateFields['customer.phone'] = customerData.phone;
+      updateFields['customer.phone'] = customerData.phone.trim();
       updateFields['orderFlow.collectedInfo.hasPhone'] = true;
+      console.log('✅ Updated phone:', customerData.phone.trim());
     }
     
-    if (customerData.address) {
-      order.customer.address = customerData.address;
+    if (customerData.address && customerData.address.trim()) {
+      order.customer.address = customerData.address.trim();
       order.orderFlow.collectedInfo.hasAddress = true;
-      updateFields['customer.address'] = customerData.address;
+      updateFields['customer.address'] = customerData.address.trim();
       updateFields['orderFlow.collectedInfo.hasAddress'] = true;
+      console.log('✅ Updated address:', customerData.address.trim());
     }
     
     if (customerData.email) {
@@ -265,8 +284,15 @@ async function confirmOrder(customerId, businessId) {
   try {
     const order = await getActiveOrder(customerId, businessId, 'whatsapp');
     
+    console.log('🔍 Confirming order - Debug info:');
+    console.log('Order items:', order.items.length);
+    console.log('Customer info:', order.customer);
+    console.log('Collected info flags:', order.orderFlow.collectedInfo);
+    console.log('Is complete check:', isOrderFlowComplete(order));
+    console.log('Missing info:', getMissingInfo(order));
+    
     if (!isOrderFlowComplete(order)) {
-      throw new Error('Order information is incomplete');
+      throw new Error(`Order information is incomplete. Missing: ${getMissingInfo(order).join(', ')}`);
     }
     
     if (order.items.length === 0) {

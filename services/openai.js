@@ -21,6 +21,7 @@ const {
   cancelOrder,
   getOrderSummary
 } = require('./orderManager');
+const { getMissingInfo, isOrderFlowComplete } = require('../models/Order');
 
 
 
@@ -90,68 +91,45 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   // Save user message
   updateSession(senderId, 'user', userMessage);
 
-  // 🛒 ORDER FLOW HANDLING - Check for order-related intents
+  // 🛒 AI-POWERED ORDER FLOW HANDLING 
   let orderContext = '';
   let currentOrder = null;
   
+  // Determine platform from metadata
+  let platform = 'whatsapp'; // default
+  if (page_id) platform = 'facebook';
+  if (instagram_account_id) platform = 'instagram';
+  
   try {
     // Get current order if exists
-    currentOrder = await getActiveOrder(senderId, business._id || business.id, 'whatsapp'); // Adjust platform as needed
+    currentOrder = await getActiveOrder(senderId, business._id || business.id, platform);
     
-    // Check for order-related keywords
-    const orderKeywords = /\b(order|buy|purchase|cart|checkout|add to cart|i want|place order|confirm order|cancel order)\b/i;
-    const nameKeywords = /\b(my name is|i'm|im|call me|name:|مين|اسمي|بدي اعرف حالي)\b/i;
-    const phoneKeywords = /\b(phone|number|contact|mobile|رقم|تلفون|هاتف|موبايل)\b/i;
-    const addressKeywords = /\b(address|location|deliver|shipping|عنوان|مكان|توصيل|شحن)\b/i;
+    // Build order context for AI
+    orderContext = `\n\n=== ORDER CONTEXT ===\n`;
     
-    // Extract phone numbers (Lebanese format)
-    const phonePattern = /(\+?961|0)?[\s-]?([0-9]{1,2})[\s-]?([0-9]{3})[\s-]?([0-9]{3})/g;
-    const extractedPhone = userMessage.match(phonePattern);
-    
-    // Extract potential names (after "my name is" or similar patterns)
-    const nameMatch = userMessage.match(/(?:my name is|i'm|im|call me|اسمي|مين)\s+([a-zA-Z\u0600-\u06FF\s]{2,30})/i);
-    const extractedName = nameMatch ? nameMatch[1].trim() : null;
-    
-    // Handle order actions
-    if (orderKeywords.test(userMessage) || currentOrder?.items.length > 0 || extractedPhone || extractedName) {
-      // Build order context for AI
-      orderContext = `\n\n=== ORDER CONTEXT ===\n`;
+    if (currentOrder) {
+      orderContext += `Current Order Status: ${currentOrder.orderFlow.stage}\n`;
+      orderContext += `Items in Cart: ${currentOrder.items.length}\n`;
+      orderContext += `Order Total: $${currentOrder.total || 0}\n`;
+      orderContext += `Customer Info Collected:\n`;
+      orderContext += `  - Name: ${currentOrder.orderFlow.collectedInfo.hasName ? '✅' : '❌'}\n`;
+      orderContext += `  - Phone: ${currentOrder.orderFlow.collectedInfo.hasPhone ? '✅' : '❌'}\n`;
+      orderContext += `  - Address: ${currentOrder.orderFlow.collectedInfo.hasAddress ? '✅' : '❌'}\n\n`;
       
-      if (currentOrder) {
-        orderContext += `Current Order Status: ${currentOrder.orderFlow.stage}\n`;
-        orderContext += `Items in Cart: ${currentOrder.items.length}\n`;
-        orderContext += `Order Total: $${currentOrder.total || 0}\n`;
-        orderContext += `Customer Info Collected:\n`;
-        orderContext += `  - Name: ${currentOrder.orderFlow.collectedInfo.hasName ? '✅' : '❌'}\n`;
-        orderContext += `  - Phone: ${currentOrder.orderFlow.collectedInfo.hasPhone ? '✅' : '❌'}\n`;
-        orderContext += `  - Address: ${currentOrder.orderFlow.collectedInfo.hasAddress ? '✅' : '❌'}\n\n`;
-        
-        if (currentOrder.items.length > 0) {
-          orderContext += `Cart Contents:\n`;
-          currentOrder.items.forEach((item, index) => {
-            orderContext += `${index + 1}. ${item.productTitle} - ${item.variantName} (Qty: ${item.quantity}) - $${item.totalPrice}\n`;
-          });
-          orderContext += `\n`;
-        }
-        
-        orderContext += `Missing Information: ${currentOrder.getMissingInfo().join(', ') || 'None'}\n`;
-      } else {
-        orderContext += `No active order. Ready to start new order.\n`;
+      if (currentOrder.items.length > 0) {
+        orderContext += `Cart Contents:\n`;
+        currentOrder.items.forEach((item, index) => {
+          orderContext += `${index + 1}. ${item.productTitle} - ${item.variantName} (Qty: ${item.quantity}) - $${item.totalPrice}\n`;
+        });
+        orderContext += `\n`;
       }
       
-      // Auto-extract customer information
-      if (extractedName && currentOrder && !currentOrder.orderFlow.collectedInfo.hasName) {
-        await updateCustomerInfo(senderId, business._id || business.id, { name: extractedName });
-        orderContext += `\n🤖 AUTO-DETECTED NAME: ${extractedName}\n`;
-      }
-      
-      if (extractedPhone && currentOrder && !currentOrder.orderFlow.collectedInfo.hasPhone) {
-        await updateCustomerInfo(senderId, business._id || business.id, { phone: extractedPhone[0] });
-        orderContext += `\n🤖 AUTO-DETECTED PHONE: ${extractedPhone[0]}\n`;
-      }
-      
-      orderContext += `=== END ORDER CONTEXT ===\n`;
+      orderContext += `Missing Information: ${getMissingInfo(currentOrder).join(', ') || 'None'}\n`;
+    } else {
+      orderContext += `No active order. Ready to start new order.\n`;
     }
+    
+    orderContext += `=== END ORDER CONTEXT ===\n`;
     
   } catch (error) {
     console.error('Error handling order context:', error);
@@ -265,67 +243,83 @@ You have COMPLETE access to all product and variant data above. Use your intelli
 
 ---
 
-### **🛒 ORDER FLOW & CUSTOMER MANAGEMENT**
+### **🛒 AI-POWERED ORDER FLOW & MANAGEMENT**
 
-**CRITICAL ORDER INSTRUCTIONS:**
-You are an intelligent order assistant. When customers want to buy products, guide them through a complete order process:
+**CRITICAL AI ORDER PROCESSING INSTRUCTIONS:**
+You are now a complete AI-powered order management system. You must intelligently handle ALL aspects of order processing:
 
-**1. PRODUCT SELECTION PHASE:**
-- Help customers find and select products they want
-- Show product details, variants, prices clearly
-- When customer expresses intent to buy (words like: "I want", "buy", "order", "add to cart", "purchase"), guide them to place an order
-- Use phrases like: "Great choice! Let me help you place an order for this."
+**1. INTELLIGENT CUSTOMER INTENT DETECTION:**
+- Detect when customers want to buy/order products from ANY language:
+  - English: "I want", "buy", "order", "add to cart", "purchase", "get me"
+  - Arabic: "بدي", "أريد", "اشتري", "اطلب", "احصل على"
+  - Lebanese: "bade", "bidi", "ishtre", "otlob", "a3tine"
+  - Mixed: "بدي هاي ال item", "I want هاي ال product"
 
-**2. ORDER INFORMATION COLLECTION:**
-You MUST collect these details for every order:
-- ✅ **Customer Name**: "What's your name for the order?"
-- ✅ **Phone Number**: "What's your phone number for delivery contact?"
-- ✅ **Delivery Address**: "What's your complete delivery address?"
+**2. AI PRODUCT MATCHING & VARIANT SELECTION:**
+When customers mention products, use your intelligence to:
+- **Exact Product Match**: Find the exact product they mentioned
+- **Fuzzy Matching**: Handle typos, partial names, descriptions
+- **Multi-language Matching**: Handle Arabic/English/Lebanese product references
+- **Variant Intelligence**: 
+  - If they specify size/color/options → find exact variant
+  - If no specifics → ask for clarification or suggest available options
+  - Handle natural descriptions: "red shirt medium" → find red shirt in size medium
 
-**3. SMART INFORMATION EXTRACTION:**
-- Automatically detect when customer provides information in their messages
-- If they say "My name is John" or "I'm John" → extract the name
-- If they provide a phone number in Lebanese format → extract it
-- If they mention their address → extract it
-- Acknowledge when you detect information: "Got it! I have your name as John."
+**3. AI CUSTOMER INFORMATION EXTRACTION:**
+Automatically detect and extract from messages:
+- **Names**: "I'm John", "My name is أحمد", "call me Sara", "انا محمد"
+- **Phone Numbers**: Any format - clean and standardize automatically
+- **Addresses**: Any format in any language - extract complete addresses
 
-**4. ORDER CONFIRMATION PROCESS:**
-- Show complete order summary with all items, quantities, prices
-- Confirm customer details (name, phone, address)
-- Ask for final confirmation: "Everything looks correct? Shall I confirm your order?"
-- When confirmed, provide order reference number
+**4. INTELLIGENT ORDER FLOW MANAGEMENT:**
+Based on ORDER CONTEXT above, respond intelligently:
 
-**5. ORDER FLOW RESPONSES:**
-Based on the ORDER CONTEXT provided above, respond intelligently:
+**Phase 1 - Product Selection:**
+- When customer wants to buy → help them select products
+- Show available options if they're not specific
+- Add selected items to their cart automatically
+- Acknowledge additions: "✅ Added [Product] to your cart!"
 
-**If no active order:**
-- When customer wants to buy → start order process
-- Guide them to select products first
+**Phase 2 - Information Collection:**
+- If missing name → ask for it naturally
+- If missing phone → request it for delivery
+- If missing address → ask for complete delivery address
+- Be conversational and match their language
 
-**If order has items but missing customer info:**
-- Ask for missing information (name, phone, address)
-- Be conversational: "I have your items ready! Now I just need your delivery details."
+**Phase 3 - Order Review & Confirmation:**
+- Show complete order summary with all items and total
+- Confirm customer details
+- Ask for final confirmation
+- Process confirmation/cancellation
 
-**If order is complete (has items + customer info):**
-- Show final order summary
-- Ask for confirmation to place the order
+**5. AI ORDER ACTIONS FORMAT:**
+When you want to perform order actions, end your response with specific action commands in this format:
 
-**6. ORDER LANGUAGE HANDLING:**
-- Handle orders in customer's language (Arabic, English, Lebanese)
-- Use appropriate cultural context for Lebanese customers
-- Be warm and helpful throughout the process
+Action Commands:
+- ADD_PRODUCT: productId, variantId, quantity
+- UPDATE_INFO: name="value", phone="value", address="value"
+- CONFIRM_ORDER: true
+- CANCEL_ORDER: true
 
-**7. ORDER STATUS COMMUNICATION:**
-- Always acknowledge when items are added/removed
-- Show running total after changes
-- Clearly indicate what information is still needed
-- Celebrate when order is complete and confirmed
+Wrap actions in: [AI_ORDER_ACTIONS] ... [/AI_ORDER_ACTIONS]
 
-**ORDER RESPONSE FORMAT:**
-- Use clear sections with emojis
-- Show order progress visually
-- Make next steps obvious to the customer
-- Be encouraging and professional
+**6. INTELLIGENT RESPONSE EXAMPLES:**
+
+Customer says: "بدي القميص الأحمر مقاس متوسط"
+AI responds: "ممتاز! لديك القميص الأحمر بالمقاس المتوسط - $25. ✅ تمت إضافته لسلة التسوق. بحاجة لاسمك ورقم هاتفك للتوصيل."
+Then adds: [AI_ORDER_ACTIONS] ADD_PRODUCT: shirt_001, variant_red_medium, 1 [/AI_ORDER_ACTIONS]
+
+Customer says: "My name is John and my phone is 03 123 456"
+AI responds: "Perfect! I have your name as John and phone as +96103123456. ✅ Now I just need your delivery address to complete the order."
+Then adds: [AI_ORDER_ACTIONS] UPDATE_INFO: name="John", phone="+96103123456" [/AI_ORDER_ACTIONS]
+
+**7. AI ORDER INTELLIGENCE RULES:**
+- **Auto-detect everything**: Don't ask users to repeat information you can extract
+- **Be proactive**: Guide customers through the process smoothly
+- **Handle errors gracefully**: If product not found, suggest alternatives
+- **Match language**: Respond in customer's language consistently
+- **Show progress**: Always indicate what's completed and what's needed
+- **Validate choices**: Confirm product selections before adding to cart
 
 Use your AI intelligence to understand what users want and provide the most helpful response using the complete product data above.` : `
 
@@ -394,11 +388,11 @@ This business does not currently have products in their catalog. Focus on:
 
     await trackUsage(business.id, 'message');
 
-    // 🛒 POST-PROCESSING: Handle order actions based on AI response and user message
+    // 🤖 AI-POWERED ORDER POST-PROCESSING
     try {
-      await processOrderActions(senderId, business._id || business.id, userMessage, replyText, productDatabase);
+      await processAIOrderActions(senderId, business._id || business.id, userMessage, replyText, productDatabase);
     } catch (orderError) {
-      console.error('Error processing order actions:', orderError);
+      console.error('Error processing AI order actions:', orderError);
     }
 
     updateSession(senderId, 'assistant', replyText);
@@ -441,157 +435,247 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
 };
 
 /**
- * Process order actions based on user message and AI response
+ * AI-Powered Order Action Processor
+ * Processes the AI response to extract and execute order actions
  */
-async function processOrderActions(senderId, businessId, userMessage, aiResponse, productDatabase) {
+async function processAIOrderActions(senderId, businessId, userMessage, aiResponse, productDatabase) {
   try {
     // Skip if no products available
     if (!productDatabase || productDatabase.length === 0) {
       return;
     }
 
-    // Extract product selection from user message
-    const productIds = extractProductReferences(userMessage, productDatabase);
+    console.log('🤖 Processing AI Order Actions for:', senderId);
     
-    // Process product additions
-    for (const { productId, variantId, quantity } of productIds) {
-      try {
-        await addItemToOrder(senderId, businessId, productId, variantId, quantity);
-        console.log(`Added product ${productId}, variant ${variantId} to order for ${senderId}`);
-      } catch (error) {
-        console.error(`Error adding product to order:`, error);
-      }
-    }
-
-    // Extract customer information from user message
-    const customerInfo = extractCustomerInfo(userMessage);
-    if (Object.keys(customerInfo).length > 0) {
-      try {
-        await updateCustomerInfo(senderId, businessId, customerInfo);
-        console.log(`Updated customer info for ${senderId}:`, customerInfo);
-      } catch (error) {
-        console.error(`Error updating customer info:`, error);
-      }
-    }
-
-    // Handle order confirmation
-    if (isOrderConfirmation(userMessage)) {
-      try {
-        const result = await confirmOrder(senderId, businessId);
-        if (result.success) {
-          console.log(`Order confirmed for ${senderId}:`, result.orderId);
+    // Extract action commands from AI response
+    const actionMatch = aiResponse.match(/\[AI_ORDER_ACTIONS\](.*?)\[\/AI_ORDER_ACTIONS\]/s);
+    if (actionMatch) {
+      const actions = actionMatch[1].trim();
+      console.log('🎯 AI Actions Found:', actions);
+      
+      // Process each action line
+      const actionLines = actions.split('\n').filter(line => line.trim());
+      
+      for (const actionLine of actionLines) {
+        const line = actionLine.trim();
+        
+        // Process ADD_PRODUCT actions
+        if (line.startsWith('ADD_PRODUCT:')) {
+          const params = line.replace('ADD_PRODUCT:', '').trim();
+          const [productId, variantId, quantity] = params.split(',').map(p => p.trim());
+          
+          try {
+            await addItemToOrder(senderId, businessId, productId, variantId, parseInt(quantity) || 1);
+            console.log(`✅ AI Added product ${productId}, variant ${variantId} to order`);
+          } catch (error) {
+            console.error(`❌ Error adding AI product to order:`, error);
+          }
         }
-      } catch (error) {
-        console.error(`Error confirming order:`, error);
+        
+        // Process UPDATE_INFO actions
+        else if (line.startsWith('UPDATE_INFO:')) {
+          const infoData = line.replace('UPDATE_INFO:', '').trim();
+          const customerInfo = parseCustomerInfo(infoData);
+          
+          if (customerInfo && Object.keys(customerInfo).length > 0) {
+            try {
+              await updateCustomerInfo(senderId, businessId, customerInfo);
+              console.log(`✅ AI Updated customer info:`, customerInfo);
+            } catch (error) {
+              console.error(`❌ Error updating AI customer info:`, error);
+            }
+          }
+        }
+        
+        // Process CONFIRM_ORDER actions
+        else if (line.startsWith('CONFIRM_ORDER:') && line.includes('true')) {
+          try {
+            const result = await confirmOrder(senderId, businessId);
+            if (result.success) {
+              console.log(`✅ AI Confirmed order:`, result.orderId);
+            }
+          } catch (error) {
+            console.error(`❌ Error confirming AI order:`, error);
+          }
+        }
+        
+        // Process CANCEL_ORDER actions
+        else if (line.startsWith('CANCEL_ORDER:') && line.includes('true')) {
+          try {
+            await cancelOrder(senderId, businessId);
+            console.log(`✅ AI Cancelled order`);
+          } catch (error) {
+            console.error(`❌ Error cancelling AI order:`, error);
+          }
+        }
       }
     }
-
-    // Handle order cancellation
-    if (isOrderCancellation(userMessage)) {
-      try {
-        await cancelOrder(senderId, businessId);
-        console.log(`Order cancelled for ${senderId}`);
-      } catch (error) {
-        console.error(`Error cancelling order:`, error);
-      }
+    
+    // Fallback: Use AI intelligence to analyze the entire conversation
+    else {
+      console.log('🧠 No explicit actions found, using AI intelligence analysis...');
+      await processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase);
     }
 
   } catch (error) {
-    console.error('Error in processOrderActions:', error);
+    console.error('Error in processAIOrderActions:', error);
   }
 }
 
 /**
- * Extract product references from user message
+ * Use AI to intelligently analyze the conversation and determine actions
  */
-function extractProductReferences(message, productDatabase) {
-  const references = [];
-  const lowerMessage = message.toLowerCase();
-  
-  // Look for product matches by title, variants, or options
-  productDatabase.forEach(product => {
-    const productTitle = product.title.toLowerCase();
+async function processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase) {
+  try {
+    // Create comprehensive analysis prompt
+    const analysisPrompt = {
+      role: 'system',
+      content: `You are an AI Order Analysis System. Analyze the user message and AI response to determine what order actions should be taken.
+
+**AVAILABLE PRODUCTS DATABASE:**
+${productDatabase.map(p => `ID: ${p.id}, Title: "${p.title}", Variants: ${p.variants.map(v => `{ID: ${v.id}, Name: "${v.name}", Price: $${v.price}, Options: ${[v.option1, v.option2, v.option3].filter(Boolean).join(', ')}}`).join(', ')}`).join('\n')}
+
+**USER MESSAGE:** "${userMessage}"
+**AI RESPONSE:** "${aiResponse}"
+
+**ANALYSIS TASK:**
+1. **Product Intent**: Did the user mention wanting to buy/order any specific products?
+2. **Customer Info**: Did the user provide name, phone, or address information?
+3. **Order Action**: Did the user confirm, cancel, or modify their order?
+
+**OUTPUT FORMAT:** Respond with ONLY a JSON object:
+{
+  "products": [{"productId": "id", "variantId": "id", "quantity": number}],
+  "customerInfo": {"name": "value", "phone": "value", "address": "value"},
+  "orderAction": "confirm" | "cancel" | null
+}
+
+If no actions needed, return: {"products": [], "customerInfo": {}, "orderAction": null}`
+    };
+
+    const response = await axios.post('https://api.openai.com/v1/responses', {
+      model: 'gpt-5-mini',
+      input: [analysisPrompt],   
+      reasoning: { effort: "medium" }, 
+      max_output_tokens: 800,   
+      text: {
+        verbosity: "low"   
+      }
+    }, {
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
+    });
+
+    const analysisText = response.data.output
+      ?.flatMap(o => o.content || [])
+      .filter(c => c.type === "output_text")
+      .map(c => c.text)
+      .join(" ")
+      .trim();
     
-    // Check if product title is mentioned
-    if (lowerMessage.includes(productTitle)) {
-      // Default to first variant if no specific variant mentioned
-      let selectedVariant = product.variants[0];
-      let quantity = 1;
+    try {
+      const analysis = JSON.parse(analysisText);
+      console.log('🧠 AI Analysis Result:', analysis);
       
-      // Try to find specific variant matches
-      product.variants.forEach(variant => {
-        const variantName = variant.name.toLowerCase();
-        const options = [variant.option1, variant.option2, variant.option3].filter(Boolean).map(o => o.toLowerCase());
-        
-        if (lowerMessage.includes(variantName) || options.some(opt => lowerMessage.includes(opt))) {
-          selectedVariant = variant;
+      // Process product additions
+      if (analysis.products && analysis.products.length > 0) {
+        for (const product of analysis.products) {
+          try {
+            await addItemToOrder(senderId, businessId, product.productId, product.variantId, product.quantity || 1);
+            console.log(`✅ AI Intelligence added product: ${product.productId}`);
+          } catch (error) {
+            console.error(`❌ Error adding AI analyzed product:`, error);
+          }
         }
-      });
-      
-      // Extract quantity if mentioned
-      const quantityMatch = message.match(/(\d+)\s*(?:x|pieces?|items?|pcs?)/i);
-      if (quantityMatch) {
-        quantity = parseInt(quantityMatch[1]);
       }
       
-      references.push({
-        productId: product.id,
-        variantId: selectedVariant.id,
-        quantity: quantity
-      });
+      // Process customer info updates
+      if (analysis.customerInfo && Object.keys(analysis.customerInfo).length > 0) {
+        const cleanInfo = {};
+        if (analysis.customerInfo.name) cleanInfo.name = analysis.customerInfo.name;
+        if (analysis.customerInfo.phone) cleanInfo.phone = cleanCustomerPhone(analysis.customerInfo.phone);
+        if (analysis.customerInfo.address) cleanInfo.address = analysis.customerInfo.address;
+        
+        if (Object.keys(cleanInfo).length > 0) {
+          try {
+            await updateCustomerInfo(senderId, businessId, cleanInfo);
+            console.log(`✅ AI Intelligence updated customer info:`, cleanInfo);
+          } catch (error) {
+            console.error(`❌ Error updating AI analyzed customer info:`, error);
+          }
+        }
+      }
+      
+      // Process order actions
+      if (analysis.orderAction === 'confirm') {
+        try {
+          const result = await confirmOrder(senderId, businessId);
+          if (result.success) {
+            console.log(`✅ AI Intelligence confirmed order:`, result.orderId);
+          }
+        } catch (error) {
+          console.error(`❌ Error confirming AI analyzed order:`, error);
+        }
+      } else if (analysis.orderAction === 'cancel') {
+        try {
+          await cancelOrder(senderId, businessId);
+          console.log(`✅ AI Intelligence cancelled order`);
+        } catch (error) {
+          console.error(`❌ Error cancelling AI analyzed order:`, error);
+        }
+      }
+      
+    } catch (parseError) {
+      console.error('Error parsing AI analysis response:', parseError);
+      console.log('Raw AI analysis response:', analysisText);
     }
-  });
-  
-  return references;
+    
+  } catch (error) {
+    console.error('Error in AI intelligence analysis:', error);
+  }
 }
 
 /**
- * Extract customer information from user message
+ * Parse customer info from action line
  */
-function extractCustomerInfo(message) {
+function parseCustomerInfo(infoData) {
   const info = {};
   
-  // Extract name
-  const nameMatch = message.match(/(?:my name is|i'm|im|call me|اسمي|مين)\s+([a-zA-Z\u0600-\u06FF\s]{2,30})/i);
-  if (nameMatch) {
-    info.name = nameMatch[1].trim();
-  }
+  // Parse name="value" format
+  const nameMatch = infoData.match(/name="([^"]+)"/);
+  if (nameMatch) info.name = nameMatch[1];
   
-  // Extract phone number (Lebanese format)
-  const phoneMatch = message.match(/(\+?961|0)?[\s-]?([0-9]{1,2})[\s-]?([0-9]{3})[\s-]?([0-9]{3})/);
-  if (phoneMatch) {
-    info.phone = phoneMatch[0];
-  }
+  // Parse phone="value" format
+  const phoneMatch = infoData.match(/phone="([^"]+)"/);
+  if (phoneMatch) info.phone = cleanCustomerPhone(phoneMatch[1]);
   
-  // Extract address (look for address keywords followed by location info)
-  const addressMatch = message.match(/(?:address|location|deliver to|at|في|عنوان|مكان)\s*:?\s*([a-zA-Z\u0600-\u06FF0-9\s,.-]{5,100})/i);
-  if (addressMatch) {
-    info.address = addressMatch[1].trim();
-  }
-  
-  // Extract email
-  const emailMatch = message.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
-  if (emailMatch) {
-    info.email = emailMatch[0];
-  }
+  // Parse address="value" format
+  const addressMatch = infoData.match(/address="([^"]+)"/);
+  if (addressMatch) info.address = addressMatch[1];
   
   return info;
 }
 
 /**
- * Check if message indicates order confirmation
+ * Clean and standardize customer phone numbers
  */
-function isOrderConfirmation(message) {
-  const confirmationKeywords = /\b(yes|confirm|place order|go ahead|submit|ok|نعم|موافق|تأكيد|بدي اطلب)\b/i;
-  return confirmationKeywords.test(message);
-}
-
-/**
- * Check if message indicates order cancellation
- */
-function isOrderCancellation(message) {
-  const cancellationKeywords = /\b(cancel|no|stop|cancel order|لا|الغاء|توقف|ما بدي)\b/i;
-  return cancellationKeywords.test(message);
+function cleanCustomerPhone(phone) {
+  if (!phone || typeof phone !== 'string') return phone;
+  
+  // Remove spaces, dashes, parentheses
+  let cleanPhone = phone.replace(/[\s-().]/g, '');
+  
+  // Handle Lebanese phone number formats
+  if (cleanPhone.startsWith('00961')) {
+    cleanPhone = '+961' + cleanPhone.slice(5);
+  } else if (cleanPhone.startsWith('961') && !cleanPhone.startsWith('+961')) {
+    cleanPhone = '+961' + cleanPhone.slice(3);
+  } else if (cleanPhone.startsWith('0') && cleanPhone.length === 8) {
+    cleanPhone = '+961' + cleanPhone.slice(1);
+  } else if (!cleanPhone.startsWith('+') && cleanPhone.length === 7) {
+    cleanPhone = '+961' + cleanPhone;
+  }
+  
+  return cleanPhone;
 }
 
 module.exports = { generateReply, scheduleBatchedReply };
