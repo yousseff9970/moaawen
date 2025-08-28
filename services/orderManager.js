@@ -1,62 +1,151 @@
-const { MongoClient, ObjectId } = require('mongodb');
-const { 
-  createOrder, 
-  createOrderItem, 
-  calculateTotals, 
-  isOrderFlowComplete, 
+const { ObjectId } = require('mongodb');
+const getDb = require('../db'); // <-- path to your db.js
+
+const {
+  createOrder,
+  createOrderItem,
+  calculateTotals,
+  isOrderFlowComplete,
   getMissingInfo,
-  validateOrder 
+  validateOrder
 } = require('../models/Order');
-const { getBusinessInfo } = require('./business');
 
-const client = new MongoClient(process.env.MONGO_URI);
+// -------------------- Helpers & globals --------------------
 
-// Map to store active order sessions
-const activeOrders = new Map();
+/** In-memory cache with TTL */
+const activeOrders = new Map(); // key -> { order, cachedAt }
+const CACHE_TTL_MS = 60_000;
 
-/**
- * Get MongoDB orders collection
- */
-async function getOrdersCollection() {
-  await client.connect();
-  const db = client.db(process.env.DB_NAME || 'moaawen');
-  return db.collection('orders');
+/** Normalize inputs to avoid key forking / type drift */
+function normCustomerId(v) { return String(v); }
+function normBusinessId(v) { return String(v); }
+function normPlatform(v) { return String(v || 'whatsapp').toLowerCase(); }
+function cacheKey(customerId, businessId, platform) {
+  return `${normCustomerId(customerId)}_${normBusinessId(businessId)}_${normPlatform(platform)}`;
+}
+
+/** Recompute order flow stage after any mutation (items/info) */
+function recomputeStage(order) {
+  if (!order) return;
+  if (order.items.length === 0) {
+    order.orderFlow.stage = 'collecting_items';
+  } else if (!isOrderFlowComplete(order)) {
+    order.orderFlow.stage = 'collecting_info';
+  } else {
+    order.orderFlow.stage = 'reviewing';
+  }
+}
+
+let _indexesEnsured = false;
+async function ensureOrderIndexes(collection) {
+  if (_indexesEnsured) return;
+  try {
+    await collection.createIndexes([
+      {
+        key: {
+          customerId: 1,
+          businessId: 1,
+          platform: 1,
+          status: 1,
+          'orderFlow.stage': 1,
+          updatedAt: -1
+        },
+        name: 'orders_hot_query_compound'
+      }
+    ]);
+  } catch (_) {
+    // ignore index creation races between processes
+  } finally {
+    _indexesEnsured = true;
+  }
 }
 
 /**
- * Get or create an active order for a customer
+ * Get MongoDB orders collection (ensures indexes once)
  */
-async function getActiveOrder(customerId, businessId, platform) {
+async function getOrdersCollection() {
+  const db = await getDb();
+  const col = db.collection('orders');
+  await ensureOrderIndexes(col); // (14) ensure proper index
+  return col;
+}
+
+// Utility: delete cache entries for a customer/business (+platform)
+function deleteActiveOrderCache(customerId, businessId, platform) {
+  const sCust = normCustomerId(customerId);
+  const sBiz = normBusinessId(businessId);
+  const sPlat = normPlatform(platform);
+  const exactKey = cacheKey(sCust, sBiz, sPlat);
+  activeOrders.delete(exactKey);
+  // sweep any legacy keys for safety
+  for (const key of activeOrders.keys()) {
+    if (key.startsWith(`${sCust}_${sBiz}_`)) {
+      activeOrders.delete(key);
+    }
+  }
+}
+
+// -------------------- Core ops --------------------
+
+/**
+ * Get or create an active order for a customer
+ * - Platform-aware
+ * - Recency-aware (maxIdleMinutes)
+ * - touchOnAccess: bump updatedAt to keep session alive (11)
+ * - When createIfMissing=false, will NOT create a new order
+ */
+async function getActiveOrder(customerId, businessId, platform = 'whatsapp', options = {}) {
+  const {
+    createIfMissing = true,
+    maxIdleMinutes = 24 * 60,  // default: 24h
+    touchOnAccess = true       // (11) keep the session alive on reads
+  } = options;
+
+  const sCust = normCustomerId(customerId);
+  const sBiz = normBusinessId(businessId);
+  const sPlat = normPlatform(platform);
+  const key = cacheKey(sCust, sBiz, sPlat);
+
   try {
-    // Check if there's an active order in memory
-    const orderKey = `${customerId}_${businessId}`;
-    if (activeOrders.has(orderKey)) {
-      return activeOrders.get(orderKey);
+    // Serve from cache if fresh (7)
+    const cached = activeOrders.get(key);
+    if (cached && (Date.now() - cached.cachedAt < CACHE_TTL_MS)) {
+      // Optionally "touch" lazily without DB write; real touch occurs below if we hit DB
+      return cached.order;
     }
 
     const collection = await getOrdersCollection();
-    
-    // Check for existing pending order in database
-    let order = await collection.findOne({
-      customerId,
-      businessId: businessId.toString(),
-      status: 'pending',
-      'orderFlow.stage': { $in: ['collecting_items', 'collecting_info', 'reviewing'] }
-    });
+    const cutoff = new Date(Date.now() - maxIdleMinutes * 60 * 1000);
 
-    if (!order) {
-      // Create new order
-      order = createOrder(businessId.toString(), customerId, platform);
-      
-      // Insert into database
+    // (1) Stable newest pending search (avoid findOne+sort pitfalls)
+    let order = await collection
+      .find({
+        customerId: sCust,
+        businessId: sBiz,
+        platform: sPlat,
+        status: 'pending',
+        'orderFlow.stage': { $in: ['collecting_items', 'collecting_info', 'reviewing'] },
+        updatedAt: { $gte: cutoff }
+      })
+      .sort({ updatedAt: -1, createdAt: -1 })
+      .limit(1)
+      .next();
+
+    if (!order && createIfMissing) {
+      // (3) Always store normalized ids/platform
+      order = createOrder(sBiz, sCust, sPlat);
       const result = await collection.insertOne(order);
       order._id = result.insertedId;
+    } else if (order && touchOnAccess) {
+      // (11) Keep session alive on access
+      order.updatedAt = new Date();
+      await collection.updateOne({ _id: order._id }, { $set: { updatedAt: order.updatedAt } });
     }
 
-    // Store in memory for quick access
-    activeOrders.set(orderKey, order);
-    
-    return order;
+    if (order) {
+      activeOrders.set(key, { order, cachedAt: Date.now() }); // (7) cache with TTL
+    }
+    return order || null;
   } catch (error) {
     console.error('Error getting active order:', error);
     throw error;
@@ -66,97 +155,125 @@ async function getActiveOrder(customerId, businessId, platform) {
 /**
  * Add item to order
  */
-async function addItemToOrder(customerId, businessId, productId, variantId, quantity = 1) {
+async function addItemToOrder(customerId, businessId, productId, variantId, quantity = 1, platform = 'whatsapp') {
   try {
-    const order = await getActiveOrder(customerId, businessId, 'whatsapp'); // Default platform
-    
-    // Get business using the businessId directly
-    const { MongoClient } = require('mongodb');
-    const client = new MongoClient(process.env.MONGO_URI);
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const sCust = normCustomerId(customerId);
+    const sBiz = normBusinessId(businessId);
+    const sPlat = normPlatform(platform);
+    const key = cacheKey(sCust, sBiz, sPlat);
+
+    // Clamp quantity
+    const qty = Number.isFinite(+quantity) && +quantity > 0 ? Math.min(+quantity, 10) : 1;
+
+    const order = await getActiveOrder(sCust, sBiz, sPlat);
+    if (!order) throw new Error('Unable to create or retrieve active order');
+
+    const db = await getDb();
     const businessCollection = db.collection('businesses');
-    
-    const business = await businessCollection.findOne({ _id: new ObjectId(businessId) });
-    if (!business) {
-      throw new Error('Business not found');
-    }
-    
-    // Find product and variant (handle both string and number IDs)
-    const product = business.products.find(p => {
-      const productIdMatch = String(p.id) === String(productId);
-      return productIdMatch;
-    });
+
+    // (6) Guard ObjectId
+    if (!ObjectId.isValid(sBiz)) throw new Error('Invalid businessId');
+
+    // Fetch only the products we need
+    const business = await businessCollection.findOne(
+      { _id: new ObjectId(sBiz) },
+      { projection: { products: 1, currency: 1 } }
+    );
+    if (!business) throw new Error('Business not found');
+
+    const sProdId = String(productId);
+    const sVarId = String(variantId);
+
+    const product = (business.products || []).find(p => String(p.id) === sProdId);
     if (!product) {
-      console.error(`❌ Product ${productId} not found. Available:`, business.products.map(p => ({ id: p.id, title: p.title })));
-      throw new Error(`Product not found: ${productId}`);
+      console.error(`❌ Product ${sProdId} not found. Available:`, (business.products || []).map(p => ({ id: p.id, title: p.title })));
+      throw new Error(`Product not found: ${sProdId}`);
     }
-    
-    const variant = product.variants.find(v => {
-      const variantIdMatch = String(v.id) === String(variantId);
-      return variantIdMatch;
-    });
+
+    const variant = (product.variants || []).find(v => String(v.id) === sVarId);
     if (!variant) {
-      console.error(`❌ Variant ${variantId} not found in product ${productId}. Available:`, product.variants.map(v => ({ id: v.id, name: v.variantName })));
-      throw new Error(`Variant not found: ${variantId}`);
+      console.error(`❌ Variant ${sVarId} not found in product ${sProdId}. Available:`, (product.variants || []).map(v => ({ id: v.id, name: v.variantName })));
+      throw new Error(`Variant not found: ${sVarId}`);
     }
-    
-    // Check if variant is in stock
-    if (variant.inStock === false) {
+
+    // (9/10) Stock + price validation (part of 10)
+    if (variant.inStock === false || (typeof variant.quantity === 'number' && variant.quantity < 1)) {
       throw new Error('This variant is out of stock');
     }
-    
-    // Check if item already exists in order
+    const priceNum = Number(variant.discountedPrice ?? variant.originalPrice);
+    if (!Number.isFinite(priceNum) || priceNum <= 0) throw new Error('Invalid price for selected variant');
+
+    const displayName =
+      variant.variantName ||
+      [variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ') ||
+      'Standard';
+
+    // Merge with existing line (string ID compare)
     const existingItemIndex = order.items.findIndex(
-      item => item.productId === productId && item.variantId === variantId
+      item => String(item.productId) === sProdId && String(item.variantId) === sVarId
     );
-    
-    const price = parseFloat(variant.discountedPrice || variant.originalPrice || 0);
-    
+
     if (existingItemIndex >= 0) {
-      // Update existing item quantity
-      order.items[existingItemIndex].quantity += quantity;
-      order.items[existingItemIndex].totalPrice = order.items[existingItemIndex].quantity * price;
+      order.items[existingItemIndex].quantity += qty;
+      order.items[existingItemIndex].price = priceNum; // keep latest price reference
+      order.items[existingItemIndex].totalPrice = order.items[existingItemIndex].quantity * priceNum;
     } else {
-      // Add new item
       const orderItem = createOrderItem(
-        productId,
-        variantId,
+        sProdId,
+        sVarId,
         product.title,
-        variant.variantName || [variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ') || 'Standard',
-        price,
-        quantity,
+        displayName,
+        priceNum,
+        qty,
         {
           option1: variant.option1,
           option2: variant.option2,
           option3: variant.option3,
           sku: variant.sku,
-          image: variant.image || (product.images && product.images[0] ? product.images[0].src : null)
+          image: variant.image
+            ?? product.images?.[0]?.src
+            ?? product.images?.[0]
+            ?? null
         }
       );
-      
       order.items.push(orderItem);
     }
-    
-    // Recalculate totals
+
+    // Recalculate totals & stage (2, 5)
     calculateTotals(order);
-    
-    // Save order to database
+    recomputeStage(order);
+    order.updatedAt = new Date();
+
+    // Persist (2): write full totals; then re-read to avoid race (6/7)
     const collection = await getOrdersCollection();
     await collection.updateOne(
       { _id: order._id },
-      { $set: { items: order.items, subtotal: order.subtotal, total: order.total, updatedAt: new Date() } }
+      {
+        $set: {
+          items: order.items,
+          subtotal: order.subtotal,
+          tax: order.tax ?? 0,
+          shipping: order.shipping ?? 0,
+          discount: order.discount ?? 0,
+          total: order.total,
+          'orderFlow.stage': order.orderFlow.stage,
+          updatedAt: order.updatedAt
+        }
+      }
     );
-    
+
+    const fresh = await collection.findOne({ _id: order._id }); // (6/7) refresh after write
+    activeOrders.set(key, { order: fresh, cachedAt: Date.now() });
+
     return {
       success: true,
-      order,
+      order: fresh,
       addedItem: {
         productTitle: product.title,
-        variantName: variant.variantName || [variant.option1, variant.option2, variant.option3].filter(Boolean).join(' / ') || 'Standard',
-        quantity,
-        price,
-        totalPrice: price * quantity
+        variantName: displayName,
+        quantity: qty,
+        price: priceNum,
+        totalPrice: priceNum * qty
       }
     };
   } catch (error) {
@@ -168,34 +285,56 @@ async function addItemToOrder(customerId, businessId, productId, variantId, quan
 /**
  * Remove item from order
  */
-async function removeItemFromOrder(customerId, businessId, productId, variantId) {
+async function removeItemFromOrder(customerId, businessId, productId, variantId, platform = 'whatsapp') {
   try {
-    const order = await getActiveOrder(customerId, businessId, 'whatsapp');
-    
-    const itemIndex = order.items.findIndex(
-      item => item.productId === productId && item.variantId === variantId
+    const sCust = normCustomerId(customerId);
+    const sBiz = normBusinessId(businessId);
+    const sPlat = normPlatform(platform);
+    const key = cacheKey(sCust, sBiz, sPlat);
+
+    const order = await getActiveOrder(sCust, sBiz, sPlat);
+    if (!order) throw new Error('No active order');
+
+    const sProdId = String(productId);
+    const sVarId = String(variantId);
+
+    const idx = order.items.findIndex(
+      item => String(item.productId) === sProdId && String(item.variantId) === sVarId
     );
-    
-    if (itemIndex === -1) {
-      throw new Error('Item not found in order');
-    }
-    
-    const removedItem = order.items[itemIndex];
-    order.items.splice(itemIndex, 1);
-    
-    // Recalculate totals
+
+    if (idx === -1) throw new Error('Item not found in order');
+
+    const removedItem = order.items[idx];
+    order.items.splice(idx, 1);
+
+    // Recalculate totals & stage (2, 5)
     calculateTotals(order);
-    
-    // Save order to database
+    recomputeStage(order);
+    order.updatedAt = new Date();
+
     const collection = await getOrdersCollection();
     await collection.updateOne(
       { _id: order._id },
-      { $set: { items: order.items, subtotal: order.subtotal, total: order.total, updatedAt: new Date() } }
+      {
+        $set: {
+          items: order.items,
+          subtotal: order.subtotal,
+          tax: order.tax ?? 0,
+          shipping: order.shipping ?? 0,
+          discount: order.discount ?? 0,
+          total: order.total,
+          'orderFlow.stage': order.orderFlow.stage,
+          updatedAt: order.updatedAt
+        }
+      }
     );
-    
+
+    const fresh = await collection.findOne({ _id: order._id }); // (6/7) refresh after write
+    activeOrders.set(key, { order: fresh, cachedAt: Date.now() });
+
     return {
       success: true,
-      order,
+      order: fresh,
       removedItem
     };
   } catch (error) {
@@ -207,69 +346,73 @@ async function removeItemFromOrder(customerId, businessId, productId, variantId)
 /**
  * Update customer information
  */
-async function updateCustomerInfo(customerId, businessId, customerData) {
+async function updateCustomerInfo(customerId, businessId, customerData, platform = 'whatsapp') {
   try {
-    const order = await getActiveOrder(customerId, businessId, 'whatsapp');
-    
-    // Update customer info
+    const sCust = normCustomerId(customerId);
+    const sBiz = normBusinessId(businessId);
+    const sPlat = normPlatform(platform);
+    const key = cacheKey(sCust, sBiz, sPlat);
+
+    const order = await getActiveOrder(sCust, sBiz, sPlat);
+    if (!order) throw new Error('No active order');
+
     const updateFields = {};
-    
+
     if (customerData.name && customerData.name.trim()) {
       order.customer.name = customerData.name.trim();
       order.orderFlow.collectedInfo.hasName = true;
-      updateFields['customer.name'] = customerData.name.trim();
+      updateFields['customer.name'] = order.customer.name;
       updateFields['orderFlow.collectedInfo.hasName'] = true;
     }
-    
+
     if (customerData.phone && customerData.phone.trim()) {
       order.customer.phone = customerData.phone.trim();
       order.orderFlow.collectedInfo.hasPhone = true;
-      updateFields['customer.phone'] = customerData.phone.trim();
+      updateFields['customer.phone'] = order.customer.phone;
       updateFields['orderFlow.collectedInfo.hasPhone'] = true;
     }
-    
+
     if (customerData.address && customerData.address.trim()) {
       order.customer.address = customerData.address.trim();
       order.orderFlow.collectedInfo.hasAddress = true;
-      updateFields['customer.address'] = customerData.address.trim();
+      updateFields['customer.address'] = order.customer.address;
       updateFields['orderFlow.collectedInfo.hasAddress'] = true;
     }
-    
+
     if (customerData.email) {
       order.customer.email = customerData.email;
       updateFields['customer.email'] = customerData.email;
     }
-    
+
     if (customerData.additionalNotes) {
       order.customer.additionalNotes = customerData.additionalNotes;
       updateFields['customer.additionalNotes'] = customerData.additionalNotes;
     }
-    
-    // Update order flow stage
-    if (order.items.length > 0 && !isOrderFlowComplete(order)) {
-      order.orderFlow.stage = 'collecting_info';
-      updateFields['orderFlow.stage'] = 'collecting_info';
-    } else if (isOrderFlowComplete(order)) {
-      order.orderFlow.stage = 'reviewing';
-      updateFields['orderFlow.stage'] = 'reviewing';
-    }
-    
+
+    // (5) Update stage consistently
+    recomputeStage(order);
+
     order.orderFlow.lastUpdated = new Date();
+    order.updatedAt = new Date();
+    updateFields['orderFlow.stage'] = order.orderFlow.stage;
     updateFields['orderFlow.lastUpdated'] = order.orderFlow.lastUpdated;
-    updateFields['updatedAt'] = new Date();
-    
-    // Save to database
+    updateFields['updatedAt'] = order.updatedAt;
+
     const collection = await getOrdersCollection();
     await collection.updateOne(
       { _id: order._id },
       { $set: updateFields }
     );
-    
+
+    // (6/7) Refresh after write
+    const fresh = await collection.findOne({ _id: order._id });
+    activeOrders.set(key, { order: fresh, cachedAt: Date.now() });
+
     return {
       success: true,
-      order,
-      isComplete: isOrderFlowComplete(order),
-      missingInfo: getMissingInfo(order)
+      order: fresh,
+      isComplete: isOrderFlowComplete(fresh),
+      missingInfo: getMissingInfo(fresh)
     };
   } catch (error) {
     console.error('Error updating customer info:', error);
@@ -279,43 +422,46 @@ async function updateCustomerInfo(customerId, businessId, customerData) {
 
 /**
  * Confirm order
+ * - IMPORTANT: does NOT create new orders.
  */
-async function confirmOrder(customerId, businessId) {
+async function confirmOrder(customerId, businessId, platform = 'whatsapp') {
   try {
-    const order = await getActiveOrder(customerId, businessId, 'whatsapp');
-    
+    const sCust = normCustomerId(customerId);
+    const sBiz = normBusinessId(businessId);
+    const sPlat = normPlatform(platform);
+
+    const order = await getActiveOrder(sCust, sBiz, sPlat, { createIfMissing: false });
+    if (!order) throw new Error('No active order to confirm');
+
     if (!isOrderFlowComplete(order)) {
       throw new Error(`Order information is incomplete. Missing: ${getMissingInfo(order).join(', ')}`);
     }
-    
     if (order.items.length === 0) {
       throw new Error('Order has no items');
     }
-    
+
     // Update order status
     order.status = 'confirmed';
     order.orderFlow.stage = 'completed';
     order.confirmedAt = new Date();
     order.updatedAt = new Date();
-    
-    // Save to database
+
     const collection = await getOrdersCollection();
     await collection.updateOne(
       { _id: order._id },
-      { 
-        $set: { 
+      {
+        $set: {
           status: 'confirmed',
           'orderFlow.stage': 'completed',
           confirmedAt: order.confirmedAt,
           updatedAt: order.updatedAt
-        } 
+        }
       }
     );
-    
-    // Remove from active orders
-    const orderKey = `${customerId}_${businessId}`;
-    activeOrders.delete(orderKey);
-    
+
+    // Remove from active orders cache (by platform)
+    deleteActiveOrderCache(sCust, sBiz, order.platform || sPlat);
+
     return {
       success: true,
       order,
@@ -329,32 +475,35 @@ async function confirmOrder(customerId, businessId) {
 
 /**
  * Cancel order
+ * - IMPORTANT: does NOT create new orders.
  */
-async function cancelOrder(customerId, businessId) {
+async function cancelOrder(customerId, businessId, platform = 'whatsapp') {
   try {
-    const order = await getActiveOrder(customerId, businessId, 'whatsapp');
-    
+    const sCust = normCustomerId(customerId);
+    const sBiz = normBusinessId(businessId);
+    const sPlat = normPlatform(platform);
+
+    const order = await getActiveOrder(sCust, sBiz, sPlat, { createIfMissing: false });
+    if (!order) throw new Error('No active order to cancel');
+
     order.status = 'cancelled';
     order.orderFlow.stage = 'cancelled';
     order.updatedAt = new Date();
-    
-    // Save to database
+
     const collection = await getOrdersCollection();
     await collection.updateOne(
       { _id: order._id },
-      { 
-        $set: { 
+      {
+        $set: {
           status: 'cancelled',
           'orderFlow.stage': 'cancelled',
           updatedAt: order.updatedAt
-        } 
+        }
       }
     );
-    
-    // Remove from active orders
-    const orderKey = `${customerId}_${businessId}`;
-    activeOrders.delete(orderKey);
-    
+
+    deleteActiveOrderCache(sCust, sBiz, order.platform || sPlat);
+
     return {
       success: true,
       order
@@ -372,9 +521,10 @@ function getOrderSummary(order) {
   if (!order || order.items.length === 0) {
     return 'Your cart is empty.';
   }
-  
+
+  // NOTE: Currency still shown as "$" (can wire business.currency into order if needed)
   let summary = '🛒 **Order Summary**\n\n';
-  
+
   order.items.forEach((item, index) => {
     summary += `${index + 1}. **${item.productTitle}**\n`;
     summary += `   ${item.variantName}\n`;
@@ -382,12 +532,12 @@ function getOrderSummary(order) {
     summary += `   Price: $${item.price} each\n`;
     summary += `   Total: $${item.totalPrice}\n\n`;
   });
-  
+
   summary += `💰 **Subtotal: $${order.subtotal}**\n`;
   if (order.tax > 0) summary += `📊 Tax: $${order.tax}\n`;
   if (order.shipping > 0) summary += `🚚 Shipping: $${order.shipping}\n`;
   summary += `💳 **Total: $${order.total}**\n\n`;
-  
+
   if (order.customer.name) {
     summary += `👤 **Customer Details**\n`;
     summary += `Name: ${order.customer.name}\n`;
@@ -395,16 +545,21 @@ function getOrderSummary(order) {
     if (order.customer.address) summary += `Address: ${order.customer.address}\n`;
     if (order.customer.email) summary += `Email: ${order.customer.email}\n`;
   }
-  
+
   return summary;
 }
 
 /**
- * Clear order session (cleanup)
+ * Clear order session (cleanup) — clears all platform keys for this customer/business
  */
 function clearOrderSession(customerId, businessId) {
-  const orderKey = `${customerId}_${businessId}`;
-  activeOrders.delete(orderKey);
+  const sCust = normCustomerId(customerId);
+  const sBiz = normBusinessId(businessId);
+  for (const key of activeOrders.keys()) {
+    if (key.startsWith(`${sCust}_${sBiz}_`)) {
+      activeOrders.delete(key);
+    }
+  }
 }
 
 module.exports = {
