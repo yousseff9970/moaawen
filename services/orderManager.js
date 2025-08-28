@@ -68,6 +68,13 @@ async function getActiveOrder(customerId, businessId, platform) {
  */
 async function addItemToOrder(customerId, businessId, productId, variantId, quantity = 1) {
   try {
+    console.log('🔍 addItemToOrder Debug:');
+    console.log('CustomerId:', customerId);
+    console.log('BusinessId:', businessId);
+    console.log('ProductId:', productId);
+    console.log('VariantId:', variantId);
+    console.log('Quantity:', quantity);
+    
     const order = await getActiveOrder(customerId, businessId, 'whatsapp'); // Default platform
     
     // Get business using the businessId directly
@@ -82,15 +89,26 @@ async function addItemToOrder(customerId, businessId, productId, variantId, quan
       throw new Error('Business not found');
     }
     
+    console.log('📦 Available products in business:');
+    business.products.forEach(p => {
+      console.log(`- Product ID: ${p.id}, Title: ${p.title}`);
+      p.variants.forEach(v => {
+        console.log(`  - Variant ID: ${v.id}, Name: ${v.variantName || v.option1 + ' / ' + v.option2}`);
+      });
+    });
+    
     // Find product and variant
     const product = business.products.find(p => p.id === productId);
     if (!product) {
-      throw new Error('Product not found');
+      console.error(`❌ Product with ID ${productId} not found in business products`);
+      throw new Error(`Product not found: ${productId}`);
     }
     
     const variant = product.variants.find(v => v.id === variantId);
     if (!variant) {
-      throw new Error('Variant not found');
+      console.error(`❌ Variant with ID ${variantId} not found in product ${productId}`);
+      console.log('Available variants:', product.variants.map(v => ({ id: v.id, name: v.variantName })));
+      throw new Error(`Variant not found: ${variantId}`);
     }
     
     // Check if variant is in stock

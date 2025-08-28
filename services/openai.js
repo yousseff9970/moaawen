@@ -373,6 +373,10 @@ This business does not currently have products in their catalog. Focus on:
   .map(c => c.text)
   .join(" ")
   .trim();
+  
+    // Remove AI action commands from user-facing response
+    const cleanReplyText = replyText.replace(/\[AI_ORDER_ACTIONS\].*?\[\/AI_ORDER_ACTIONS\]/gs, '').trim();
+    
     const duration = Date.now() - start;
 
     logToJson({
@@ -383,20 +387,20 @@ This business does not currently have products in their catalog. Focus on:
       duration,
       tokens: response.data.usage || {},
       message: userMessage,
-      ai_reply: replyText
+      ai_reply: cleanReplyText
     });
 
     await trackUsage(business.id, 'message');
 
-    // 🤖 AI-POWERED ORDER POST-PROCESSING
+    // 🤖 AI-POWERED ORDER POST-PROCESSING - Use original response with actions
     try {
       await processAIOrderActions(senderId, business._id || business.id, userMessage, replyText, productDatabase);
     } catch (orderError) {
       console.error('Error processing AI order actions:', orderError);
     }
 
-    updateSession(senderId, 'assistant', replyText);
-    return { reply: replyText, source: 'ai', layer_used: 'ai', duration };
+    updateSession(senderId, 'assistant', cleanReplyText);
+    return { reply: cleanReplyText, source: 'ai', layer_used: 'ai', duration };
   } catch (err) {
     const duration = Date.now() - start;
     const errMsg = err?.response?.data?.error?.message || err.message;
@@ -541,12 +545,15 @@ Each product has:
 - Multiple variants with their own IDs (e.g., "45292206129341")
 - Each variant has specific options like size, color, etc.
 
+**YOU MUST USE EXACT IDs FROM THE DATABASE BELOW:**
+
 **AVAILABLE PRODUCTS DATABASE:**
 ${productDatabase.map(p => `
-PRODUCT: ID="${p.id}", Title="${p.title}"
+PRODUCT_ID: "${p.id}"
+TITLE: "${p.title}"
 VARIANTS:
-${p.variants.map(v => `  - VARIANT_ID="${v.id}", Name="${v.name || 'Standard'}", Price=$${v.price}, Options: ${[v.option1, v.option2, v.option3].filter(Boolean).join(' / ') || 'None'}, InStock=${v.inStock !== false}`).join('\n')}
-`).join('\n')}
+${p.variants.filter(v => v.inStock !== false).map(v => `  VARIANT_ID: "${v.id}" | NAME: "${v.name || v.variantName || 'Standard'}" | PRICE: $${v.price} | OPTIONS: ${[v.option1, v.option2, v.option3].filter(Boolean).join(' / ') || 'None'}`).join('\n')}
+---`).join('\n')}
 
 **USER MESSAGE:** "${userMessage}"
 **AI RESPONSE:** "${aiResponse}"
@@ -557,6 +564,7 @@ ${p.variants.map(v => `  - VARIANT_ID="${v.id}", Name="${v.name || 'Standard'}",
    - If user mentions size/color/options, find the matching variant ID
    - If user mentions general product, select the first available (in-stock) variant
    - ALWAYS return BOTH productId (parent) AND variantId (specific variant)
+   - USE THE EXACT IDs FROM THE DATABASE ABOVE - DO NOT MODIFY OR GUESS IDs
 
 2. **Customer Info**: Did the user provide name, phone, or address information?
    - Extract any personal information mentioned
@@ -566,10 +574,17 @@ ${p.variants.map(v => `  - VARIANT_ID="${v.id}", Name="${v.name || 'Standard'}",
    - Look for cancellation words like "no", "cancel", "لا", "الغاء"
 
 **CRITICAL MATCHING RULES:**
-- When user says "Crop Top" → find product with title "Crop Top"
-- When user specifies "Pink S" → find variant with option1="Pink" AND option2="S"
-- When user says "medium" → find variant with option2="M" or similar
-- When user says general product name → select first in-stock variant
+- When user says "Crop Top" → find PRODUCT_ID for "Crop Top"
+- When user specifies "Pink S" → find VARIANT_ID with OPTIONS "Pink / S"
+- When user says "medium" → find VARIANT_ID with option containing "M" or "Medium"
+- When user says general product name → select first VARIANT_ID from that product
+- COPY THE EXACT PRODUCT_ID AND VARIANT_ID FROM THE DATABASE - DO NOT GUESS OR MODIFY
+
+**EXAMPLE MATCHING:**
+User: "I want the crop top in pink size S"
+→ Find PRODUCT_ID: "8057183568061" (for Crop Top)
+→ Find VARIANT_ID: "45292206129341" (for Pink / S variant)
+→ Return: {"productId": "8057183568061", "variantId": "45292206129341", "quantity": 1}
 
 **OUTPUT FORMAT:** Respond with ONLY a JSON object:
 {
