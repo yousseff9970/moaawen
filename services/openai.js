@@ -584,6 +584,9 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
           } else {
             console.error(`No fallback product found for user message: "${userMessage}"`);
           }
+          await processWithAIIntelligence(senderId, businessId, userMessage, aiResponse, productDatabase)
+  .catch(e => console.error('AI analysis repair failed:', e));
+
           continue;
         }
 
