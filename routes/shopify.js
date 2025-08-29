@@ -3,6 +3,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const shopifyClient = require('../utils/shopifyClient');
 const saveOrUpdateStore = require('../utils/saveOrUpdateStore');
+const getdb = require('../db');
 
 const router = express.Router();
 
@@ -101,11 +102,9 @@ router.get('/callback', async (req, res) => {
     if (businessConnection && businessConnection.businessId) {
       // Business-specific connection
       console.log(`🏢 Business-specific connection for business ${businessConnection.businessId}`);
-      
-      const { MongoClient, ObjectId } = require('mongodb');
-      const mongoClient = new MongoClient(process.env.MONGO_URI);
-      await mongoClient.connect();
-      const businessesCol = mongoClient.db().collection('businesses');
+
+      const db = await getdb();
+      const businessesCol = db.collection('businesses');
 
       // Check if business exists
       const business = await businessesCol.findOne({ _id: new ObjectId(businessConnection.businessId) });

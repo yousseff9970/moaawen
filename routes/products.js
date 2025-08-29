@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const { MongoClient, ObjectId } = require('mongodb');
+const {  ObjectId } = require('mongodb');
 const { authMiddleware, requireVerified } = require('../middlewares/authMiddleware');
+const getdb = require('../db');
 
-const client = new MongoClient(process.env.MONGO_URI);
+
 
 // Validate business ownership
 const validateBusinessOwnership = async (businessId, userId) => {
-  await client.connect();
-  const db = client.db(process.env.DB_NAME || 'moaawen');
+
+  const db = await getdb();
   const usersCol = db.collection('users');
   const businessesCol = db.collection('businesses');
   

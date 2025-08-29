@@ -54,17 +54,17 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
         const variantId = rawVid ? toId(rawVid) : '';
         const quantity = toQty(rawQty);
 
-        console.log(`Processing ADD_PRODUCT: productId=${productId}, variantId=${variantId}, quantity=${quantity}`);
+        //console.log(`Processing ADD_PRODUCT: productId=${productId}, variantId=${variantId}, quantity=${quantity}`);
 
         // product = variant mistake → auto-pick a valid variant
         if (productId && variantId && productId === variantId) {
-          console.log(`AI used same ID for product and variant (${productId}) - attempting to fix...`);
+          //console.log(`AI used same ID for product and variant (${productId}) - attempting to fix...`);
           const prod = findProduct(productId);
           const chosen = firstAvailableVariant(prod);
           if (prod && chosen) {
             try {
               await addItemToOrder(senderId, businessId, String(prod.id), String(chosen.id), quantity);
-              console.log(`Auto-corrected with variant ${chosen.id} for product ${prod.id}`);
+              //console.log(`Auto-corrected with variant ${chosen.id} for product ${prod.id}`);
               continue;
             } catch (e) {
               console.error('Error adding corrected product:', e);
@@ -90,7 +90,7 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
                 String(productMatch.variantId),
                 quantity
               );
-              console.log(`Successfully added fallback product: ${productMatch.productTitle}`);
+             // console.log(`Successfully added fallback product: ${productMatch.productTitle}`);
             } catch (e) {
               console.error('Error adding fallback product:', e);
             }
@@ -155,7 +155,7 @@ async function processAIOrderActions(senderId, businessId, userMessage, aiRespon
             continue;
           }
           const result = await confirmOrder(senderId, businessId);
-          console.log(`Order confirmed successfully: ${result?.orderId || 'N/A'}`);
+          //console.log(`Order confirmed successfully: ${result?.orderId || 'N/A'}`);
         } catch (e) {
           console.error('Error confirming AI order:', e);
         }
@@ -254,7 +254,7 @@ ${p.variants.filter(v => v.inStock !== false).map(v => `  VARIANT_ID: "${v.id}" 
       cleanedText = cleanedText.substring(firstBrace, lastBrace + 1);
     }
 
-    console.log(`Attempting to parse AI analysis: ${cleanedText.substring(0, 200)}...`);
+    //console.log(`Attempting to parse AI analysis: ${cleanedText.substring(0, 200)}...`);
 
     let analysis;
     try {
@@ -516,15 +516,15 @@ async function fallbackProductMatching(senderId, businessId, userMessage, produc
     const productMatch = matchProductFromMessage(userMessage, productDatabase);
     
     if (productMatch) {
-      console.log(`Fallback found product match: ${productMatch.productTitle} (${productMatch.productId})`);
+      //console.log(`Fallback found product match: ${productMatch.productTitle} (${productMatch.productId})`);
       try {
         await addItemToOrder(senderId, businessId, productMatch.productId, productMatch.variantId, 1);
-        console.log(`Fallback successfully added: ${productMatch.productTitle}`);
+        //console.log(`Fallback successfully added: ${productMatch.productTitle}`);
       } catch (error) {
         console.error(`Fallback error adding product:`, error);
       }
     } else {
-      console.log(`No fallback product match found for: "${userMessage}"`);
+      //console.log(`No fallback product match found for: "${userMessage}"`);
     }
     
   } catch (error) {
