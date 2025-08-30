@@ -37,7 +37,7 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   }
 
   const business = await getBusinessInfo({ phone_number_id, page_id, domain, instagram_account_id, shop });
-console.log(business);
+
   // 🛡️ Plan/access check
   const { checkAccess } = require('../utils/businessPolicy');
   const access = checkAccess(business, { messages: true, feature: 'aiReplies' });
@@ -82,7 +82,7 @@ console.log(business);
     return { reply: faqAnswer, source: 'faq', layer_used: 'faq', duration };
   }
     console.log("from open ai" + business.id);
-await trackUsage(business.id, 'message');
+await trackUsage(business._id, 'message');
   // Save user message
   updateSession(senderId, 'user', userMessage);
 
