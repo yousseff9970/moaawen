@@ -2,96 +2,98 @@
 const { express, getDb, ObjectId, authMiddleware, requireVerified, planSettings } = require('./shared');
 const router = express.Router();
 
-// Test endpoint
-router.get('/test', (req, res) => {
-  res.json({ message: 'Business route is working!' });
-});
-
 // Get user's businesses
+// at top of file once
+const { performance } = require('perf_hooks');
+const crypto = require('crypto');
+
+// GET / (list user's businesses)
 router.get('/', authMiddleware, async (req, res) => {
+  const t0 = performance.now();
   try {
-   const db = await getDb();
+    const db = await getDb();
     const usersCol = db.collection('users');
     const businessesCol = db.collection('businesses');
 
-    // Get user data to check their associated businesses
-    const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    // 1) Fetch only what we need from the user
+    const user = await usersCol.findOne(
+      { _id: new ObjectId(req.user.userId) },
+      { projection: { email: 1, businesses: 1 } }
+    );
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // 2) Build a single OR query (covers all three paths)
+    const or = [];
+    // a) businesses[] by _id
+    if (Array.isArray(user.businesses) && user.businesses.length) {
+      const ids = user.businesses
+        .map(id => {
+          try { return new ObjectId(id); } catch { return null; }
+        })
+        .filter(Boolean);
+      if (ids.length) or.push({ _id: { $in: ids } });
     }
+    // b) by userId (handle both ObjectId & string storage)
+    or.push({ userId: new ObjectId(req.user.userId) });
+    or.push({ userId: req.user.userId });
 
-    let businesses = [];
-
-    // Check if user has businesses array with IDs
-    if (user.businesses && user.businesses.length > 0) {
-      // Convert string IDs to ObjectIds for the query
-      const businessObjectIds = user.businesses.map(id => {
-        try {
-          return new ObjectId(id);
-        } catch (error) {
-          console.log('Invalid ObjectId:', id);
-          return null;
-        }
-      }).filter(id => id !== null);
-
-      if (businessObjectIds.length > 0) {
-        businesses = await businessesCol.find({ 
-          _id: { $in: businessObjectIds }
-        }).toArray();
+    const cursor = businessesCol.find(
+      { $or: or },
+      {
+        projection: {
+          // keep this tight; add/remove fields your UI actually shows
+          name: 1,
+          
+          status: 1,
+          
+          channels: 1,
+          settings: 1,
+          plan: 1,
+          messagesLimit: 1,
+          messagesUsed: 1,
+          createdAt: 1,
+        },
+        sort: { createdAt: 1 },
+        limit: 50
       }
-    }
+    );
 
-    // If no businesses found by user association, try finding by userId field
-    if (businesses.length === 0) {
-      businesses = await businessesCol.find({ 
-        userId: new ObjectId(req.user.userId) 
-      }).toArray();
-    }
+    const docs = await cursor.toArray();
 
-    // If still no businesses, try finding by owner email
-    if (businesses.length === 0) {
-      businesses = await businessesCol.find({ 
-        'contact.email': user.email 
-      }).toArray();
-    }
+    // 4) Map minimal shape (avoid spreading whole doc)
+    const businesses = docs.map(b => ({
+      id: String(b._id),
+      name: b.name || 'Untitled',
+      status: b.status || 'active',
+      plan: (b.settings?.currentPlan) || b.plan || 'starter',
+      channels: b.channels || {},
+      settings: b.settings || {
+        currentPlan: b.plan || 'starter',
+        maxMessages: b.messagesLimit ?? 1000,
+        usedMessages: b.messagesUsed ?? 0,
+        allowedChannels: 3,
+        enabledChannels: {}
+      },
+      createdAt: b.createdAt || null
+    }));
 
-    // Transform business data to match frontend interface
-    const transformedBusinesses = businesses.map(business => {
-      return {
-        ...business,
-        id: business._id.toString(),
-        // Ensure status field exists
-        status: business.status || 'active',
-        // Ensure contact object exists
-        contact: business.contact || {},
-        // Ensure channels object exists
-        channels: business.channels || {},
-        // Ensure settings object exists with defaults
-        settings: business.settings || {
-          currentPlan: business.plan || 'starter',
-          maxMessages: business.messagesLimit || 1000,
-          usedMessages: business.messagesUsed || 0,
-          allowedChannels: 3,
-          enabledChannels: {
-            languages: 1,
-            voiceMinutes: 10,
-            usedVoiceMinutes: 0,
-            imageAnalysesUsed: 0
-          }
-        }
-      };
-    });
+    // 5) Cheap client caching (repeat clicks → 304)
+    const body = JSON.stringify({ success: true, businesses });
+    const etag = '"' + crypto.createHash('md5').update(body).digest('hex') + '"';
+    if (req.headers['if-none-match'] === etag) return res.status(304).end();
+    res.setHeader('ETag', etag);
+    res.setHeader('Cache-Control', 'private, max-age=30');
 
-    res.json({
-      success: true,
-      businesses: transformedBusinesses
-    });
+    // 6) Server-Timing to see where time goes
+    res.setHeader('Server-Timing', `total;dur=${(performance.now() - t0).toFixed(1)}`);
 
-  } catch (error) {
-    console.error('Error fetching businesses:', error);
-    res.status(500).json({ error: 'Failed to fetch businesses' });
+    return res.json({ success: true, businesses });
+  } catch (err) {
+    console.error('Error fetching businesses:', err);
+    return res.status(500).json({ error: 'Failed to fetch businesses' });
   }
 });
+
 
 // Get single business details
 router.get('/:id', authMiddleware, async (req, res) => {
