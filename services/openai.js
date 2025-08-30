@@ -1,6 +1,5 @@
 const axios = require('axios');
 const path = require('path');
-const {ObjectId} = require('bson');
 const { getBusinessInfo } = require('./business');
 const { matchFAQSmart } = require('./modelMatcher');
 const { logToJson } = require('./jsonLog');
@@ -409,7 +408,7 @@ This business does not currently have products in their catalog. Focus on:
 }, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
     });
-await trackUsage(new ObjectId(business.trackid), 'message');
+await trackUsage(business.id, 'message');
     const replyText = response.data.output
   ?.flatMap(o => o.content || [])
   .filter(c => c.type === "output_text")
