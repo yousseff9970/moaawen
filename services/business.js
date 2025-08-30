@@ -52,7 +52,7 @@ async function getBusinessInfo({ phone_number_id, page_id, domain, shop, instagr
   if (!business && domain) {
     business = await collection.findOne({ 'channels.website.domain': domain });
     if (business) {
-      //console.log(`🌐 Found business via website domain: ${domain}`);
+      console.log(`🌐 Found business via website domain: ${domain}`);
       return business;
     }
   }
