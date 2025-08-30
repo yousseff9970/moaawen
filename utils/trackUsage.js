@@ -14,8 +14,11 @@ async function trackUsage(businessId, type, amount = 1) {
   if (!field) return;
 
   try {
-    const db = getDb();
-    await db.collection('businesses').updateOne(
+  
+     const db = await getDb();
+    
+    const businessesCol = db.collection('businesses');
+    await businessesCol.updateOne(
       { _id: new ObjectId(businessId) },
       { $inc: { [field]: amount } }
     );
