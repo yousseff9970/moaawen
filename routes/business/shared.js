@@ -1,18 +1,19 @@
 // routes/business/shared.js
 const express = require('express');
-const { MongoClient, ObjectId } = require('mongodb');
+const getDb = require('../../db');
+const { ObjectId } = require('bson');
 const { authMiddleware, requireVerified, requireAdmin } = require('../../middlewares/authMiddleware');
 const planSettings = require('../../utils/PlanSettings');
 
-const client = new MongoClient(process.env.MONGO_URI);
+
 
 module.exports = {
   express,
-  MongoClient,
+  getDb,
   ObjectId,
   authMiddleware,
   requireVerified,
   requireAdmin,
   planSettings,
-  client
+  
 };

@@ -2,10 +2,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { MongoClient, ObjectId } = require('mongodb');
 const axios = require('axios');
+const getDb = require('../../db');
+const { ObjectId } = require('bson');
 
-const client = new MongoClient(process.env.MONGO_URI);
+
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key';
 
 const FB_APP_ID = process.env.FB_APP_ID;
@@ -21,10 +22,9 @@ module.exports = {
   express,
   bcrypt,
   jwt,
-  MongoClient,
   ObjectId,
   axios,
-  client,
+  getDb,
   JWT_SECRET,
   FB_APP_ID,
   FB_APP_SECRET,

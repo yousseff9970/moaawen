@@ -4,7 +4,7 @@ const {
   jwt, 
   ObjectId, 
   axios, 
-  client, 
+  getDb, 
   JWT_SECRET, 
   FB_APP_ID, 
   FB_APP_SECRET, 
@@ -94,8 +94,7 @@ router.get('/callback', async (req, res) => {
 
     const { id: facebookId, name, email, picture } = userResponse.data;
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const usersCol = db.collection('users');
     const businessCol = db.collection('businesses');
 
@@ -657,8 +656,7 @@ router.post('/fix-duplicates', async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     // Find all users with Facebook IDs
@@ -738,8 +736,7 @@ router.post('/disconnect', async (req, res) => {
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, JWT_SECRET);
     
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const user = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
@@ -817,8 +814,7 @@ router.post('/callback', async (req, res) => {
       return res.status(400).json({ error: 'Email permission required' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     // Check if user exists by email or Facebook ID

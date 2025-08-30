@@ -1,5 +1,5 @@
 // routes/auth/user.js
-const { express, bcrypt, jwt, ObjectId, client, JWT_SECRET } = require('./shared');
+const { express, bcrypt, jwt, getDb, ObjectId, JWT_SECRET } = require('./shared');
 const { generateOTP, sendVerificationEmail } = require('../../utils/mailer');
 
 const router = express.Router();
@@ -13,8 +13,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const existingUser = await usersCol.findOne({ email });
@@ -98,8 +97,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const user = await usersCol.findOne({ email });
@@ -178,8 +176,7 @@ router.post('/verify-email', async (req, res) => {
       return res.status(400).json({ message: 'Email and OTP are required.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const user = await usersCol.findOne({ email });
@@ -249,8 +246,7 @@ router.post('/resend-verification', async (req, res) => {
       return res.status(400).json({ message: 'Email is required.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const user = await usersCol.findOne({ email });
@@ -310,8 +306,7 @@ router.get('/profile', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const user = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });
@@ -377,8 +372,7 @@ router.put('/profile', async (req, res) => {
       return res.status(400).json({ success: false, message: 'At least one field must be provided for update.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const usersCol = db.collection('users');
 
     const user = await usersCol.findOne({ _id: new ObjectId(decoded.userId) });

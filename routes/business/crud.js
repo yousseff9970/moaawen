@@ -1,5 +1,5 @@
 // routes/business/crud.js
-const { express, MongoClient, ObjectId, authMiddleware, requireVerified, planSettings, client } = require('./shared');
+const { express, getDb, ObjectId, authMiddleware, requireVerified, planSettings } = require('./shared');
 const router = express.Router();
 
 // Test endpoint
@@ -10,8 +10,7 @@ router.get('/test', (req, res) => {
 // Get user's businesses
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const usersCol = db.collection('users');
     const businessesCol = db.collection('businesses');
 
@@ -99,8 +98,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
   try {
     console.log('Getting business with ID:', req.params.id, 'for user:', req.user.userId); // Debug log
     
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+  const db = await getDb();
     const usersCol = db.collection('users');
     const businessesCol = db.collection('businesses');
 
@@ -189,8 +187,7 @@ router.post('/', authMiddleware, requireVerified, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Business name is required' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -276,8 +273,7 @@ router.put('/:id', authMiddleware, requireVerified, async (req, res) => {
     console.log('Updating business with ID:', req.params.id, 'for user:', req.user.userId); // Debug log
     console.log('Update data:', req.body); // Debug log
     
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const usersCol = db.collection('users');
     const businessesCol = db.collection('businesses');
 

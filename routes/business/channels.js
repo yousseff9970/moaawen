@@ -1,5 +1,5 @@
 // routes/business/channels.js
-const { express, MongoClient, ObjectId, authMiddleware, requireVerified, client } = require('./shared');
+const { express, getDb, ObjectId, authMiddleware, requireVerified } = require('./shared');
 const router = express.Router();
 
 // Connect/Update website channel
@@ -34,8 +34,7 @@ router.put('/:id/channels/website', authMiddleware, requireVerified, async (req,
       return res.status(400).json({ error: 'Invalid domain format. Use format like: luxbelcare.com (no https, www, paths, or subdomains)' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -117,8 +116,7 @@ router.put('/:id/channels/facebook', authMiddleware, requireVerified, async (req
       return res.status(400).json({ error: 'Facebook account_id, access_token, and user_id are required' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -195,8 +193,7 @@ router.put('/:id/channels/instagram', authMiddleware, requireVerified, async (re
       return res.status(400).json({ error: 'Instagram account ID, username, and access token are required' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -294,8 +291,7 @@ router.put('/:id/channels/messenger', authMiddleware, requireVerified, async (re
       return res.status(400).json({ error: 'Messenger page_id and access_token are required' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -385,8 +381,7 @@ router.put('/:id/channels/whatsapp', authMiddleware, requireVerified, async (req
       return res.status(400).json({ error: 'WhatsApp phone_number_id, phone_number, and access_token are required' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -480,8 +475,7 @@ router.put('/:id/channels/tiktok', authMiddleware, requireVerified, async (req, 
       return res.status(400).json({ error: 'Invalid TikTok Account ID format.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
@@ -564,8 +558,7 @@ router.delete('/:id/channels/:channelType', authMiddleware, requireVerified, asy
       return res.status(400).json({ error: 'Invalid channel type' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 

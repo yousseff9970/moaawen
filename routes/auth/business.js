@@ -1,5 +1,5 @@
 // routes/auth/business.js
-const { express, ObjectId, axios, client } = require('./shared');
+const { express, ObjectId, axios, getDb } = require('./shared');
 
 const router = express.Router();
 
@@ -8,8 +8,7 @@ router.get('/pages/:businessId', async (req, res) => {
   try {
     const { businessId } = req.params;
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getDb();
     const businessCol = db.collection('businesses');
 
     const business = await businessCol.findOne({ _id: new ObjectId(businessId) });
@@ -45,8 +44,7 @@ router.get('/instagram-accounts/:businessId', async (req, res) => {
   try {
     const { businessId } = req.params;
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessCol = db.collection('businesses');
 
     const business = await businessCol.findOne({ _id: new ObjectId(businessId) });

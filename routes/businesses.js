@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { MongoClient, ObjectId } = require('mongodb');
+const { ObjectId } = require('bson');
+const getDb = require('../db');
 const jwt = require('jsonwebtoken');
 const planSettings = require('../utils/PlanSettings');
 
-const client = new MongoClient(process.env.MONGO_URI);
 const JWT_SECRET = process.env.JWT_SECRET || 'moaawen-secret-key';
 
 // Create a new business
@@ -31,8 +31,7 @@ router.post('/businesses', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Business name is required.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
 
     // Get growth plan settings as default
@@ -114,8 +113,7 @@ router.get('/businesses', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
 
     // Find all businesses that belong to this user
@@ -151,8 +149,7 @@ router.get('/businesses/:businessId', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
 
     const business = await businessesCol.findOne({ 
@@ -194,8 +191,7 @@ router.put('/businesses/:businessId', async (req, res) => {
 
     const { name, description, website, shop, contact } = req.body;
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getDb();
     const businessesCol = db.collection('businesses');
 
     // Check if business exists and belongs to user

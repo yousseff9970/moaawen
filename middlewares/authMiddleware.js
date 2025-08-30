@@ -1,5 +1,7 @@
 // middlewares/authMiddleware.js
 const jwt = require('jsonwebtoken');
+const getDb = require('../db');
+const { ObjectId } = require('bson');
 
 // Ensure JWT_SECRET is set - fail fast if not configured
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -122,11 +124,11 @@ async function requireVerified(req, res, next) {
 
   try {
     // For extra security, verify the email verification status from the database
-    const { MongoClient, ObjectId } = require('mongodb');
-    const client = new MongoClient(process.env.MONGO_URI);
     
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    
+    
+    const db = await getDb();
+    
     const usersCol = db.collection('users');
     
     const user = await usersCol.findOne({ _id: new ObjectId(req.user.userId) });
