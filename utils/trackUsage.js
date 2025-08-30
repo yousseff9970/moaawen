@@ -19,7 +19,7 @@ console.log(businessId);
     
     const businessesCol = db.collection('businesses');
     await businessesCol.updateOne(
-      { _id: new ObjectId(businessId) },
+      { _id: businessId },
       { $inc: { [field]: amount } }
     );
     console.log(`✅ Tracked usage for business ${businessId}: +${amount} ${type}`);
