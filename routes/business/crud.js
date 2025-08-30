@@ -273,8 +273,8 @@ router.post('/', authMiddleware, requireVerified, async (req, res) => {
 // Update business details - requires verified email
 router.put('/:id', authMiddleware, requireVerified, async (req, res) => {
   try {
-    console.log('Updating business with ID:', req.params.id, 'for user:', req.user.userId); // Debug log
-    console.log('Update data:', req.body); // Debug log
+    //console.log('Updating business with ID:', req.params.id, 'for user:', req.user.userId); // Debug log
+    //console.log('Update data:', req.body); // Debug log
     
    const db = await getDb();
     const usersCol = db.collection('users');

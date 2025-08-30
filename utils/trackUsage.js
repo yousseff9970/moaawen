@@ -19,6 +19,7 @@ async function trackUsage(businessId, type, amount = 1) {
       { _id: new ObjectId(businessId) },
       { $inc: { [field]: amount } }
     );
+    console.log(`✅ Tracked usage for business ${businessId}: +${amount} ${type}`);
   } catch (err) {
     console.error('❌ Usage tracking error:', err.message);
   }
