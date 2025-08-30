@@ -32,7 +32,7 @@ router.post('/instagram', async (req, res) => {
 
     for (const entry of body.entry) {
       const pageId = entry.id;
-      console.log(`📄 Processing Instagram entry for account ID: ${pageId}`);
+      //console.log(`📄 Processing Instagram entry for account ID: ${pageId}`);
       
       for (const event of entry.messaging || []) {
         const senderId = event.sender?.id;
@@ -40,19 +40,19 @@ router.post('/instagram', async (req, res) => {
         
         // Skip non-message events (read receipts, delivery confirmations, etc.)
         if (!event.message) {
-          console.log(`⏭️ Skipping non-message event (read/delivery/etc.) from ${senderId}`);
+          //console.log(`⏭️ Skipping non-message event (read/delivery/etc.) from ${senderId}`);
           continue;
         }
         
         // Skip echo messages (messages sent by the bot)
         if (event.message.is_echo) {
-          console.log(`⏭️ Skipping echo message: ${messageId}`);
+          //console.log(`⏭️ Skipping echo message: ${messageId}`);
           continue;
         }
         
         // Skip messages sent by the bot itself (sender ID = page ID)
         if (senderId === pageId) {
-          console.log(`⏭️ Skipping bot's own message from ${senderId}`);
+         // console.log(`⏭️ Skipping bot's own message from ${senderId}`);
           continue;
         }
         
@@ -68,7 +68,7 @@ router.post('/instagram', async (req, res) => {
         
         // Check for duplicate event using signature
         if (processedEvents.has(eventSignature)) {
-          console.log(`⏭️ Skipping duplicate Instagram event: ${eventSignature}`);
+          //console.log(`⏭️ Skipping duplicate Instagram event: ${eventSignature}`);
           continue;
         }
         
@@ -77,10 +77,10 @@ router.post('/instagram', async (req, res) => {
         console.log(`✅ Processing new Instagram event: ${eventSignature}`);
         
         // This is an Instagram webhook (object: "instagram"), so process all messages as Instagram
-        console.log(`📨 Instagram message from ${senderId} (Instagram webhook detected)`);
+        //console.log(`📨 Instagram message from ${senderId} (Instagram webhook detected)`);
         
         if (!senderId || !messageId) {
-          console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
+          //console.log(`⏭️ Skipping message: senderId=${senderId}, messageId=${messageId}`);
           continue;
         }
         let messageText = event.message?.text;
@@ -88,9 +88,9 @@ router.post('/instagram', async (req, res) => {
         // Load business - Instagram lookup using the account ID (pageId)
         let business;
         try {
-          console.log(`🔍 Looking up business for Instagram account: ${pageId}`);
+          //console.log(`🔍 Looking up business for Instagram account: ${pageId}`);
           business = await getBusinessInfo({ instagram_account_id: pageId });
-          console.log(`✅ Found business via Instagram account ID: ${pageId}`);
+          //console.log(`✅ Found business via Instagram account ID: ${pageId}`);
         } catch (e) {
           console.warn(`⚠️ No business found for Instagram account ${pageId}: ${e.message}`);
           continue;
@@ -103,7 +103,7 @@ router.post('/instagram', async (req, res) => {
         // Get the specific Instagram access token from the database
         if (business.channels?.instagram?.access_token) {
           token = business.channels.instagram.access_token;
-          console.log(`📱 Using Instagram access token for account: ${pageId}`);
+          //console.log(`📱 Using Instagram access token for account: ${pageId}`);
         } else {
           console.warn(`⚠️ No Instagram access token found for account ${pageId}, using default`);
         }

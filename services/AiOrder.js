@@ -8,7 +8,7 @@ const {
   cancelOrder,
   getOrderSummary
 } = require('./orderManager');
-
+const { trackUsage } = require('../utils/trackUsage');
 
 
 
@@ -253,7 +253,7 @@ ${p.variants.filter(v => v.inStock !== false).map(v => `  VARIANT_ID: "${v.id}" 
     if (firstBrace !== -1 && lastBrace > firstBrace) {
       cleanedText = cleanedText.substring(firstBrace, lastBrace + 1);
     }
-
+await trackUsage(business.id, 'message');
     //console.log(`Attempting to parse AI analysis: ${cleanedText.substring(0, 200)}...`);
 
     let analysis;

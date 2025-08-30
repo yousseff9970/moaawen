@@ -60,7 +60,6 @@ router.get('/', authMiddleware, async (req, res) => {
 
     const docs = await cursor.toArray();
 
-    // 4) Map minimal shape (avoid spreading whole doc)
     const businesses = docs.map(b => ({
       id: String(b._id),
       name: b.name || 'Untitled',
@@ -77,14 +76,12 @@ router.get('/', authMiddleware, async (req, res) => {
       createdAt: b.createdAt || null
     }));
 
-    // 5) Cheap client caching (repeat clicks → 304)
     const body = JSON.stringify({ success: true, businesses });
     const etag = '"' + crypto.createHash('md5').update(body).digest('hex') + '"';
     if (req.headers['if-none-match'] === etag) return res.status(304).end();
     res.setHeader('ETag', etag);
     res.setHeader('Cache-Control', 'private, max-age=30');
 
-    // 6) Server-Timing to see where time goes
     res.setHeader('Server-Timing', `total;dur=${(performance.now() - t0).toFixed(1)}`);
 
     return res.json({ success: true, businesses });
@@ -164,7 +161,11 @@ router.get('/:id', authMiddleware, async (req, res) => {
     } else {
       return res.status(404).json({ error: 'Business not found' });
     }
-
+const body = JSON.stringify({ success: true, business });
+    const etag = '"' + crypto.createHash('md5').update(body).digest('hex') + '"';
+    if (req.headers['if-none-match'] === etag) return res.status(304).end();
+    res.setHeader('ETag', etag);
+    res.setHeader('Cache-Control', 'private, max-age=30');
     res.json({
       success: true,
       business: business

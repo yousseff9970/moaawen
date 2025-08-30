@@ -65,21 +65,21 @@ getFullProducts: async () => {
     const customCollections = await getAllPages('/custom_collections.json?fields=id,title');
     const smartCollections = await getAllPages('/smart_collections.json?fields=id,title');
     collections = [...customCollections, ...smartCollections];
-    console.log(`📦 Found ${collections.length} collections`);
+   // console.log(`📦 Found ${collections.length} collections`);
   } catch (err) {
     console.warn('⚠️ Could not fetch collections:', err.message);
   }
 
   // 2️⃣ Get all products with complete variant data
-  console.log('📋 Fetching products...');
+  //console.log('📋 Fetching products...');
   const products = await getAllPages('/products.json?fields=id,title,body_html,product_type,vendor,tags,variants,images');
-  console.log(`📦 Found ${products.length} products`);
+  //console.log(`📦 Found ${products.length} products`);
 
   // 3️⃣ Get collects mapping
   let collects = [];
   try {
     collects = await getAllPages('/collects.json?fields=collection_id,product_id');
-    console.log(`🔗 Found ${collects.length} product-collection mappings`);
+   // console.log(`🔗 Found ${collects.length} product-collection mappings`);
   } catch (err) {
     console.warn('⚠️ Could not fetch collects mapping:', err.message);
   }
@@ -108,7 +108,7 @@ getFullProducts: async () => {
     .flatMap(p => p.variants?.map(v => v.inventory_item_id) || [])
     .filter(Boolean);
 
-  console.log(`🔍 Found ${itemIds.length} inventory items to check`);
+  //console.log(`🔍 Found ${itemIds.length} inventory items to check`);
 
   const inStockMap = {};
   const inventoryDetails = {};
@@ -120,7 +120,7 @@ getFullProducts: async () => {
     try {
       const locationsRes = await api.get('/locations.json');
       locations = locationsRes.data.locations || [];
-      console.log(`📍 Found ${locations.length} locations:`, locations.map(l => `${l.name} (${l.id})`));
+     // console.log(`📍 Found ${locations.length} locations:`, locations.map(l => `${l.name} (${l.id})`));
     } catch (err) {
       console.warn('⚠️ Could not fetch locations:', err.message);
     }
@@ -163,7 +163,7 @@ getFullProducts: async () => {
         
         // If no inventory levels found, try alternative method
         if (res.data.inventory_levels.length === 0) {
-          console.log(`⚠️ No inventory levels found for batch ${i}-${Math.min(i + 100, itemIds.length)}, trying alternative method...`);
+          //console.log(`⚠️ No inventory levels found for batch ${i}-${Math.min(i + 100, itemIds.length)}, trying alternative method...`);
           
           // Fallback: check individual inventory items
           const currentBatchIds = itemIds.slice(i, i + 100);
@@ -199,7 +199,7 @@ getFullProducts: async () => {
           }
         }
         
-        console.log(`📊 Processed ${Math.min(i + 100, itemIds.length)}/${itemIds.length} inventory items`);
+        //console.log(`📊 Processed ${Math.min(i + 100, itemIds.length)}/${itemIds.length} inventory items`);
       } catch (batchErr) {
         console.error(`❌ Error fetching inventory batch ${i}-${Math.min(i + 100, itemIds.length)}:`, batchErr.message);
         
@@ -236,12 +236,7 @@ getFullProducts: async () => {
   const untrackedCount = Object.values(inventoryDetails).filter(d => d.untracked).length;
   const fallbackCount = Object.values(inventoryDetails).filter(d => d.fallback || d.errorFallback).length;
 
-  console.log(`✅ Inventory Summary:
-    • Total inventory items: ${totalTracked}
-    • Items in stock: ${inStockCount}
-    • Untracked items (assumed available): ${untrackedCount}
-    • Fallback items (assumed available): ${fallbackCount}
-    • Processed inventory records: ${processedInventoryItems}`);
+
 
   // 6️⃣ Build collections with products and variants
   const collectionMap = collections.reduce((acc, col) => {
@@ -327,15 +322,10 @@ getFullProducts: async () => {
     });
   });
 
-  console.log(`📊 Final Stock Status Summary:
-    • Total variants: ${totalVariants}
-    • Variants with stock info: ${variantsWithStock}
-    • Variants in stock: ${variantsInStock}
-    • Stock coverage: ${totalVariants > 0 ? ((variantsWithStock / totalVariants) * 100).toFixed(1) : 0}%`);
 
   // 7️⃣ Return collections with products
   const result = Object.values(collectionMap);
-  console.log(`✅ Returning ${result.length} collections with products`);
+  //console.log(`✅ Returning ${result.length} collections with products`);
   
   return result;
 }

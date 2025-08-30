@@ -107,15 +107,13 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     formattedProductData = formatProductDatabaseForAI(productDatabase);
     categoryOverview = groupProductsByCategory(productDatabase);
     
-    // Debug: Log product database to verify correct IDs
-    console.log(`Product database built for business ${business.name}:`);
-    console.log(`Number of products: ${productDatabase.length}`);
+    
     if (productDatabase.length > 0) {
-      console.log(`Sample product structure:`);
+      
       productDatabase.slice(0, 2).forEach(p => {
-        console.log(`  Product ID: ${p.id} | Title: ${p.title}`);
+       
         p.variants.slice(0, 2).forEach(v => {
-          console.log(`    Variant ID: ${v.id} | Name: ${v.name} | Price: $${v.price}`);
+         
         });
       });
     }

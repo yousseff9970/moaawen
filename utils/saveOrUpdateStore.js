@@ -1,16 +1,16 @@
-const { MongoClient } = require('mongodb');
+const getDb = require('../db');
 const { generateSettingsFromPlan } = require('./applyPlanSettings');
 
-const client = new MongoClient(process.env.MONGO_URI);
+
 
 async function saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, collections) {
-  console.log(`💾 Saving store data for ${shop}...`);
   
-  await client.connect();
-  const col = client.db().collection('businesses');
+  
+  const db = await getDb();
+  const col = db.collection('businesses');
 
   const existing = await col.findOne({ shop });
-  console.log(`${existing ? '🔄 Updating existing' : '🆕 Creating new'} business record for ${shop}`);
+  //console.log(`${existing ? '🔄 Updating existing' : '🆕 Creating new'} business record for ${shop}`);
 
   // Validate product data structure
   let totalVariants = 0;
@@ -31,14 +31,7 @@ async function saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, col
     }
   });
 
-  console.log(`📊 Data Validation:
-    • Products: ${flatProducts.length}
-    • Collections: ${collections.length}
-    • Total variants: ${totalVariants}
-    • Variants with stock data: ${variantsWithStock}
-    • Variants in stock: ${variantsInStock}
-    • Stock data coverage: ${totalVariants > 0 ? ((variantsWithStock / totalVariants) * 100).toFixed(1) : 0}%`);
-
+  
   const doc = {
     shop,
     accessToken,
@@ -63,7 +56,7 @@ async function saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, col
     doc.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
     doc.createdAt = new Date();
     doc.channels = {};
-    console.log('🎁 Applied Growth plan with 30-day trial');
+    
   }
 
   await col.updateOne(
@@ -78,11 +71,6 @@ async function saveOrUpdateStore(shop, accessToken, storeInfo, flatProducts, col
   const savedProducts = savedBusiness.products || [];
   const savedVariantCount = savedProducts.reduce((count, p) => count + (p.variants?.length || 0), 0);
   
-  console.log(`✅ Successfully saved:
-    • Business: ${savedBusiness.name}
-    • Products: ${savedProducts.length}
-    • Variants: ${savedVariantCount}
-    • Collections: ${savedBusiness.collections?.length || 0}`);
 
   return savedBusiness;
 }

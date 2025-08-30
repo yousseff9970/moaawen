@@ -17,7 +17,6 @@ const shopifyRoutes = require('./routes/shopify');
 const chatRoutes = require('./routes/chat');
 const webhookRoutes = require('./routes/webhook');
 const whatsappRoutes = require('./routes/whatsapp');
-const adminRoutes = require('./routes/admin');
 const logsRoutes = require('./routes/logs');
 const businessRoutes = require('./routes/business');
 
@@ -134,7 +133,7 @@ app.get('/dashboard/data', authMiddleware, (req, res) => {
 });
 
 // Protected areas
-app.use('/admin',     authMiddleware, requireAdmin,    adminRoutes);
+
 app.use('/dashboard', publicLimiter, authMiddleware, requireVerified, dashboardRoutes);
 app.use('/businesses', authMiddleware, businessRoutes);
 

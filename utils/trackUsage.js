@@ -1,5 +1,5 @@
-const { MongoClient, ObjectId } = require('mongodb');
-const client = new MongoClient(process.env.MONGO_URI);
+const getDb = require('../db');
+const { ObjectId } = require('bson')
 
 async function trackUsage(businessId, type, amount = 1) {
   if (!businessId || !type) return;
@@ -14,8 +14,8 @@ async function trackUsage(businessId, type, amount = 1) {
   if (!field) return;
 
   try {
-    await client.connect();
-    await client.db().collection('businesses').updateOne(
+    const db = getDb();
+    await db.collection('businesses').updateOne(
       { _id: new ObjectId(businessId) },
       { $inc: { [field]: amount } }
     );
