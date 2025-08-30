@@ -3,7 +3,7 @@ const { ObjectId } = require('bson')
 
 async function trackUsage(businessId, type, amount = 1) {
   if (!businessId || !type) return;
-
+console.log(businessId);
   const fieldMap = {
     message: 'settings.usedMessages',
     voice: 'settings.usedVoiceMinutes',

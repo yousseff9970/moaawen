@@ -409,7 +409,7 @@ This business does not currently have products in their catalog. Focus on:
 }, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
     });
-await trackUsage(new ObjectId(business.id), 'message');
+await trackUsage(new ObjectId(business.trackid), 'message');
     const replyText = response.data.output
   ?.flatMap(o => o.content || [])
   .filter(c => c.type === "output_text")

@@ -71,6 +71,7 @@ async function getBusinessInfo({ phone_number_id, page_id, domain, shop, instagr
   }
 
   return {
+    trackid: business.id,
     id: business._id.toString(),
     name: business.name,
     contact: business.contact || {},
