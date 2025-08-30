@@ -81,7 +81,8 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     });
     return { reply: faqAnswer, source: 'faq', layer_used: 'faq', duration };
   }
-
+    console.log("from open ai" + business.id);
+await trackUsage(business.id, 'message');
   // Save user message
   updateSession(senderId, 'user', userMessage);
 
@@ -408,8 +409,7 @@ This business does not currently have products in their catalog. Focus on:
 }, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }
     });
-    console.log("from open ai" + business.id);
-await trackUsage(business.id, 'message');
+
     const replyText = response.data.output
   ?.flatMap(o => o.content || [])
   .filter(c => c.type === "output_text")
