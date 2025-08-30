@@ -24,7 +24,7 @@ const pendingMessages = new Map();
 const generateReply = async (senderId, userMessage, metadata = {}) => {
   const start = Date.now();
   const { phone_number_id, page_id, domain, instagram_account_id, shop } = metadata;
-console.log(metadata);
+
   if (!phone_number_id && !page_id && !domain && !instagram_account_id && !shop) {
     logToJson({
       layer: 'error',
@@ -37,7 +37,7 @@ console.log(metadata);
   }
 
   const business = await getBusinessInfo({ phone_number_id, page_id, domain, instagram_account_id, shop });
-
+console.log(business);
   // 🛡️ Plan/access check
   const { checkAccess } = require('../utils/businessPolicy');
   const access = checkAccess(business, { messages: true, feature: 'aiReplies' });
