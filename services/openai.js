@@ -81,8 +81,8 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     });
     return { reply: faqAnswer, source: 'faq', layer_used: 'faq', duration };
   }
-    console.log("from open ai" + business.id);
-await trackUsage(business._id, 'message');
+    
+
   // Save user message
   updateSession(senderId, 'user', userMessage);
 
@@ -432,7 +432,7 @@ This business does not currently have products in their catalog. Focus on:
       message: userMessage,
       ai_reply: cleanReplyText
     });
-
+await trackUsage(business._id, 'message');
     
 
     // 🤖 AI-POWERED ORDER POST-PROCESSING - Use original response with actions

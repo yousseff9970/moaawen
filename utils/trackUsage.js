@@ -19,7 +19,7 @@ async function trackUsage(businessId, type, amount = 1) {
     
     const businessesCol = db.collection('businesses');
     await businessesCol.updateOne(
-      { _id: ObjectId(businessId) },
+      { _id: new ObjectId(businessId) },
       { $inc: { [field]: amount } }
     );
     console.log(`✅ Tracked usage for business ${businessId}: +${amount} ${type}`);
