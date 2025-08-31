@@ -78,7 +78,7 @@ app.get(
   (req, res) => {
     res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
     // good caching for CDN; tweak as you like
-    res.setHeader('Cache-Control', 'public, max-age=300, immutable');
+    
     // explicitly allow cross-origin (in case helmet isn’t applied)
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
     res.sendFile(path.join(__dirname, 'public', 'widget.js'));
