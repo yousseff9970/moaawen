@@ -7,9 +7,9 @@ const router = express.Router();
 // -------------------- REGISTER --------------------
 router.post('/register', async (req, res) => {
   try {
-    const { businessName, email, phone, password } = req.body;
+    const { fullName, email, phone, password } = req.body;
 
-    if (!businessName || !email || !phone || !password) {
+    if (!fullName || !email || !phone || !password) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
 
@@ -38,7 +38,7 @@ router.post('/register', async (req, res) => {
         );
 
         // Send verification email
-        const emailResult = await sendVerificationEmail(email, otp, businessName);
+        const emailResult = await sendVerificationEmail(email, otp, fullName);
         if (!emailResult.success) {
           return res.status(500).json({ message: 'Failed to send verification email. Please try again.' });
         }
@@ -59,7 +59,7 @@ router.post('/register', async (req, res) => {
       email,
       phone,
       password: hashedPassword,
-      businessName,
+      fullName,
       businesses: [],
       isEmailVerified: false,
       emailVerificationOTP: otp,
@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
     const result = await usersCol.insertOne(userDoc);
 
     // Send verification email
-    const emailResult = await sendVerificationEmail(email, otp, businessName);
+    const emailResult = await sendVerificationEmail(email, otp, fullName);
     if (!emailResult.success) {
       // Remove the user if email sending failed
       await usersCol.deleteOne({ _id: result.insertedId });
@@ -123,11 +123,11 @@ router.post('/login', async (req, res) => {
       );
 
       // Send verification email
-      const emailResult = await sendVerificationEmail(email, otp, user.businessName || '');
-      
-      return res.status(403).json({ 
-        message: emailResult.success 
-          ? 'Please verify your email address. We\'ve sent a new verification code to your email.' 
+      const emailResult = await sendVerificationEmail(email, otp, user.fullName || '');
+
+      return res.status(403).json({
+        message: emailResult.success
+          ? 'Please verify your email address. We\'ve sent a new verification code to your email.'
           : 'Please verify your email address before logging in.',
         requiresVerification: true,
         email: email,
@@ -274,7 +274,7 @@ router.post('/resend-verification', async (req, res) => {
     );
 
     // Send verification email
-    const emailResult = await sendVerificationEmail(email, otp, user.businessName || '');
+    const emailResult = await sendVerificationEmail(email, otp, user.fullName || '');
     if (!emailResult.success) {
       return res.status(500).json({ message: 'Failed to send verification email. Please try again.' });
     }

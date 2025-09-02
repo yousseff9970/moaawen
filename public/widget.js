@@ -4,13 +4,13 @@
   const apiKey = currentScript?.dataset.apiKey || null;
 
   if (!apiKey) {
-    console.error('❌ Moaawen Widget: Missing API key. Please add data-api-key attribute.');
+    console.error('❌ Moaawen Widget: Missing API key.');
     return;
   }
 
-  const apiEndpoint = 'https://moaawen.onrender.com/api/chat';
+  const apiEndpoint = 'https://api.moaawen.ai/api/chat';
   const storageKey = 'moaawen_chat_history';
-  let userMarket = null;
+ 
 
   // Create widget root
   let root = document.getElementById('moaawen-widget-root');
@@ -20,18 +20,13 @@
     document.body.appendChild(root);
   }
 
-  // Detect user country
-  fetch('https://ipapi.co/json/')
-    .then(res => res.json())
-    .then(data => {
-      userMarket = data.country_code || 'LB';
-    })
-    .catch(() => userMarket = 'US');
+ 
 
-  // Shadow DOM
+
+ 
   const shadow = root.attachShadow({ mode: 'open' });
 
-  // Ultra-modern styles with glassmorphism and advanced animations
+ 
   const style = document.createElement('style');
   style.textContent = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
