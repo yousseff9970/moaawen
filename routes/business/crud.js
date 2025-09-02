@@ -76,14 +76,7 @@ router.get('/', authMiddleware, async (req, res) => {
       createdAt: b.createdAt || null
     }));
 
-    const body = JSON.stringify({ success: true, businesses });
-    const etag = '"' + crypto.createHash('md5').update(body).digest('hex') + '"';
-    if (req.headers['if-none-match'] === etag) return res.status(304).end();
-    res.setHeader('ETag', etag);
-    res.setHeader('Cache-Control', 'private, max-age=30');
-
-    res.setHeader('Server-Timing', `total;dur=${(performance.now() - t0).toFixed(1)}`);
-
+    
     return res.json({ success: true, businesses });
   } catch (err) {
     console.error('Error fetching businesses:', err);
@@ -161,11 +154,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
     } else {
       return res.status(404).json({ error: 'Business not found' });
     }
-const body = JSON.stringify({ success: true, business });
-    const etag = '"' + crypto.createHash('md5').update(body).digest('hex') + '"';
-    if (req.headers['if-none-match'] === etag) return res.status(304).end();
-    res.setHeader('ETag', etag);
-    res.setHeader('Cache-Control', 'private, max-age=30');
+
     res.json({
       success: true,
       business: business
