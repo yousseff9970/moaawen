@@ -230,8 +230,8 @@ router.post('/', authMiddleware, async (req, res) => {
                 .json({ error: validation.error });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+    const db = await getdb();
+
     
     // Generate a unique ID for the new product
     const newProductId = Date.now(); // Simple timestamp-based ID
@@ -248,7 +248,7 @@ router.post('/', authMiddleware, async (req, res) => {
     };
 
     // Add product to business document's products array
-    const result = await db.collection('businesses').updateOne(
+    const result = db.collection('businesses').updateOne(
       { _id: new ObjectId(businessId) },
       { 
         $push: { products: productData },
@@ -295,8 +295,8 @@ router.put('/:productId', authMiddleware, async (req, res) => {
                 .json({ error: validation.error });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
+   const db = await getdb();
+  
 
     // Prepare update data (exclude id field)
     const updateData = { ...req.body };
@@ -305,7 +305,7 @@ router.put('/:productId', authMiddleware, async (req, res) => {
     delete updateData.shopifyId;
 
     // Update product in business document's products array
-    const result = await db.collection('businesses').updateOne(
+    const result =  db.collection('businesses').updateOne(
       { 
         _id: new ObjectId(businessId),
         'products.id': parseInt(productId) // Match by product ID
@@ -370,11 +370,10 @@ router.delete('/:productId', authMiddleware, async (req, res) => {
                 .json({ error: validation.error });
     }
 
-    await client.connect();
-    const db = client.db(process.env.DB_NAME || 'moaawen');
-    
+    const db = await getdb();
+
     // Remove product from business document's products array
-    const result = await db.collection('businesses').updateOne(
+    const result =  db.collection('businesses').updateOne(
       { _id: new ObjectId(businessId) },
       { 
         $pull: { products: { id: parseInt(productId) } },
