@@ -244,7 +244,11 @@ router.post('/', authMiddleware, async (req, res) => {
       type: req.body.type || '',
       tags: req.body.tags || '',
       images: req.body.images || [],
-      variants: req.body.variants || []
+      variants: req.body.variants || [],
+      created_manually: true, // Flag to identify manual products
+      source: 'manual', // Source tracking
+      created_at: new Date(),
+      updated_at: new Date()
     };
 
     // Add product to business document's products array

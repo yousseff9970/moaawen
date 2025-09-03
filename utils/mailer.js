@@ -66,7 +66,66 @@ async function sendVerificationEmail(toEmail, otp, userName = '') {
   }
 }
 
+// Function to send password reset email
+async function sendPasswordResetEmail(toEmail, resetToken, userName = '') {
+  try {
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    
+    const info = await transporter.sendMail({
+      from: '"Moaawen" <info@moaawen.ai>',
+      to: toEmail,
+      subject: "Reset Your Password - Moaawen",
+      text: `Hello ${userName},\n\nYou requested to reset your password for your Moaawen account. Click the link below to reset your password:\n\n${resetUrl}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this password reset, please ignore this email and your password will remain unchanged.\n\nBest regards,\nMoaawen Team`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #2563eb; margin: 0;">Moaawen</h1>
+            <p style="color: #6b7280; margin: 5px 0;">Business Communication Platform</p>
+          </div>
+          
+          <div style="background-color: #f8fafc; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
+            <h2 style="color: #1f2937; margin-top: 0;">Reset Your Password</h2>
+            <p style="color: #4b5563; line-height: 1.5;">Hello ${userName || 'there'},</p>
+            <p style="color: #4b5563; line-height: 1.5;">You requested to reset your password for your Moaawen account. Click the button below to create a new password:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${resetUrl}" style="background-color: #2563eb; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                Reset Password
+              </a>
+            </div>
+            
+            <p style="color: #4b5563; line-height: 1.5; font-size: 14px;">
+              Or copy and paste this link in your browser: <br>
+              <a href="${resetUrl}" style="color: #2563eb; word-break: break-all;">${resetUrl}</a>
+            </p>
+            
+            <p style="color: #ef4444; font-size: 14px; text-align: center; margin-top: 20px;">
+              ⏰ This link will expire in 1 hour
+            </p>
+            
+            <p style="color: #4b5563; line-height: 1.5; margin-top: 30px;">
+              If you didn't request this password reset, please ignore this email and your password will remain unchanged.
+            </p>
+          </div>
+          
+          <div style="text-align: center; color: #6b7280; font-size: 12px;">
+            <p>© 2025 Moaawen. All rights reserved.</p>
+            <p>This is an automated message, please do not reply to this email.</p>
+          </div>
+        </div>
+      `,
+    });
+
+    console.log("✅ Password reset email sent:", info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error("❌ Error sending password reset email:", err);
+    return { success: false, error: err.message };
+  }
+}
+
 module.exports = {
   generateOTP,
-  sendVerificationEmail
+  sendVerificationEmail,
+  sendPasswordResetEmail
 };

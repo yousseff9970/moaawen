@@ -4,6 +4,12 @@ require('dotenv').config();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const passport = require('passport');
+const session = require('express-session');
+
+// Load Google OAuth credentials
+const { loadGoogleCredentials } = require('./config/google');
+loadGoogleCredentials();
 
 // Middlewares
 const { limiter, authLimiter, publicLimiter } = require('./middlewares/rateLimit');
@@ -106,6 +112,21 @@ app.use(cors(corsOptions.restrictive));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));  // single JSON parser (drop bodyParser)
 app.use(cookieParser());
+
+// Session configuration for Passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // HTTPS in production
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.set('view engine', 'ejs');

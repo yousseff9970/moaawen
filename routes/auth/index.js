@@ -4,11 +4,15 @@ const router = express.Router();
 
 // Import sub-routers
 const facebookRouter = require('./facebook');
+const googleRouter = require('./google');
 const userRouter = require('./user');
 const businessRouter = require('./business');
 
 // Mount Facebook routes
 router.use('/facebook', facebookRouter);
+
+// Mount Google routes
+router.use('/google', googleRouter);
 
 // Mount user authentication routes directly on auth root
 router.use('/', userRouter);

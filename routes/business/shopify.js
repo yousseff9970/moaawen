@@ -160,7 +160,9 @@ router.post('/:businessId/channels/shopify/sync', async (req, res) => {
       success: true,
       message: 'Products synced successfully',
       data: {
-        products: result.products.length,
+        total_products: result.products.length,
+        shopify_products: result.shopify_products_updated,
+        manual_products_preserved: result.preserved_manual_products,
         collections: result.collections.length,
         variants: result.variants
       }
@@ -192,11 +194,125 @@ async function syncShopifyProducts(businessId, shop, accessToken, business) {
   }
 
   // Create flat product array for storage
-  const flatProducts = fullCollections.flatMap(c => c.products || []);
+  const shopifyProducts = fullCollections.flatMap(c => c.products || []);
+  
+  // Get existing products from business
+  const existingProducts = business.products || [];
+  
+  // Separate manually created products from Shopify products using multiple criteria
+  const manualProducts = existingProducts.filter(product => {
+    // Check if explicitly marked as manual
+    if (product.created_manually === true || product.source === 'manual') {
+      return true;
+    }
+    
+    // Legacy check: products without shopify_id and with timestamp-like IDs are likely manual
+    // Shopify IDs are typically large numbers (> 10^12), manual IDs are timestamps (around 10^12-10^13)
+    if (!product.shopify_id && product.id && typeof product.id === 'number') {
+      const idStr = product.id.toString();
+      // If ID looks like a timestamp (13 digits starting with 1 or 2) and no shopify markers
+      if (idStr.length === 13 && (idStr.startsWith('1') || idStr.startsWith('2'))) {
+        return true;
+      }
+    }
+    
+    return false;
+  });
+  
+  const existingShopifyProducts = existingProducts.filter(product => {
+    // Explicitly marked as Shopify
+    if (product.source === 'shopify' || product.shopify_id) {
+      return true;
+    }
+    
+    // Not marked as manual and has characteristics of Shopify products
+    if (product.created_manually !== true && product.source !== 'manual') {
+      // If it has typical Shopify fields or large ID numbers
+      if (product.handle || product.vendor || (product.id && product.id > 1000000000000)) {
+        return true;
+      }
+    }
+    
+    return false;
+  });
+  
+  console.log(`📊 Product separation: ${manualProducts.length} manual products, ${existingShopifyProducts.length} Shopify products`);
+  
+  // One-time migration: Update manual products to have proper flags if they don't already
+  const migratedManualProducts = manualProducts.map(product => {
+    if (!product.created_manually && product.source !== 'manual') {
+      console.log(`🔄 Migrating manual product: ${product.name || product.title || product.id}`);
+      return {
+        ...product,
+        created_manually: true,
+        source: 'manual',
+        updated_at: new Date()
+      };
+    }
+    return product;
+  });
+  
+  // Create a map of existing Shopify products for quick lookup
+  const existingShopifyMap = new Map();
+  existingShopifyProducts.forEach(product => {
+    const shopifyId = product.shopify_id || product.id;
+    if (shopifyId) {
+      existingShopifyMap.set(shopifyId.toString(), product);
+    }
+  });
+  
+  // Process Shopify products: update existing or add new
+  const updatedShopifyProducts = shopifyProducts.map(shopifyProduct => {
+    const shopifyId = shopifyProduct.id || shopifyProduct.shopify_id;
+    const existing = existingShopifyMap.get(shopifyId?.toString());
+    
+    if (existing) {
+      // Update existing Shopify product while preserving manual modifications
+      return {
+        ...existing,
+        ...shopifyProduct,
+        // Preserve any manual fields that shouldn't be overridden
+        _id: existing._id, // Keep original MongoDB ID
+        created_manually: existing.created_manually || false,
+        last_synced: new Date().toISOString(),
+        source: 'shopify'
+      };
+    } else {
+      // Add new Shopify product
+      return {
+        ...shopifyProduct,
+        created_manually: false,
+        last_synced: new Date().toISOString(),
+        source: 'shopify'
+      };
+    }
+  });
+  
+  // Combine migrated manual products with updated/new Shopify products
+  const finalProducts = [
+    ...migratedManualProducts, // Keep all manually created products (with proper flags)
+    ...updatedShopifyProducts // Add updated/new Shopify products
+  ];
+  
+  // Similarly handle collections - preserve manual collections
+  const existingCollections = business.collections || [];
+  const manualCollections = existingCollections.filter(collection => !collection.shopify_id && !collection.id);
+  
+  // Update collections with source tracking
+  const updatedCollections = fullCollections.map(collection => ({
+    ...collection,
+    source: 'shopify',
+    last_synced: new Date().toISOString()
+  }));
+  
+  const finalCollections = [
+    ...manualCollections,
+    ...updatedCollections
+  ];
   
   // Validate data
-  const variantCount = flatProducts.reduce((count, p) => count + (p.variants?.length || 0), 0);
-  console.log(`📊 Sync data: ${flatProducts.length} products, ${variantCount} variants, ${fullCollections.length} collections`);
+  const variantCount = updatedShopifyProducts.reduce((count, p) => count + (p.variants?.length || 0), 0);
+  console.log(`📊 Sync data: ${finalProducts.length} total products (${migratedManualProducts.length} manual + ${updatedShopifyProducts.length} Shopify), ${variantCount} variants, ${finalCollections.length} collections`);
 
   // Update business with synced data
   await client.connect();
@@ -206,8 +322,8 @@ async function syncShopifyProducts(businessId, shop, accessToken, business) {
     { _id: new ObjectId(businessId) },
     {
       $set: {
-        products: flatProducts,
-        collections: fullCollections,
+        products: finalProducts,
+        collections: finalCollections,
         // Update business info if not set
         ...((!business || !business.name) && {
           name: storeInfo.name,
@@ -219,12 +335,14 @@ async function syncShopifyProducts(businessId, shop, accessToken, business) {
     }
   );
 
-  console.log(`✅ Products synced successfully for business ${businessId}`);
+  console.log(`✅ Products synced successfully for business ${businessId}. Preserved ${migratedManualProducts.length} manual products, updated/added ${updatedShopifyProducts.length} Shopify products`);
 
   return {
-    products: flatProducts,
-    collections: fullCollections,
-    variants: variantCount
+    products: finalProducts,
+    collections: finalCollections,
+    variants: variantCount,
+    preserved_manual_products: migratedManualProducts.length,
+    shopify_products_updated: updatedShopifyProducts.length
   };
 }
 

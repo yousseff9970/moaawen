@@ -7,6 +7,9 @@ const router = express.Router();
 const { performance } = require('perf_hooks');
 const crypto = require('crypto');
 
+// Import FAQ routes
+const faqRoutes = require('./faqs');
+
 // GET / (list user's businesses)
 router.get('/', authMiddleware, async (req, res) => {
   const t0 = performance.now();
@@ -151,6 +154,17 @@ router.get('/:id', authMiddleware, async (req, res) => {
           }
         }
       };
+
+      // Optionally include FAQ count for business overview
+      try {
+        const faqsCol = db.collection('faqs');
+        const faqCount = await faqsCol.countDocuments({ businessId: new ObjectId(req.params.id) });
+        business.faqCount = faqCount;
+      } catch (faqError) {
+        console.error('Error counting FAQs:', faqError);
+        // Don't fail the entire request if FAQ count fails
+        business.faqCount = 0;
+      }
     } else {
       return res.status(404).json({ error: 'Business not found' });
     }
@@ -342,5 +356,8 @@ router.put('/:id', authMiddleware, requireVerified, async (req, res) => {
     res.status(500).json({ error: 'Failed to update business' });
   }
 });
+
+// Mount FAQ routes
+router.use('/', faqRoutes);
 
 module.exports = router;
