@@ -36,15 +36,35 @@ router.post('/chat', validateChatRequest, async (req, res) => {
       history: sessionHistory[sessionId], // pass conversation history
     });
 
-    // Save the AI's reply to history
-    sessionHistory[sessionId].push({ role: 'assistant', content: reply.reply });
+    // Handle multiple messages if response was split
+    if (reply.isMultiMessage && Array.isArray(reply.reply)) {
+      // Save all message chunks to history
+      reply.reply.forEach(chunk => {
+        sessionHistory[sessionId].push({ role: 'assistant', content: chunk });
+      });
+      
+      // Keep only last 10 messages
+      if (sessionHistory[sessionId].length > 10) {
+        sessionHistory[sessionId] = sessionHistory[sessionId].slice(-10);
+      }
+      
+      // Return all chunks as an array
+      return res.json({ 
+        reply: reply.reply.map(chunk => xss(chunk)),
+        isMultiMessage: true,
+        totalChunks: reply.reply.length
+      });
+    } else {
+      // Save the AI's reply to history
+      sessionHistory[sessionId].push({ role: 'assistant', content: reply.reply });
 
-    // Keep only last 10 messages again
-    if (sessionHistory[sessionId].length > 10) {
-      sessionHistory[sessionId] = sessionHistory[sessionId].slice(-10);
+      // Keep only last 10 messages again
+      if (sessionHistory[sessionId].length > 10) {
+        sessionHistory[sessionId] = sessionHistory[sessionId].slice(-10);
+      }
+
+      return res.json({ reply: xss(reply.reply) });
     }
-
-    return res.json({ reply: xss(reply.reply) });
   } catch (err) {
     console.error('Chat API error:', err.message);
     return res.status(500).json({ error: 'Internal server error' });

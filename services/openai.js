@@ -21,6 +21,56 @@ const { processAIOrderActions } = require('./AiOrder');
 
 const replyTimeouts = new Map();
 const pendingMessages = new Map();
+
+// Function to split long messages into chunks of max 900 characters
+const splitLongMessage = (message, maxLength = 900) => {
+  if (message.length <= maxLength) {
+    return [message];
+  }
+
+  const chunks = [];
+  let currentChunk = '';
+  
+  // Split by sentences first (. ! ?)
+  const sentences = message.split(/(?<=[.!?])\s+/);
+  
+  for (const sentence of sentences) {
+    // If adding this sentence would exceed the limit
+    if (currentChunk.length + sentence.length + 1 > maxLength) {
+      // If current chunk is not empty, save it
+      if (currentChunk.trim()) {
+        chunks.push(currentChunk.trim());
+        currentChunk = '';
+      }
+      
+      // If the sentence itself is too long, split by words
+      if (sentence.length > maxLength) {
+        const words = sentence.split(' ');
+        for (const word of words) {
+          if (currentChunk.length + word.length + 1 > maxLength) {
+            if (currentChunk.trim()) {
+              chunks.push(currentChunk.trim());
+              currentChunk = '';
+            }
+          }
+          currentChunk += (currentChunk ? ' ' : '') + word;
+        }
+      } else {
+        currentChunk = sentence;
+      }
+    } else {
+      currentChunk += (currentChunk ? ' ' : '') + sentence;
+    }
+  }
+  
+  // Add the last chunk if it exists
+  if (currentChunk.trim()) {
+    chunks.push(currentChunk.trim());
+  }
+  
+  return chunks;
+};
+
 const generateReply = async (senderId, userMessage, metadata = {}) => {
   const start = Date.now();
   const { phone_number_id, page_id, domain, instagram_account_id, shop } = metadata;
@@ -420,6 +470,9 @@ This business does not currently have products in their catalog. Focus on:
     // Remove AI action commands from user-facing response
     const cleanReplyText = replyText.replace(/\[AI_ORDER_ACTIONS\].*?\[\/AI_ORDER_ACTIONS\]/gs, '').trim();
     
+    // Split long messages into multiple chunks if needed
+    const messageChunks = splitLongMessage(cleanReplyText, 900);
+    
     const duration = Date.now() - start;
 
     logToJson({
@@ -430,7 +483,8 @@ This business does not currently have products in their catalog. Focus on:
       duration,
       tokens: response.data.usage || {},
       message: userMessage,
-      ai_reply: cleanReplyText
+      ai_reply: cleanReplyText,
+      message_chunks: messageChunks.length > 1 ? messageChunks.length : undefined
     });
 await trackUsage(business._id, 'message');
     
@@ -443,7 +497,24 @@ await trackUsage(business._id, 'message');
     }
 
     updateSession(senderId, 'assistant', cleanReplyText);
-    return { reply: cleanReplyText, source: 'ai', layer_used: 'ai', duration };
+    
+    // Return multiple messages if the response was split
+    if (messageChunks.length > 1) {
+      return { 
+        reply: messageChunks, 
+        source: 'ai', 
+        layer_used: 'ai', 
+        duration,
+        isMultiMessage: true 
+      };
+    } else {
+      return { 
+        reply: cleanReplyText, 
+        source: 'ai', 
+        layer_used: 'ai', 
+        duration 
+      };
+    }
   } catch (err) {
     const duration = Date.now() - start;
     const errMsg = err?.response?.data?.error?.message || err.message;
@@ -475,7 +546,30 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
     replyTimeouts.delete(senderId);
 
     const result = await generateReply(senderId, allMessages, metadata);
-    onReply(result);
+    
+    // Handle multiple messages if response was split
+    if (result.isMultiMessage && Array.isArray(result.reply)) {
+      // Send each message chunk with a small delay
+      for (let i = 0; i < result.reply.length; i++) {
+        const messageChunk = result.reply[i];
+        const chunkResult = {
+          ...result,
+          reply: messageChunk,
+          isMultiMessage: false,
+          chunkIndex: i + 1,
+          totalChunks: result.reply.length
+        };
+        
+        if (i > 0) {
+          // Add a small delay between messages to ensure proper delivery order
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        
+        onReply(chunkResult);
+      }
+    } else {
+      onReply(result);
+    }
   }, 10000);
 
   replyTimeouts.set(senderId, timeout);
