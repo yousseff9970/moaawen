@@ -1,5 +1,6 @@
 // routes/business/crud.js
 const { express, getDb, ObjectId, authMiddleware, requireVerified, planSettings } = require('./shared');
+const { generateSettingsFromPlan } = require('../../utils/applyPlanSettings');
 const router = express.Router();
 
 // Get user's businesses
@@ -145,16 +146,30 @@ router.get('/:id', authMiddleware, async (req, res) => {
         channels: business.channels || {},
         settings: {
           ...(business.settings || {}),
+          // Ensure backward compatibility with old structure
           currentPlan: business.settings?.currentPlan || business.plan || 'starter',
-          maxMessages: business.settings?.maxMessages || business.messagesLimit || 1000,
-          usedMessages: business.settings?.usedMessages || business.messagesUsed || 0,
-          allowedChannels: business.settings?.allowedChannels || 3,
-          enabledChannels: business.settings?.enabledChannels || {
-            languages: 1,
-            voiceMinutes: 10,
-            usedVoiceMinutes: 0,
-            imageAnalysesUsed: 0
+          planDetails: business.settings?.planDetails || {
+            name: planSettings[business.plan || 'starter']?.name || 'Starter Plan',
+            priceMonthly: planSettings[business.plan || 'starter']?.priceMonthly || 13
           },
+          limits: business.settings?.limits || {
+            maxMessages: business.settings?.maxMessages || business.messagesLimit || 1000,
+            usedMessages: business.settings?.usedMessages || business.messagesUsed || 0,
+            allowedChannels: business.settings?.allowedChannels || 3,
+            languages: business.settings?.languages || 2,
+            voiceMinutes: business.settings?.voiceMinutes || 0,
+            usedVoiceMinutes: business.settings?.usedVoiceMinutes || 0,
+            aiImageProcessing: business.settings?.aiImageProcessing || 100,
+            usedAiImageProcessing: business.settings?.usedAiImageProcessing || 0
+          },
+          enabledChannels: business.settings?.enabledChannels || {
+            whatsapp: true,
+            instagram: false,
+            messenger: false,
+            website: false,
+            telegram: false
+          },
+          features: business.settings?.features || planSettings[business.plan || 'starter']?.features || {},
           // Include advanced settings if they exist
           advanced: business.settings?.advanced || null
         }
@@ -202,8 +217,8 @@ router.post('/', authMiddleware, requireVerified, async (req, res) => {
     const businessesCol = db.collection('businesses');
     const usersCol = db.collection('users');
 
-    // Get growth plan settings as default
-    const growthPlan = planSettings.growth;
+    // Generate growth plan settings as default for new businesses
+    const businessSettings = generateSettingsFromPlan('growth');
     const currentDate = new Date();
     const subscriptionEndDate = new Date(currentDate.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days from now
 
@@ -217,8 +232,9 @@ router.post('/', authMiddleware, requireVerified, async (req, res) => {
       status: 'active',
       type: 'retail',
       plan: 'growth',
+      // Legacy fields for backward compatibility
       messagesUsed: 0,
-      messagesLimit: growthPlan.maxMessages,
+      messagesLimit: businessSettings.limits.maxMessages,
       subscriptionEndDate: subscriptionEndDate.toISOString(),
       contact: {
         email: contact?.email?.trim() || '',
@@ -227,18 +243,8 @@ router.post('/', authMiddleware, requireVerified, async (req, res) => {
         instagram: contact?.instagram?.trim() || ''
       },
       channels: {},
-      settings: {
-        currentPlan: 'growth',
-        maxMessages: growthPlan.maxMessages,
-        usedMessages: 0,
-        allowedChannels: growthPlan.allowedChannels,
-        enabledChannels: {
-          languages: growthPlan.languages,
-          voiceMinutes: growthPlan.voiceMinutes,
-          usedVoiceMinutes: 0,
-          imageAnalysesUsed: 0
-        }
-      },
+      // New settings structure
+      settings: businessSettings,
       products: [],
       collections: [],
       createdAt: currentDate,
