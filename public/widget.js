@@ -774,7 +774,7 @@ container.innerHTML = `
       <div class="chat-header">
         <div class="header-info">
           <div class="moaawen-logo">
-            <img src="https://www.moaawen.onrender.com/assets/images/logo.png" alt="Moaawen Logo" />
+            <img src="https://moaawen.onrender.com/public/logo.png" alt="Moaawen Logo" />
           </div>
           <div class="header-text">
             <div class="header-title">Moaawen Assistant</div>
@@ -841,7 +841,7 @@ container.innerHTML = `
       <!-- Enhanced Branding Section with Moaawen colors -->
       <div class="chat-branding">
         <span style="font-weight: 600; color: var(--deep-cobalt);">Powered by MOAAWEN</span>
-        <span style="color: var(--text-secondary); font-size: 10px;">AI Customer Support • v2.0</span>
+        <span style="color: var(--text-secondary); font-size: 10px;">AI Customer Support • v1.0</span>
       </div>
 
     </div>
