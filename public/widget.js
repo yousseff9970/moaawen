@@ -32,20 +32,38 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
   :host {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --glass-bg: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.18);
+    /* Moaawen Brand Colors */
+    --deep-cobalt: #023E8A;
+    --aquamarine: #48CAE4;
+    --coral-pop: #FF8066;
+    --dark-neutral: #202124;
+    --light-neutral: #FAFAFA;
+    
+    /* Updated gradients with Moaawen brand colors */
+    --primary-gradient: linear-gradient(135deg, var(--deep-cobalt) 0%, var(--aquamarine) 100%);
+    --secondary-gradient: linear-gradient(135deg, var(--coral-pop) 0%, #ff6b4d 100%);
+    --success-gradient: linear-gradient(135deg, var(--aquamarine) 0%, #3dd5f3 100%);
+    --accent-gradient: linear-gradient(135deg, var(--coral-pop) 0%, var(--aquamarine) 100%);
+    
+    /* Enhanced glass effects */
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(72, 202, 228, 0.2);
     --glass-blur: blur(20px);
-    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.12);
-    --shadow-medium: 0 16px 48px rgba(0, 0, 0, 0.16);
-    --shadow-hard: 0 24px 64px rgba(0, 0, 0, 0.24);
-    --text-primary: #1a1a1a;
+    
+    /* Modern shadows */
+    --shadow-soft: 0 8px 32px rgba(2, 62, 138, 0.08);
+    --shadow-medium: 0 16px 48px rgba(2, 62, 138, 0.12);
+    --shadow-hard: 0 24px 64px rgba(2, 62, 138, 0.16);
+    
+    /* Typography */
+    --text-primary: var(--dark-neutral);
     --text-secondary: #6b7280;
-    --border-subtle: rgba(0, 0, 0, 0.06);
+    --text-light: rgba(255, 255, 255, 0.9);
+    
+    /* Surfaces */
+    --border-subtle: rgba(72, 202, 228, 0.15);
     --bg-surface: #ffffff;
-    --bg-elevated: #f8fafc;
+    --bg-elevated: #fafbfc;
   }
 
   .chat-widget {
@@ -71,6 +89,7 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.9);
   }
 
   .chat-bubble::before {
@@ -80,15 +99,16 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--success-gradient);
+    background: var(--accent-gradient);
     opacity: 0;
     transition: opacity 0.3s ease;
     border-radius: 50%;
   }
 
   .chat-bubble:hover {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.15) rotate(5deg);
     box-shadow: var(--shadow-hard);
+    border-color: var(--aquamarine);
   }
 
   .chat-bubble:hover::before {
@@ -118,17 +138,24 @@
     color: white;
     animation: pulse-badge 2s infinite;
     border: 2px solid white;
+    box-shadow: 0 4px 12px rgba(255, 128, 102, 0.3);
   }
 
   @keyframes bounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-4px); }
-    60% { transform: translateY(-2px); }
+    40% { transform: translateY(-6px); }
+    60% { transform: translateY(-3px); }
   }
 
   @keyframes pulse-badge {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    0%, 100% { 
+      transform: scale(1); 
+      box-shadow: 0 4px 12px rgba(255, 128, 102, 0.3);
+    }
+    50% { 
+      transform: scale(1.15); 
+      box-shadow: 0 6px 16px rgba(255, 128, 102, 0.4);
+    }
   }
 
   .chat-window {
@@ -154,7 +181,7 @@
     right: 0;
     bottom: 0;
     background: var(--bg-surface);
-    opacity: 0.95;
+    opacity: 1;
     z-index: -1;
     border-radius: 24px;
   }
@@ -198,7 +225,7 @@
 
   .chat-header {
     background: var(--primary-gradient);
-    color: white;
+    color: var(--text-light);
     padding: 20px 24px;
     display: flex;
     justify-content: space-between;
@@ -206,6 +233,7 @@
     font-weight: 600;
     font-size: 16px;
     position: relative;
+    backdrop-filter: blur(10px);
   }
 
   .chat-header::after {
@@ -224,23 +252,67 @@
     gap: 12px;
   }
 
+  .moaawen-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+  }
+
+  .moaawen-logo img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .header-title {
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .header-subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: 400;
+  }
+
   .status-indicator {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #10b981;
+    background: var(--aquamarine);
     animation: pulse-status 2s infinite;
+    box-shadow: 0 0 8px rgba(72, 202, 228, 0.5);
   }
 
   @keyframes pulse-status {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%, 100% { 
+      opacity: 1; 
+      transform: scale(1);
+    }
+    50% { 
+      opacity: 0.7; 
+      transform: scale(1.1);
+    }
   }
 
   .close-btn {
     background: rgba(255, 255, 255, 0.15);
     border: none;
-    color: white;
+    color: var(--text-light);
     font-size: 18px;
     cursor: pointer;
     width: 32px;
@@ -251,11 +323,13 @@
     justify-content: center;
     transition: all 0.2s ease;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .close-btn:hover {
     background: rgba(255, 255, 255, 0.25);
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.1);
+    border-color: rgba(255, 255, 255, 0.4);
   }
 
   .chat-messages {
@@ -313,8 +387,9 @@
 
   .message.user .message-bubble {
     background: var(--primary-gradient);
-    color: white;
+    color: var(--text-light);
     border-bottom-right-radius: 6px;
+    box-shadow: 0 4px 12px rgba(2, 62, 138, 0.15);
   }
 
   .message.bot {
@@ -326,6 +401,7 @@
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
     border-bottom-left-radius: 6px;
+    box-shadow: 0 2px 8px rgba(72, 202, 228, 0.08);
   }
 
   .message-meta {
@@ -426,11 +502,16 @@
 
   .chat-branding {
     text-align: center;
-    padding: 6px 0;
+    padding: 8px 0;
     font-size: 11px;
-    background: #f8f9fa;
-    color: #555;
-    border-top: 1px solid #ddd;
+    background: linear-gradient(135deg, var(--light-neutral) 0%, #f0f9ff 100%);
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
   }
 
   @media (max-width: 576px) {
@@ -461,8 +542,8 @@
   }
 
   .message-input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--aquamarine);
+    box-shadow: 0 0 0 3px rgba(72, 202, 228, 0.15);
     background: var(--bg-surface);
   }
 
@@ -528,37 +609,44 @@
   }
 
   .quick-action:hover {
-    background: var(--primary-gradient);
+    background: var(--accent-gradient);
     color: white;
     border-color: transparent;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 128, 102, 0.2);
   }
 
   .welcome-message {
     text-align: center;
     padding: 32px 24px;
     color: var(--text-secondary);
-    background: var(--bg-elevated);
+    background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba(72, 202, 228, 0.02) 100%);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .welcome-message h3 {
     font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .welcome-message p {
     font-size: 14px;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
   }
 
   .avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: var(--success-gradient);
+    background: var(--accent-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -567,6 +655,8 @@
     font-size: 14px;
     margin-right: 12px;
     flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 128, 102, 0.2);
   }
 
   .bot-message-container {
@@ -584,7 +674,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: var(--secondary-gradient);
+    background: var(--primary-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -593,6 +683,8 @@
     font-size: 14px;
     margin-left: 12px;
     flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(2, 62, 138, 0.2);
   }
 
   .message-content {
@@ -681,10 +773,15 @@ container.innerHTML = `
     <div class="chat-window" id="chatWindow">
       <div class="chat-header">
         <div class="header-info">
-          <div class="status-indicator"></div>
-          <div>
-            <div>Moaawen Assistant</div>
-            <div style="font-size: 12px; opacity: 0.8; font-weight: 400;">Online</div>
+          <div class="moaawen-logo">
+            <img src="https://www.moaawen.onrender.com/assets/images/logo.png" alt="Moaawen Logo" />
+          </div>
+          <div class="header-text">
+            <div class="header-title">Moaawen Assistant</div>
+            <div class="header-subtitle">
+              <div class="status-indicator" style="display: inline-block; margin-right: 6px;"></div>
+              Online
+            </div>
           </div>
         </div>
         <button class="resize-btn" id="resizeBtn">
@@ -701,12 +798,12 @@ container.innerHTML = `
       </div>
       
       <div class="welcome-message" id="welcomeMessage">
-        <h3>👋 Welcome to Moaawen</h3>
-        <p>I'm here to help you with any questions you might have. How can I assist you today?</p>
+        <h3>✨ Welcome to Moaawen</h3>
+        <p>Your AI-powered customer support assistant is ready to help. Ask me anything about your business, products, or how I can assist your customers!</p>
         <div class="quick-actions">
-          <div class="quick-action" data-message="Help me get started">Get Started</div>
-          <div class="quick-action" data-message="What can you do?">Features</div>
-          <div class="quick-action" data-message="Contact support">Support</div>
+          <div class="quick-action" data-message="How can I integrate Moaawen?">Integration</div>
+          <div class="quick-action" data-message="What features do you offer?">Features</div>
+          <div class="quick-action" data-message="Show me pricing plans">Pricing</div>
         </div>
       </div>
       
@@ -741,11 +838,11 @@ container.innerHTML = `
         </button>
       </div>
 
-      <!-- ✅ Branding Section -->
+      <!-- Enhanced Branding Section with Moaawen colors -->
       <div class="chat-branding">
-  <strong>MOAAWEN</strong> &copy; ${new Date().getFullYear()} <br>
-  <span>Beta Build v0.1</span>
-</div>
+        <span style="font-weight: 600; color: var(--deep-cobalt);">Powered by MOAAWEN</span>
+        <span style="color: var(--text-secondary); font-size: 10px;">AI Customer Support • v2.0</span>
+      </div>
 
     </div>
   </div>
