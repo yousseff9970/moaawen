@@ -5,9 +5,9 @@ async function trackUsage(businessId, type, amount = 1) {
   if (!businessId || !type) return;
 
   const fieldMap = {
-    message: 'settings.usedMessages',
-    voice: 'settings.usedVoiceMinutes',
-    image: 'settings.imageAnalysesUsed'
+    message: 'settings.limits.usedMessages',
+    voice: 'settings.limits.usedVoiceMinutes',
+    image: 'settings.limits.imageAnalysesUsed'
   };
 
   const field = fieldMap[type];

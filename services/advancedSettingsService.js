@@ -1,5 +1,5 @@
 // services/advancedSettingsService.js
-const { getDb } = require('../db');
+const  getDb  = require('../db');
 const { ObjectId } = require('mongodb');
 
 /**
