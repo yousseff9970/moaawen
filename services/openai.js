@@ -16,6 +16,11 @@ const {
 } = require('./orderManager');
 const { getMissingInfo, isOrderFlowComplete } = require('../models/Order');
 const { processAIOrderActions } = require('./AiOrder');
+const { 
+  getBusinessAdvancedSettings, 
+  applyAdvancedSettingsToPrompt,
+  isFeatureEnabled 
+} = require('./advancedSettingsService');
 
 
 
@@ -433,9 +438,30 @@ This business does not currently have products in their catalog. Focus on:
 5. **Language Consistency**: Always match the user's language and dialect exactly
 6. **No Pressure**: Never make customers feel obligated to buy anything${hasProducts ? '' : '\n7. **Product Queries**: If asked about products, explain that the business doesn\'t have an online catalog and provide contact information'}`;
 
+  // 🎨 APPLY ADVANCED SETTINGS TO AI BEHAVIOR
+  let enhancedBasePrompt = basePrompt + productPrompt + generalRules;
+  try {
+    const advancedSettings = await getBusinessAdvancedSettings(business._id || business.id);
+    if (advancedSettings) {
+      enhancedBasePrompt = applyAdvancedSettingsToPrompt(advancedSettings, enhancedBasePrompt);
+      
+      // Log that advanced settings are being applied
+      console.log('Applied advanced settings for business:', business._id || business.id, {
+        tone: advancedSettings.aiPersonality?.tone,
+        length: advancedSettings.responses?.lengthPreference,
+        language: advancedSettings.language?.default,
+        voicesEnabled: advancedSettings.features?.voicesEnabled,
+        imagesEnabled: advancedSettings.features?.imagesEnabled
+      });
+    }
+  } catch (advancedSettingsError) {
+    console.error('Error applying advanced settings:', advancedSettingsError);
+    // Continue with base prompt if advanced settings fail
+  }
+
   const systemPrompt = {
     role: 'system',
-    content: (basePrompt + productPrompt + generalRules).trim()
+    content: enhancedBasePrompt.trim()
   };
 
 

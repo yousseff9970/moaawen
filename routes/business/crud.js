@@ -9,6 +9,8 @@ const crypto = require('crypto');
 
 // Import FAQ routes
 const faqRoutes = require('./faqs');
+// Import Advanced Settings routes
+const advancedSettingsRoutes = require('./advanced-settings');
 
 // GET / (list user's businesses)
 router.get('/', authMiddleware, async (req, res) => {
@@ -141,17 +143,20 @@ router.get('/:id', authMiddleware, async (req, res) => {
         status: business.status || 'active',
         contact: business.contact || {},
         channels: business.channels || {},
-        settings: business.settings || {
-          currentPlan: business.plan || 'starter',
-          maxMessages: business.messagesLimit || 1000,
-          usedMessages: business.messagesUsed || 0,
-          allowedChannels: 3,
-          enabledChannels: {
+        settings: {
+          ...(business.settings || {}),
+          currentPlan: business.settings?.currentPlan || business.plan || 'starter',
+          maxMessages: business.settings?.maxMessages || business.messagesLimit || 1000,
+          usedMessages: business.settings?.usedMessages || business.messagesUsed || 0,
+          allowedChannels: business.settings?.allowedChannels || 3,
+          enabledChannels: business.settings?.enabledChannels || {
             languages: 1,
             voiceMinutes: 10,
             usedVoiceMinutes: 0,
             imageAnalysesUsed: 0
-          }
+          },
+          // Include advanced settings if they exist
+          advanced: business.settings?.advanced || null
         }
       };
 
@@ -357,7 +362,101 @@ router.put('/:id', authMiddleware, requireVerified, async (req, res) => {
   }
 });
 
+// DELETE /:id (delete business and all associated data)
+router.delete('/:id', authMiddleware, requireVerified, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid business ID' 
+      });
+    }
+
+    const db = await getDb();
+    const businessesCol = db.collection('businesses');
+    const usersCol = db.collection('users');
+    const ordersCol = db.collection('orders');
+    const conversationsCol = db.collection('conversations');
+    const productsCol = db.collection('products');
+
+    // 1. Check if business exists and user owns it
+    const business = await businessesCol.findOne({ 
+      _id: new ObjectId(id),
+      $or: [
+        { userId: new ObjectId(req.user.userId) },
+        { userId: req.user.userId }
+      ]
+    });
+
+    if (!business) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Business not found or you do not have permission to delete it' 
+      });
+    }
+
+    // 2. Start deletion process - delete all associated data
+    const session = db.client.startSession();
+    
+    try {
+      await session.withTransaction(async () => {
+        // Delete the business document
+        await businessesCol.deleteOne({ _id: new ObjectId(id) }, { session });
+
+        // Remove business ID from user's businesses array
+        await usersCol.updateOne(
+          { _id: new ObjectId(req.user.userId) },
+          { $pull: { businesses: id } },
+          { session }
+        );
+
+        // Delete all orders for this business
+        await ordersCol.deleteMany({ businessId: id }, { session });
+
+        // Delete all conversations for this business
+        await conversationsCol.deleteMany({ businessId: id }, { session });
+
+        // Delete all products for this business
+        await productsCol.deleteMany({ businessId: id }, { session });
+
+        // Note: You might want to add more collections here if you have:
+        // - Analytics data
+        // - Chat logs
+        // - Uploaded media files
+        // - FAQ data
+        // - Channel configurations
+        // etc.
+      });
+
+      console.log(`✅ Business ${id} and all associated data deleted by user ${req.user.userId}`);
+      
+      res.json({ 
+        success: true, 
+        message: 'Business and all associated data have been permanently deleted' 
+      });
+
+    } catch (transactionError) {
+      console.error('Transaction failed:', transactionError);
+      throw transactionError;
+    } finally {
+      await session.endSession();
+    }
+
+  } catch (error) {
+    console.error('Error deleting business:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to delete business. Please try again.' 
+    });
+  }
+});
+
 // Mount FAQ routes
 router.use('/', faqRoutes);
+
+// Mount Advanced Settings routes
+router.use('/', advancedSettingsRoutes);
 
 module.exports = router;
