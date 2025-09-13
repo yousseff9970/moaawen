@@ -2,7 +2,7 @@ const axios = require('axios');
 const path = require('path');
 const { getBusinessInfo } = require('./business');
 const { matchFAQSmart } = require('./modelMatcher');
-const { logToJson } = require('./jsonLog');
+const { logConversation, logError, logAnalyticsEvent } = require('./advancedLogger');
 const { trackUsage } = require('../utils/trackUsage');
 const { 
   buildProductDatabase,
@@ -81,13 +81,17 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   const { phone_number_id, page_id, domain, instagram_account_id, shop } = metadata;
 
   if (!phone_number_id && !page_id && !domain && !instagram_account_id && !shop) {
-    logToJson({
-      layer: 'error',
-      senderId,
-      businessId: null,
-      message: userMessage,
-      error: 'Missing identifiers (phone_number_id, page_id, domain, instagram_account_id, shop)'
-    });
+    await logError(
+      new Error('Missing identifiers for generateReply'),
+      {
+        senderId,
+        businessId: null,
+        endpoint: 'generateReply',
+        requestData: { phone_number_id, page_id, domain, instagram_account_id, shop },
+        severity: 'warning',
+        category: 'validation'
+      }
+    );
     throw new Error('Unsupported metadata or missing identifiers');
   }
 
@@ -102,14 +106,19 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
     const reason = access.reasons.join(', ');
     const fallbackMessage = '🚫 Your access is restricted. Please contact support.';
 
-    logToJson({
-      layer: 'policy',
+    await logConversation({
       senderId,
       businessId: business.id,
+      businessName: business.name,
       message: userMessage,
-      reasons: access.reasons,
       ai_reply: fallbackMessage,
-      duration: 0
+      responseSource: 'policy',
+      layer: 'policy',
+      duration: 0,
+      platform: phone_number_id ? 'whatsapp' : page_id ? 'facebook' : 'unknown',
+      messageType: 'text',
+      isFirstMessage: false,
+      errors: access.reasons
     });
 
     return {
@@ -125,14 +134,19 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   const faqAnswer = matchFAQSmart(userMessage, business.faqs || []);
   if (faqAnswer) {
     const duration = Date.now() - start;
-    logToJson({
-      layer: 'faq',
+    await logConversation({
       senderId,
       businessId: business.id,
-      duration,
+      businessName: business.name,
       message: userMessage,
-      matched: true,
-      ai_reply: faqAnswer
+      ai_reply: faqAnswer,
+      responseSource: 'faq',
+      layer: 'faq',
+      duration,
+      platform: phone_number_id ? 'whatsapp' : page_id ? 'facebook' : instagram_account_id ? 'instagram' : 'unknown',
+      messageType: 'text',
+      isFirstMessage: false,
+      intent: 'faq_match'
     });
     return { reply: faqAnswer, source: 'faq', layer_used: 'faq', duration };
   }
@@ -500,19 +514,29 @@ This business does not currently have products in their catalog. Focus on:
     const messageChunks = splitLongMessage(cleanReplyText, 900);
     
     const duration = Date.now() - start;
+    const platform = phone_number_id ? 'whatsapp' : page_id ? 'facebook' : instagram_account_id ? 'instagram' : 'unknown';
 
-    logToJson({
-      layer: 'ai',
+    await logConversation({
       senderId,
       businessId: business.id,
+      businessName: business.name,
+      message: userMessage,
+      ai_reply: cleanReplyText,
+      responseSource: 'ai',
+      layer: 'ai',
       intent: 'general',
       duration,
       tokens: response.data.usage || {},
-      message: userMessage,
-      ai_reply: cleanReplyText,
-      message_chunks: messageChunks.length > 1 ? messageChunks.length : undefined
+      platform,
+      messageType: 'text',
+      isFirstMessage: false,
+      messageChunks: messageChunks.length > 1 ? messageChunks.length : undefined,
+      productMentions: hasProducts ? extractProductMentions(cleanReplyText, productDatabase) : [],
+      conversionIntent: detectConversionIntent(userMessage, cleanReplyText),
+      userSatisfaction: estimateUserSatisfaction(cleanReplyText)
     });
-await trackUsage(business._id, 'message');
+
+    await trackUsage(business._id, 'message');
     
 
     // 🤖 AI-POWERED ORDER POST-PROCESSING - Use original response with actions
@@ -544,16 +568,33 @@ await trackUsage(business._id, 'message');
   } catch (err) {
     const duration = Date.now() - start;
     const errMsg = err?.response?.data?.error?.message || err.message;
+    const platform = phone_number_id ? 'whatsapp' : page_id ? 'facebook' : instagram_account_id ? 'instagram' : 'unknown';
 
     const fallbackReply = "Sorry, I'm having trouble right now. Please try again or contact us directly.";
 
-    logToJson({
-      layer: 'error',
+    await logError(err, {
       senderId,
       businessId: business.id,
-      duration,
+      platform,
+      endpoint: 'generateReply',
+      severity: 'error',
+      category: 'ai_response',
+      requestData: { userMessage, metadata }
+    });
+
+    await logConversation({
+      senderId,
+      businessId: business.id,
+      businessName: business.name,
       message: userMessage,
-      error: errMsg
+      ai_reply: fallbackReply,
+      responseSource: 'error',
+      layer: 'error',
+      duration,
+      platform,
+      messageType: 'text',
+      isFirstMessage: false,
+      errors: [errMsg]
     });
 
     return { reply: fallbackReply, source: 'error', layer_used: 'error', duration };
@@ -599,6 +640,51 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
   }, 10000);
 
   replyTimeouts.set(senderId, timeout);
+};
+
+// Helper methods for enhanced logging
+const extractProductMentions = (message, productDatabase) => {
+  if (!message || !productDatabase) return [];
+  
+  const mentions = [];
+  productDatabase.forEach(product => {
+    if (message.toLowerCase().includes(product.title.toLowerCase())) {
+      mentions.push({
+        productId: product.id,
+        productName: product.title,
+        category: product.type
+      });
+    }
+  });
+  return mentions;
+};
+
+const detectConversionIntent = (userMessage, aiReply) => {
+  const buyKeywords = ['buy', 'purchase', 'order', 'بدي', 'اشتري', 'اطلب'];
+  const highIntentKeywords = ['how much', 'price', 'cost', 'كم', 'سعر'];
+  
+  const userHasBuyIntent = buyKeywords.some(keyword => 
+    userMessage.toLowerCase().includes(keyword.toLowerCase())
+  );
+  const userHasHighIntent = highIntentKeywords.some(keyword => 
+    userMessage.toLowerCase().includes(keyword.toLowerCase())
+  );
+  
+  if (userHasBuyIntent) return 'high';
+  if (userHasHighIntent) return 'medium';
+  return 'low';
+};
+
+const estimateUserSatisfaction = (aiReply) => {
+  // Simple satisfaction estimation based on response characteristics
+  let score = 3; // Base score
+  
+  if (aiReply.includes('😊') || aiReply.includes('🎉') || aiReply.includes('✅')) score += 0.5;
+  if (aiReply.includes('sorry') || aiReply.includes('آسف')) score -= 0.5;
+  if (aiReply.length > 200) score += 0.3; // Detailed responses
+  if (aiReply.includes('contact') || aiReply.includes('تواصل')) score += 0.2;
+  
+  return Math.min(5, Math.max(1, score));
 };
 
 

@@ -15,6 +15,7 @@ loadGoogleCredentials();
 const { limiter, authLimiter, publicLimiter } = require('./middlewares/rateLimit');
 const apiKeyMiddleware = require('./middlewares/apiKey');
 const { authMiddleware, requireVerified, requireAdmin } = require('./middlewares/authMiddleware');
+const { requestLoggingMiddleware, businessActivityMiddleware, errorLoggingMiddleware } = require('./middlewares/loggingMiddleware');
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -25,6 +26,8 @@ const webhookRoutes = require('./routes/webhook');
 const whatsappRoutes = require('./routes/whatsapp');
 const logsRoutes = require('./routes/logs');
 const businessRoutes = require('./routes/business');
+const usageRoutes = require('./routes/usage');
+const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 
@@ -113,6 +116,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));  // single JSON parser (drop bodyParser)
 app.use(cookieParser());
 
+// Add request logging middleware
+app.use(requestLoggingMiddleware());
+
 // Session configuration for Passport
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-session-secret-key',
@@ -156,7 +162,9 @@ app.get('/dashboard/data', authMiddleware, (req, res) => {
 // Protected areas
 
 app.use('/dashboard', publicLimiter, authMiddleware, requireVerified, dashboardRoutes);
-app.use('/businesses', authMiddleware, businessRoutes);
+app.use('/businesses', authMiddleware, businessActivityMiddleware('business_management'), businessRoutes);
+app.use('/usage', authMiddleware, businessActivityMiddleware('usage_view'), usageRoutes);
+app.use('/analytics', authMiddleware, businessActivityMiddleware('analytics_view'), analyticsRoutes);
 
 // Shopify integration - Public routes for OAuth and webhooks (no auth required)
 app.use('/shopify', cors(corsOptions.permissive), publicLimiter, shopifyRoutes);
@@ -171,6 +179,9 @@ app.use(publicLimiter, logsRoutes);
 
 // 404
 app.use((req, res) => res.status(404).json({ success: false, message: 'Not found' }));
+
+// Error logging middleware
+app.use(errorLoggingMiddleware);
 
 // Error handler (last)
 app.use((err, req, res, next) => {
