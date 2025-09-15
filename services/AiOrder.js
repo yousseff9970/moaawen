@@ -253,7 +253,7 @@ ${p.variants.filter(v => v.inStock !== false).map(v => `  VARIANT_ID: "${v.id}" 
     if (firstBrace !== -1 && lastBrace > firstBrace) {
       cleanedText = cleanedText.substring(firstBrace, lastBrace + 1);
     }
-await trackUsage(businessId, 'message');
+
     //console.log(`Attempting to parse AI analysis: ${cleanedText.substring(0, 200)}...`);
 
     let analysis;

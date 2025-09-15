@@ -1082,8 +1082,31 @@ resizeBtn.onclick = () => {
       return;
     }
 
+    // Handle channel disabled - no response should be shown
+    if (response.status === 204) {
+      typingIndicator.style.display = 'none';
+      // Don't add any message - channel is disabled, completely ignore
+      console.log('🚫 Channel disabled - no response sent');
+      return;
+    }
+
+    // Handle other server errors (500, etc.) - don't show error message to user
+    if (!response.ok) {
+      typingIndicator.style.display = 'none';
+      // Don't add any error message - just silently fail
+      console.error('Server error:', response.status, response.statusText);
+      return;
+    }
+
     const data = await response.json();
     typingIndicator.style.display = 'none';
+
+    // Only proceed if we have a valid response
+    if (!data || (data.error && data.error === "Internal server error")) {
+      // Don't show error message to user for internal server errors
+      console.error('Internal server error - no response sent');
+      return;
+    }
 
     // ✅ Update receipt directly without re-rendering all messages
     const lastUserMsg = chatMessages.querySelector('.message.user:last-child .receipt');
@@ -1107,8 +1130,10 @@ resizeBtn.onclick = () => {
 
   } catch (err) {
     typingIndicator.style.display = 'none';
-    addMessage('⚠️ Connection error. Please check your internet and try again.', false);
+    // Don't show error message to user - just silently fail
     console.error('Chat widget error:', err);
+  } finally {
+    sendBtn.disabled = false;
   }
 }
 

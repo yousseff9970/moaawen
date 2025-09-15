@@ -19,7 +19,8 @@ const { processAIOrderActions } = require('./AiOrder');
 const { 
   getBusinessAdvancedSettings, 
   applyAdvancedSettingsToPrompt,
-  isFeatureEnabled 
+  isFeatureEnabled,
+  isChannelEnabled 
 } = require('./advancedSettingsService');
 
 
@@ -96,6 +97,30 @@ const generateReply = async (senderId, userMessage, metadata = {}) => {
   }
 
   const business = await getBusinessInfo({ phone_number_id, page_id, domain, instagram_account_id, shop });
+
+  // 🚫 CHANNEL RESTRICTION CHECK - Completely ignore disabled channels
+  try {
+    const advancedSettings = await getBusinessAdvancedSettings(business._id || business.id);
+    
+    // Detect current channel
+    let currentChannel = 'unknown';
+    if (phone_number_id) currentChannel = 'whatsapp';
+    else if (page_id) currentChannel = 'messenger';
+    else if (instagram_account_id) currentChannel = 'instagram';
+    else if (domain || shop) currentChannel = 'website';
+    
+    // Check if channel is enabled - if not, completely ignore the message
+    if (!isChannelEnabled(advancedSettings, currentChannel)) {
+      console.log(`🚫 Channel ${currentChannel} is DISABLED for business ${business._id || business.id} - completely ignoring message`);
+      
+      // Return undefined/null to indicate message should be completely ignored
+      return undefined;
+    }
+    
+    console.log(`✅ Channel ${currentChannel} is enabled for business ${business._id || business.id}`);
+  } catch (error) {
+    console.error('⚠️ Error checking channel restrictions, allowing message:', error.message);
+  }
 
   // 🛡️ Plan/access check
   const { checkAccess } = require('../utils/businessPolicy');
@@ -613,6 +638,12 @@ const scheduleBatchedReply = (senderId, userMessage, metadata, onReply) => {
     replyTimeouts.delete(senderId);
 
     const result = await generateReply(senderId, allMessages, metadata);
+    
+    // If result is null/undefined (channel disabled), don't send any response
+    if (!result) {
+      console.log(`🚫 No response sent for ${senderId} - message completely ignored`);
+      return;
+    }
     
     // Handle multiple messages if response was split
     if (result.isMultiMessage && Array.isArray(result.reply)) {

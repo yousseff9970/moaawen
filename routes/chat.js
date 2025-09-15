@@ -36,6 +36,12 @@ router.post('/chat', validateChatRequest, async (req, res) => {
       history: sessionHistory[sessionId], // pass conversation history
     });
 
+    // If reply is null/undefined (channel disabled), return 204 No Content
+    if (!reply) {
+      console.log(`🚫 Website channel disabled for domain ${domain} - ignoring message`);
+      return res.status(204).send(); // No response, channel disabled
+    }
+
     // Handle multiple messages if response was split
     if (reply.isMultiMessage && Array.isArray(reply.reply)) {
       // Save all message chunks to history
