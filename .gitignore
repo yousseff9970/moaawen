@@ -4,6 +4,7 @@
 # ignore logs
 logs.json
 logs/conversations.json
+logs/analytics.json
 
 # Ignore dependencies
 node_modules/
